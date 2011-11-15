@@ -14,17 +14,15 @@ class Gallery
    Конструктор
   ###
   constructor: (@options = {}, images) ->
-    self = @
-
     @overlay   = $(template).appendTo 'body'
     @container = @overlay.find '.gallery-image'
     @tumbnail  = @overlay.find '.gallery-tumbnails'
 
-    @overlay.click (event) ->
-      hideOverlay self.overlay if $(event.target).hasClass 'gallery-overlay'
+    @overlay.click (event) =>
+      hideOverlay @overlay if $(event.target).hasClass 'gallery-overlay'
 
-    $(document).bind 'keyup', (event) ->
-      hideOverlay self.overlay if event.keyCode is 27
+    $(document).bind 'keyup', (event) =>
+      hideOverlay @overlay if event.keyCode is 27
 
     @add images if images
 

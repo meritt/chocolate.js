@@ -14,19 +14,18 @@
     */
 
     function Gallery(options, images) {
-      var self;
+      var _this = this;
       this.options = options != null ? options : {};
-      self = this;
       this.overlay = $(template).appendTo('body');
       this.container = this.overlay.find('.gallery-image');
       this.tumbnail = this.overlay.find('.gallery-tumbnails');
       this.overlay.click(function(event) {
         if ($(event.target).hasClass('gallery-overlay')) {
-          return hideOverlay(self.overlay);
+          return hideOverlay(_this.overlay);
         }
       });
       $(document).bind('keyup', function(event) {
-        if (event.keyCode === 27) return hideOverlay(self.overlay);
+        if (event.keyCode === 27) return hideOverlay(_this.overlay);
       });
       if (images) this.add(images);
     }
