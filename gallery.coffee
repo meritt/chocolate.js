@@ -85,7 +85,8 @@ class Gallery
 
   updateDimensions: (width, height) ->
     left = '-' + parseInt(width / 2, 10) + 'px'
-    @container.css 'width': width, 'height': height, 'margin-left': left
+    top  = '-' + (parseInt(height / 2, 10) + parseInt(@tumbnail.height() / 2, 10)) + 'px'
+    @container.css 'width': width, 'height': height, 'margin-left': left, 'margin-top': top
 
   ###
    Обновление списка тумбнейлов

@@ -95,12 +95,14 @@
     };
 
     Gallery.prototype.updateDimensions = function(width, height) {
-      var left;
+      var left, top;
       left = '-' + parseInt(width / 2, 10) + 'px';
+      top = '-' + (parseInt(height / 2, 10) + parseInt(this.tumbnail.height() / 2, 10)) + 'px';
       return this.container.css({
         'width': width,
         'height': height,
-        'margin-left': left
+        'margin-left': left,
+        'margin-top': top
       });
     };
 
