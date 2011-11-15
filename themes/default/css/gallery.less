@@ -1,6 +1,10 @@
 img.gallery {
   cursor: pointer;
-  border: 4px dotted red;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 4px dotted red;
+  }
 }
 
 div.gallery-overlay {
@@ -16,21 +20,14 @@ div.gallery-overlay {
 
 div.gallery-image {
   position: fixed;
-  top: 5%;
-  left: 5%;
-  width: 90%;
-  height: 70%;
-  background-color: #fff;
-  overflow: hidden;
-  text-align: center;
+  left: 50%;
   z-index: 10;
 }
 
 div.gallery-tumbnails {
   position: fixed;
-  left: 5%;
-  bottom: 5%;
-  width: 90%;
+  bottom: 0;
+  width: 100%;
   height: 150px;
   background-color: #000;
   padding-left: 10px;

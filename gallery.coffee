@@ -10,6 +10,9 @@ counter = 0
 class Gallery
   images: {}
 
+  ###
+   Конструктор
+  ###
   constructor: (@options = {}, images) ->
     self = @
 
@@ -25,6 +28,9 @@ class Gallery
 
     @add images if images
 
+  ###
+   Добавляем список изображений для работы в галереи
+  ###
   add: (images) ->
     return if not images or images.length is 0
 
@@ -47,17 +53,35 @@ class Gallery
           source:    source
           thumbnail: image.attr 'src'
 
+  ###
+   Показать изображение на большом экране
+  ###
   show: (image) ->
     source = image.parent().attr 'href'
 
     if source
-      @updateImage source
       @updateThumbnail source
+
+      @updateImage source
       showOverlay @overlay
 
+  ###
+   Обновление изображения
+  ###
   updateImage: (source) ->
-    @container.html '<img src="' + source + '">'
+    image = new Image()
+    image.src = source
+    image.onload = (event) => @updateDimensions image.width, image.height
 
+    @container.css 'background-image', 'url(' + source + ')'
+
+  updateDimensions: (width, height) ->
+    left = '-' + parseInt(width / 2, 10) + 'px'
+    @container.css 'width': width, 'height': height, 'margin-left': left
+
+  ###
+   Обновление списка тумбнейлов
+  ###
   updateThumbnail: (current) ->
     return if @images.length is 0
 
