@@ -36,25 +36,28 @@
     */
 
     Gallery.prototype.add = function(images) {
-      var self;
+      var _this = this;
       if (!images || images.length === 0) return;
-      self = this;
       return $.each(images, function(index, image) {
-        var cid, source;
+        var cid, data, source, title;
         image = $(image);
         source = image.parent().attr('href');
+        title = image.attr('title');
         if (source) {
           cid = ++counter;
+          data = {
+            index: cid,
+            element: image,
+            source: source,
+            title: title,
+            thumbnail: image.attr('src')
+          };
           image.addClass('gallery').attr('data-cid', cid).click(function(event) {
             event.stopPropagation();
             event.preventDefault();
-            return self.show($(this));
+            return _this.show(data);
           });
-          return self.images[cid] = {
-            element: image,
-            source: source,
-            thumbnail: image.attr('src')
-          };
+          return _this.images[cid] = data;
         }
       });
     };
@@ -64,28 +67,32 @@
     */
 
     Gallery.prototype.show = function(image) {
-      var source;
-      source = image.parent().attr('href');
-      if (source) {
-        this.updateThumbnail(source);
-        this.updateImage(source);
-        return showOverlay(this.overlay);
-      }
+      this.updateThumbnail(image.source);
+      this.updateImage(image);
+      return showOverlay(this.overlay);
     };
 
     /*
        Обновление изображения
     */
 
-    Gallery.prototype.updateImage = function(source) {
-      var image;
+    Gallery.prototype.updateImage = function(image) {
+      var content, element;
       var _this = this;
-      image = new Image();
-      image.src = source;
-      image.onload = function(event) {
-        return _this.updateDimensions(image.width, image.height);
-      };
-      return this.container.css('background-image', 'url(' + source + ')');
+      if (!image.width || !image.height) {
+        element = new Image();
+        element.src = image.source;
+        element.onload = function(event) {
+          _this.images[image.index].width = element.width;
+          _this.images[image.index].height = element.height;
+          return _this.updateDimensions(element.width, element.height);
+        };
+      } else {
+        this.updateDimensions(image.width, image.height);
+      }
+      content = image.title ? '<h1>' + image.title + '</h1>' : '';
+      this.container.css('background-image', 'url(' + image.source + ')');
+      return this.container.html(content);
     };
 
     Gallery.prototype.updateDimensions = function(width, height) {
@@ -103,9 +110,9 @@
     */
 
     Gallery.prototype.updateThumbnail = function(current) {
-      var content, self;
+      var content, _this;
       if (this.images.length === 0) return;
-      self = this;
+      _this = this;
       content = '';
       $.each(this.images, function(cid, image) {
         var selected;
@@ -116,9 +123,9 @@
       return this.tumbnail.find('img').click(function(event) {
         var image;
         image = $(this);
-        self.tumbnail.find('img.selected').removeClass('selected');
+        _this.tumbnail.find('img.selected').removeClass('selected');
         image.addClass('selected');
-        return self.updateImage(self.images[image.data('gid')].source);
+        return _this.updateImage(_this.images[image.data('gid')]);
       });
     };
 

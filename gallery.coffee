@@ -34,46 +34,56 @@ class Gallery
   add: (images) ->
     return if not images or images.length is 0
 
-    self = @
-
-    $.each images, (index, image) ->
+    $.each images, (index, image) =>
       image  = $ image
       source = image.parent().attr 'href'
+      title  = image.attr 'title'
 
       if source
         cid = ++counter
 
-        image.addClass('gallery').attr('data-cid', cid).click (event) ->
-          event.stopPropagation()
-          event.preventDefault()
-          self.show $ @
-
-        self.images[cid] =
+        data =
+          index:     cid
           element:   image
           source:    source
+          title:     title
           thumbnail: image.attr 'src'
+
+        image.addClass('gallery').attr('data-cid', cid).click (event) =>
+          event.stopPropagation()
+          event.preventDefault()
+
+          @show data
+
+        @images[cid] = data
 
   ###
    Показать изображение на большом экране
   ###
   show: (image) ->
-    source = image.parent().attr 'href'
-
-    if source
-      @updateThumbnail source
-
-      @updateImage source
-      showOverlay @overlay
+    @updateThumbnail image.source
+    @updateImage image
+    showOverlay @overlay
 
   ###
    Обновление изображения
   ###
-  updateImage: (source) ->
-    image = new Image()
-    image.src = source
-    image.onload = (event) => @updateDimensions image.width, image.height
+  updateImage: (image) ->
+    if not image.width or not image.height
+      element = new Image()
+      element.src = image.source
+      element.onload = (event) =>
+        @images[image.index].width = element.width
+        @images[image.index].height = element.height
 
-    @container.css 'background-image', 'url(' + source + ')'
+        @updateDimensions element.width, element.height
+    else
+      @updateDimensions image.width, image.height
+
+    content = if image.title then '<h1>' + image.title + '</h1>' else ''
+
+    @container.css 'background-image', 'url(' + image.source + ')'
+    @container.html content
 
   updateDimensions: (width, height) ->
     left = '-' + parseInt(width / 2, 10) + 'px'
@@ -85,7 +95,7 @@ class Gallery
   updateThumbnail: (current) ->
     return if @images.length is 0
 
-    self = @
+    _this = @
 
     content = ''
     $.each @images, (cid, image) ->
@@ -97,10 +107,10 @@ class Gallery
     @tumbnail.find('img').click (event) ->
       image = $ @
 
-      self.tumbnail.find('img.selected').removeClass 'selected'
+      _this.tumbnail.find('img.selected').removeClass 'selected'
       image.addClass 'selected'
 
-      self.updateImage self.images[image.data('gid')].source
+      _this.updateImage _this.images[image.data('gid')]
 
 
 showOverlay = (overlay) -> overlay.css 'display', 'block'
