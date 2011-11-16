@@ -16,7 +16,7 @@ class Gallery
   constructor: (@options = {}, images) ->
     @overlay   = $(template).appendTo 'body'
     @container = @overlay.find '.gallery-image'
-    @tumbnail  = @overlay.find '.gallery-tumbnails'
+    @tumbnails = @overlay.find '.gallery-tumbnails'
 
     @overlay.click (event) =>
       hideOverlay @overlay if $(event.target).hasClass 'gallery-overlay'
@@ -85,7 +85,7 @@ class Gallery
 
   updateDimensions: (width, height) ->
     left = '-' + parseInt(width / 2, 10) + 'px'
-    top  = '-' + (parseInt(height / 2, 10) + parseInt(@tumbnail.height() / 2, 10)) + 'px'
+    top  = '-' + (parseInt(height / 2, 10) + parseInt(@tumbnails.height() / 2, 10)) + 'px'
     @container.css 'width': width, 'height': height, 'margin-left': left, 'margin-top': top
 
   ###
@@ -98,15 +98,15 @@ class Gallery
 
     content = ''
     $.each @images, (cid, image) ->
-      selected = if current and current is image.source then ' class="selected"' else ''
-      content += '<img src="' + image.thumbnail + '" data-gid="' + cid + '" width="140" height="140"' + selected + '>'
+      selected = if current and current is image.source then ' selected' else ''
+      content += '<div class="thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"></div>'
 
-    @tumbnail.html content
+    @tumbnails.html content
 
-    @tumbnail.find('img').click (event) ->
+    @tumbnails.find('div.thumbnail').click (event) ->
       image = $ @
 
-      _this.tumbnail.find('img.selected').removeClass 'selected'
+      _this.tumbnails.find('div.selected').removeClass 'selected'
       image.addClass 'selected'
 
       _this.updateImage _this.images[image.data('gid')]

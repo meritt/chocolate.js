@@ -18,7 +18,7 @@
       this.options = options != null ? options : {};
       this.overlay = $(template).appendTo('body');
       this.container = this.overlay.find('.gallery-image');
-      this.tumbnail = this.overlay.find('.gallery-tumbnails');
+      this.tumbnails = this.overlay.find('.gallery-tumbnails');
       this.overlay.click(function(event) {
         if ($(event.target).hasClass('gallery-overlay')) {
           return hideOverlay(_this.overlay);
@@ -97,7 +97,7 @@
     Gallery.prototype.updateDimensions = function(width, height) {
       var left, top;
       left = '-' + parseInt(width / 2, 10) + 'px';
-      top = '-' + (parseInt(height / 2, 10) + parseInt(this.tumbnail.height() / 2, 10)) + 'px';
+      top = '-' + (parseInt(height / 2, 10) + parseInt(this.tumbnails.height() / 2, 10)) + 'px';
       return this.container.css({
         'width': width,
         'height': height,
@@ -117,14 +117,14 @@
       content = '';
       $.each(this.images, function(cid, image) {
         var selected;
-        selected = current && current === image.source ? ' class="selected"' : '';
-        return content += '<img src="' + image.thumbnail + '" data-gid="' + cid + '" width="140" height="140"' + selected + '>';
+        selected = current && current === image.source ? ' selected' : '';
+        return content += '<div class="thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"></div>';
       });
-      this.tumbnail.html(content);
-      return this.tumbnail.find('img').click(function(event) {
+      this.tumbnails.html(content);
+      return this.tumbnails.find('div.thumbnail').click(function(event) {
         var image;
         image = $(this);
-        _this.tumbnail.find('img.selected').removeClass('selected');
+        _this.tumbnails.find('div.selected').removeClass('selected');
         image.addClass('selected');
         return _this.updateImage(_this.images[image.data('gid')]);
       });
