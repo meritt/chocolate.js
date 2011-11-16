@@ -1,5 +1,5 @@
 (function() {
-  var Gallery, counter, hideOverlay, showOverlay, template;
+  var Gallery, counter, hideOverlay, isOverlay, showOverlay, template;
 
   template = '<div class="gallery-overlay">' + '<div class="gallery-image">' + '</div>' + '<div class="gallery-tumbnails">' + '</div>' + '</div>';
 
@@ -25,7 +25,16 @@
         }
       });
       $(document).bind('keyup', function(event) {
-        if (event.keyCode === 27) return hideOverlay(_this.overlay);
+        if (isOverlay(_this.overlay)) {
+          switch (event.keyCode) {
+            case 27:
+              return hideOverlay(_this.overlay);
+            case 37:
+              return console.log('left');
+            case 39:
+              return console.log('right');
+          }
+        }
       });
       if (images) this.add(images);
     }
@@ -36,48 +45,49 @@
 
     Gallery.prototype.add = function(images) {
       var _this = this;
-      if (!images || images.length === 0) return;
-      return $.each(images, function(index, image) {
-        var cid, data, source, title;
+      if (!images || images.length === 0) return this;
+      $.each(images, function(index, image) {
+        var cid, source, title;
         image = $(image);
-        source = image.parent().attr('href');
-        title = image.attr('title');
+        source = image.attr('data-src') || image.parent().attr('href') || null;
+        title = image.attr('data-title') || image.attr('title') || null;
         if (source) {
           cid = ++counter;
-          data = {
+          image.addClass('gallery').attr('data-cid', cid).click(function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            return _this.show(cid);
+          });
+          return _this.images[cid] = {
             index: cid,
             element: image,
             source: source,
             title: title,
             thumbnail: image.attr('src')
           };
-          image.addClass('gallery').attr('data-cid', cid).click(function(event) {
-            event.stopPropagation();
-            event.preventDefault();
-            return _this.show(data);
-          });
-          return _this.images[cid] = data;
         }
       });
+      return this;
     };
 
     /*
        Показать изображение на большом экране
     */
 
-    Gallery.prototype.show = function(image) {
-      this.updateThumbnail(image.source);
-      this.updateImage(image);
-      return showOverlay(this.overlay);
+    Gallery.prototype.show = function(cid) {
+      this.updateThumbnail(this.images[cid].source).updateImage(cid);
+      showOverlay(this.overlay);
+      return this;
     };
 
     /*
        Обновление изображения
     */
 
-    Gallery.prototype.updateImage = function(image) {
-      var content, element;
+    Gallery.prototype.updateImage = function(cid) {
+      var content, element, image;
       var _this = this;
+      image = this.images[cid];
       if (!image.width || !image.height) {
         element = new Image();
         element.src = image.source;
@@ -91,19 +101,21 @@
       }
       content = image.title ? '<h1>' + image.title + '</h1>' : '';
       this.container.css('background-image', 'url(' + image.source + ')');
-      return this.container.html(content);
+      this.container.html(content);
+      return this;
     };
 
     Gallery.prototype.updateDimensions = function(width, height) {
       var left, top;
       left = '-' + parseInt(width / 2, 10) + 'px';
       top = '-' + (parseInt(height / 2, 10) + parseInt(this.tumbnails.height() / 2, 10)) + 'px';
-      return this.container.css({
+      this.container.css({
         'width': width,
         'height': height,
         'margin-left': left,
         'margin-top': top
       });
+      return this;
     };
 
     /*
@@ -112,7 +124,7 @@
 
     Gallery.prototype.updateThumbnail = function(current) {
       var content, _this;
-      if (this.images.length === 0) return;
+      if (this.images.length === 0) return this;
       _this = this;
       content = '';
       $.each(this.images, function(cid, image) {
@@ -121,13 +133,14 @@
         return content += '<div class="thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (image.title ? ' title="' + image.title + '"' : '') + '></div>';
       });
       this.tumbnails.html(content);
-      return this.tumbnails.find('div.thumbnail').click(function(event) {
+      this.tumbnails.find('div.thumbnail').click(function(event) {
         var image;
         image = $(this);
         _this.tumbnails.find('div.selected').removeClass('selected');
         image.addClass('selected');
-        return _this.updateImage(_this.images[image.data('gid')]);
+        return _this.updateImage(image.data('gid'));
       });
+      return this;
     };
 
     return Gallery;
@@ -140,6 +153,10 @@
 
   hideOverlay = function(overlay) {
     return overlay.css('display', 'none');
+  };
+
+  isOverlay = function(overlay) {
+    return overlay.css('display') === 'block';
   };
 
   if (jQuery && jQuery.fn) {

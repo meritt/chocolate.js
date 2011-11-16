@@ -22,7 +22,14 @@ class Gallery
       hideOverlay @overlay if $(event.target).hasClass 'gallery-overlay'
 
     $(document).bind 'keyup', (event) =>
-      hideOverlay @overlay if event.keyCode is 27
+      if isOverlay @overlay
+        switch event.keyCode
+          when 27                 # ESC
+            hideOverlay @overlay
+          when 37                 # Left arrow
+            console.log 'left'
+          when 39                 # Right arrow
+            console.log 'right'
 
     @add images if images
 
@@ -30,43 +37,43 @@ class Gallery
    Добавляем список изображений для работы в галереи
   ###
   add: (images) ->
-    return if not images or images.length is 0
+    return @ if not images or images.length is 0
 
     $.each images, (index, image) =>
       image  = $ image
-      source = image.parent().attr 'href'
-      title  = image.attr 'title'
+      source = image.attr('data-src') || image.parent().attr('href') || null
+      title  = image.attr('data-title') || image.attr('title') || null
 
       if source
         cid = ++counter
 
-        data =
+        image.addClass('gallery').attr('data-cid', cid).click (event) =>
+          event.stopPropagation()
+          event.preventDefault()
+          @show cid
+
+        @images[cid] =
           index:     cid
           element:   image
           source:    source
           title:     title
-          thumbnail: image.attr 'src'
-
-        image.addClass('gallery').attr('data-cid', cid).click (event) =>
-          event.stopPropagation()
-          event.preventDefault()
-
-          @show data
-
-        @images[cid] = data
+          thumbnail: image.attr('src')
+    @
 
   ###
    Показать изображение на большом экране
   ###
-  show: (image) ->
-    @updateThumbnail image.source
-    @updateImage image
+  show: (cid) ->
+    @updateThumbnail(@images[cid].source).updateImage(cid)
     showOverlay @overlay
+    @
 
   ###
    Обновление изображения
   ###
-  updateImage: (image) ->
+  updateImage: (cid) ->
+    image = @images[cid]
+
     if not image.width or not image.height
       element = new Image()
       element.src = image.source
@@ -82,17 +89,19 @@ class Gallery
 
     @container.css 'background-image', 'url(' + image.source + ')'
     @container.html content
+    @
 
   updateDimensions: (width, height) ->
     left = '-' + parseInt(width / 2, 10) + 'px'
     top  = '-' + (parseInt(height / 2, 10) + parseInt(@tumbnails.height() / 2, 10)) + 'px'
     @container.css 'width': width, 'height': height, 'margin-left': left, 'margin-top': top
+    @
 
   ###
    Обновление списка тумбнейлов
   ###
   updateThumbnail: (current) ->
-    return if @images.length is 0
+    return @ if @images.length is 0
 
     _this = @
 
@@ -109,11 +118,14 @@ class Gallery
       _this.tumbnails.find('div.selected').removeClass 'selected'
       image.addClass 'selected'
 
-      _this.updateImage _this.images[image.data('gid')]
+      _this.updateImage image.data('gid')
+    @
 
 
 showOverlay = (overlay) -> overlay.css 'display', 'block'
 hideOverlay = (overlay) -> overlay.css 'display', 'none'
+
+isOverlay = (overlay) -> overlay.css('display') is 'block'
 
 if jQuery and jQuery.fn
   jQuery.fn.gallery = -> new Gallery arguments[0], @
