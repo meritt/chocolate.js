@@ -118,7 +118,7 @@
       $.each(this.images, function(cid, image) {
         var selected;
         selected = current && current === image.source ? ' selected' : '';
-        return content += '<div class="thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"></div>';
+        return content += '<div class="thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (image.title ? ' title="' + image.title + '"' : '') + '></div>';
       });
       this.tumbnails.html(content);
       return this.tumbnails.find('div.thumbnail').click(function(event) {

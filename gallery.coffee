@@ -99,7 +99,7 @@ class Gallery
     content = ''
     $.each @images, (cid, image) ->
       selected = if current and current is image.source then ' selected' else ''
-      content += '<div class="thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"></div>'
+      content += '<div class="thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (if image.title then ' title="' + image.title + '"' else '') + '></div>'
 
     @tumbnails.html content
 
