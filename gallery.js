@@ -9,6 +9,8 @@
 
     Gallery.prototype.images = {};
 
+    Gallery.prototype.current = null;
+
     /*
        Конструктор
     */
@@ -25,14 +27,22 @@
         }
       });
       $(document).bind('keyup', function(event) {
+        var next, prev;
         if (isOverlay(_this.overlay)) {
           switch (event.keyCode) {
             case 27:
               return hideOverlay(_this.overlay);
             case 37:
-              return console.log('left');
+              prev = _this.current - 1;
+              if (typeof _this.images[prev] !== 'undefined') {
+                return _this.updateImage(prev);
+              }
+              break;
             case 39:
-              return console.log('right');
+              next = _this.current + 1;
+              if (typeof _this.images[next] !== 'undefined') {
+                return _this.updateImage(next);
+              }
           }
         }
       });
@@ -75,7 +85,7 @@
     */
 
     Gallery.prototype.show = function(cid) {
-      this.updateThumbnail(this.images[cid].source).updateImage(cid);
+      this.updateImage(cid).updateThumbnails();
       showOverlay(this.overlay);
       return this;
     };
@@ -87,6 +97,7 @@
     Gallery.prototype.updateImage = function(cid) {
       var content, element, image;
       var _this = this;
+      this.current = cid;
       image = this.images[cid];
       if (!image.width || !image.height) {
         element = new Image();
@@ -122,10 +133,11 @@
        Обновление списка тумбнейлов
     */
 
-    Gallery.prototype.updateThumbnail = function(current) {
-      var content, _this;
-      if (this.images.length === 0) return this;
+    Gallery.prototype.updateThumbnails = function() {
+      var content, current, _this;
+      if (this.images.length <= 1 || this.current === null) return this;
       _this = this;
+      current = this.images[this.current].source;
       content = '';
       $.each(this.images, function(cid, image) {
         var selected;

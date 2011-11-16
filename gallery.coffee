@@ -9,6 +9,7 @@ counter = 0
 
 class Gallery
   images: {}
+  current: null
 
   ###
    Конструктор
@@ -27,9 +28,11 @@ class Gallery
           when 27                 # ESC
             hideOverlay @overlay
           when 37                 # Left arrow
-            console.log 'left'
+            prev = @current - 1
+            @updateImage prev if typeof @images[prev] isnt 'undefined'
           when 39                 # Right arrow
-            console.log 'right'
+            next = @current + 1
+            @updateImage next if typeof @images[next] isnt 'undefined'
 
     @add images if images
 
@@ -64,7 +67,7 @@ class Gallery
    Показать изображение на большом экране
   ###
   show: (cid) ->
-    @updateThumbnail(@images[cid].source).updateImage(cid)
+    @updateImage(cid).updateThumbnails()
     showOverlay @overlay
     @
 
@@ -72,7 +75,8 @@ class Gallery
    Обновление изображения
   ###
   updateImage: (cid) ->
-    image = @images[cid]
+    @current = cid
+    image    = @images[cid]
 
     if not image.width or not image.height
       element = new Image()
@@ -100,12 +104,13 @@ class Gallery
   ###
    Обновление списка тумбнейлов
   ###
-  updateThumbnail: (current) ->
-    return @ if @images.length is 0
+  updateThumbnails: ->
+    return @ if @images.length <= 1 or @current is null
 
-    _this = @
-
+    _this   = @
+    current = @images[@current].source
     content = ''
+
     $.each @images, (cid, image) ->
       selected = if current and current is image.source then ' selected' else ''
       content += '<div class="thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (if image.title then ' title="' + image.title + '"' else '') + '></div>'
