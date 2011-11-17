@@ -1,5 +1,6 @@
 template = '<div class="gallery-overlay">' +
            '<div class="gallery-close"></div>' +
+           '<div class="gallery-previous"></div>' +
            '<div class="gallery-image"></div>' +
            '<div class="gallery-tumbnails"></div>' +
            '</div>'
@@ -17,10 +18,12 @@ class Gallery
     @overlay   = $(template).appendTo 'body'
     @container = @overlay.find '.gallery-image'
     @tumbnails = @overlay.find '.gallery-tumbnails'
+    @previous  = @overlay.find '.gallery-previous'
 
     @overlay.click (event) => @close() if $(event.target).hasClass 'gallery-overlay'
     @overlay.find('.gallery-close').click (event) => @close()
 
+    @previous.click (event) => @prev()
     @container.click (event) => @next()
 
     $(document).bind 'keyup', (event) =>
@@ -131,9 +134,11 @@ class Gallery
       width  = (windowHeight * width) / height
       height = windowHeight
 
-    left = '-' + parseInt(width / 2, 10) + 'px'
-    top  = '-' + (parseInt(height / 2, 10) + parseInt(@tumbnails.height() / 2, 10)) + 'px'
-    @container.css 'width': width, 'height': height, 'margin-left': left, 'margin-top': top
+    left = parseInt(width / 2, 10)
+    top  = parseInt(height / 2, 10) + parseInt(@tumbnails.height() / 2, 10)
+
+    @previous.css  'width': (windowWidth / 2 - left) + 'px'
+    @container.css 'width': width, 'height': height, 'margin-left': '-' + left + 'px', 'margin-top': '-' + top + 'px'
     @
 
   ###

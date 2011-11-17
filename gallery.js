@@ -1,7 +1,7 @@
 (function() {
   var Gallery, counter, template;
 
-  template = '<div class="gallery-overlay">' + '<div class="gallery-close"></div>' + '<div class="gallery-image"></div>' + '<div class="gallery-tumbnails"></div>' + '</div>';
+  template = '<div class="gallery-overlay">' + '<div class="gallery-close"></div>' + '<div class="gallery-previous"></div>' + '<div class="gallery-image"></div>' + '<div class="gallery-tumbnails"></div>' + '</div>';
 
   counter = 0;
 
@@ -21,11 +21,15 @@
       this.overlay = $(template).appendTo('body');
       this.container = this.overlay.find('.gallery-image');
       this.tumbnails = this.overlay.find('.gallery-tumbnails');
+      this.previous = this.overlay.find('.gallery-previous');
       this.overlay.click(function(event) {
         if ($(event.target).hasClass('gallery-overlay')) return _this.close();
       });
       this.overlay.find('.gallery-close').click(function(event) {
         return _this.close();
+      });
+      this.previous.click(function(event) {
+        return _this.prev();
       });
       this.container.click(function(event) {
         return _this.next();
@@ -154,13 +158,16 @@
         width = (windowHeight * width) / height;
         height = windowHeight;
       }
-      left = '-' + parseInt(width / 2, 10) + 'px';
-      top = '-' + (parseInt(height / 2, 10) + parseInt(this.tumbnails.height() / 2, 10)) + 'px';
+      left = parseInt(width / 2, 10);
+      top = parseInt(height / 2, 10) + parseInt(this.tumbnails.height() / 2, 10);
+      this.previous.css({
+        'width': (windowWidth / 2 - left) + 'px'
+      });
       this.container.css({
         'width': width,
         'height': height,
-        'margin-left': left,
-        'margin-top': top
+        'margin-left': '-' + left + 'px',
+        'margin-top': '-' + top + 'px'
       });
       return this;
     };
