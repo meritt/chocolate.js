@@ -1,5 +1,5 @@
 (function() {
-  var Gallery, counter, hideOverlay, isOverlay, showOverlay, template;
+  var Gallery, counter, template;
 
   template = '<div class="gallery-overlay">' + '<div class="gallery-close"></div>' + '<div class="gallery-image"></div>' + '<div class="gallery-tumbnails"></div>' + '</div>';
 
@@ -31,7 +31,7 @@
         return _this.next();
       });
       $(document).bind('keyup', function(event) {
-        if (isOverlay(_this.overlay)) {
+        if (_this.overlay.css('display') === 'block') {
           switch (event.keyCode) {
             case 27:
               return _this.close();
@@ -82,7 +82,12 @@
 
     Gallery.prototype.show = function(cid) {
       this.updateImage(cid).updateThumbnails();
-      showOverlay(this.overlay);
+      this.overlay.css('display', 'block');
+      return this;
+    };
+
+    Gallery.prototype.close = function() {
+      this.overlay.css('display', 'none');
       return this;
     };
 
@@ -100,39 +105,55 @@
       return this;
     };
 
-    Gallery.prototype.close = function() {
-      hideOverlay(this.overlay);
-      return this;
-    };
-
     /*
        Обновление изображения
     */
 
     Gallery.prototype.updateImage = function(cid) {
-      var content, element, image;
-      var _this = this;
       this.current = cid;
+      this.getImageSize(cid, function(cid) {
+        var content, image;
+        console.log('callback into getImageSize()');
+        image = this.images[cid];
+        this.updateDimensions(image.width, image.height);
+        content = image.title ? '<div class="gallery-header"><h1>' + image.title + '</h1></div>' : '';
+        this.container.css('background-image', 'url(' + image.source + ')');
+        return this.container.html(content);
+      });
+      return this;
+    };
+
+    Gallery.prototype.getImageSize = function(cid, callback) {
+      var element, image;
+      var _this = this;
+      if (callback == null) callback = function() {};
       image = this.images[cid];
       if (!image.width || !image.height) {
         element = new Image();
         element.src = image.source;
         element.onload = function(event) {
-          _this.images[image.index].width = element.width;
-          _this.images[image.index].height = element.height;
-          return _this.updateDimensions(element.width, element.height);
+          _this.images[cid].width = element.width;
+          _this.images[cid].height = element.height;
+          return callback.call(_this, cid);
         };
       } else {
-        this.updateDimensions(image.width, image.height);
+        callback.call(this, cid);
       }
-      content = image.title ? '<h1>' + image.title + '</h1>' : '';
-      this.container.css('background-image', 'url(' + image.source + ')');
-      this.container.html(content);
       return this;
     };
 
     Gallery.prototype.updateDimensions = function(width, height) {
-      var left, top;
+      var left, top, windowHeight, windowWidth;
+      windowWidth = window.innerWidth - 50;
+      windowHeight = window.innerHeight - 150;
+      if (width > windowWidth) {
+        height = (windowWidth * height) / width;
+        width = windowWidth;
+      }
+      if (height > windowHeight) {
+        width = (windowHeight * width) / height;
+        height = windowHeight;
+      }
       left = '-' + parseInt(width / 2, 10) + 'px';
       top = '-' + (parseInt(height / 2, 10) + parseInt(this.tumbnails.height() / 2, 10)) + 'px';
       this.container.css({
@@ -173,18 +194,6 @@
     return Gallery;
 
   })();
-
-  showOverlay = function(overlay) {
-    return overlay.css('display', 'block');
-  };
-
-  hideOverlay = function(overlay) {
-    return overlay.css('display', 'none');
-  };
-
-  isOverlay = function(overlay) {
-    return overlay.css('display') === 'block';
-  };
 
   if (jQuery && jQuery.fn) {
     jQuery.fn.gallery = function() {

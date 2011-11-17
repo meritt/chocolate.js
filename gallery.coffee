@@ -24,7 +24,7 @@ class Gallery
     @container.click (event) => @next()
 
     $(document).bind 'keyup', (event) =>
-      if isOverlay @overlay
+      if @overlay.css('display') is 'block'
         switch event.keyCode
           when 27    # ESC
             @close()
@@ -67,7 +67,11 @@ class Gallery
   ###
   show: (cid) ->
     @updateImage(cid).updateThumbnails()
-    showOverlay @overlay
+    @overlay.css 'display', 'block'
+    @
+
+  close: ->
+    @overlay.css 'display', 'none'
     @
 
   next: ->
@@ -80,35 +84,53 @@ class Gallery
     @updateImage prev if typeof @images[prev] isnt 'undefined'
     @
 
-  close: ->
-    hideOverlay @overlay
-    @
-
   ###
    Обновление изображения
   ###
   updateImage: (cid) ->
     @current = cid
-    image    = @images[cid]
 
-    if not image.width or not image.height
-      element = new Image()
-      element.src = image.source
-      element.onload = (event) =>
-        @images[image.index].width = element.width
-        @images[image.index].height = element.height
+    @getImageSize cid, (cid) ->
+      console.log 'callback into getImageSize()'
 
-        @updateDimensions element.width, element.height
-    else
+      image = @images[cid]
+
       @updateDimensions image.width, image.height
 
-    content = if image.title then '<h1>' + image.title + '</h1>' else ''
+      content = if image.title then '<div class="gallery-header"><h1>' + image.title + '</h1></div>' else ''
 
-    @container.css 'background-image', 'url(' + image.source + ')'
-    @container.html content
+      @container.css 'background-image', 'url(' + image.source + ')'
+      @container.html content
+    @
+
+  getImageSize: (cid, callback = ->) ->
+    image = @images[cid]
+
+    if not image.width or not image.height
+      element     = new Image()
+      element.src = image.source
+
+      element.onload = (event) =>
+        @images[cid].width  = element.width
+        @images[cid].height = element.height
+
+        callback.call @, cid
+    else
+      callback.call @, cid
     @
 
   updateDimensions: (width, height) ->
+    windowWidth  = window.innerWidth - 50   # padding: 50px
+    windowHeight = window.innerHeight - 150 # padding: 50px - 100px (tumbnails height)
+
+    if width > windowWidth
+      height = (windowWidth * height) / width
+      width  = windowWidth
+
+    if height > windowHeight
+      width  = (windowHeight * width) / height
+      height = windowHeight
+
     left = '-' + parseInt(width / 2, 10) + 'px'
     top  = '-' + (parseInt(height / 2, 10) + parseInt(@tumbnails.height() / 2, 10)) + 'px'
     @container.css 'width': width, 'height': height, 'margin-left': left, 'margin-top': top
@@ -139,11 +161,6 @@ class Gallery
       _this.updateImage image.data('gid')
     @
 
-
-showOverlay = (overlay) -> overlay.css 'display', 'block'
-hideOverlay = (overlay) -> overlay.css 'display', 'none'
-
-isOverlay = (overlay) -> overlay.css('display') is 'block'
 
 if jQuery and jQuery.fn
   jQuery.fn.gallery = -> new Gallery arguments[0], @
