@@ -1,8 +1,7 @@
 template = '<div class="gallery-overlay">' +
-           '<div class="gallery-image">' +
-           '</div>' +
-           '<div class="gallery-tumbnails">' +
-           '</div>' +
+           '<div class="gallery-close"></div>' +
+           '<div class="gallery-image"></div>' +
+           '<div class="gallery-tumbnails"></div>' +
            '</div>'
 
 counter = 0
@@ -19,20 +18,20 @@ class Gallery
     @container = @overlay.find '.gallery-image'
     @tumbnails = @overlay.find '.gallery-tumbnails'
 
-    @overlay.click (event) =>
-      hideOverlay @overlay if $(event.target).hasClass 'gallery-overlay'
+    @overlay.click (event) => @close() if $(event.target).hasClass 'gallery-overlay'
+    @overlay.find('.gallery-close').click (event) => @close()
+
+    @container.click (event) => @next()
 
     $(document).bind 'keyup', (event) =>
       if isOverlay @overlay
         switch event.keyCode
-          when 27                 # ESC
-            hideOverlay @overlay
-          when 37                 # Left arrow
-            prev = @current - 1
-            @updateImage prev if typeof @images[prev] isnt 'undefined'
-          when 39                 # Right arrow
-            next = @current + 1
-            @updateImage next if typeof @images[next] isnt 'undefined'
+          when 27    # ESC
+            @close()
+          when 37    # Left arrow
+            @prev()
+          when 39    # Right arrow
+            @next()
 
     @add images if images
 
@@ -69,6 +68,20 @@ class Gallery
   show: (cid) ->
     @updateImage(cid).updateThumbnails()
     showOverlay @overlay
+    @
+
+  next: ->
+    next = @current + 1
+    @updateImage next if typeof @images[next] isnt 'undefined'
+    @
+
+  prev: ->
+    prev = @current - 1
+    @updateImage prev if typeof @images[prev] isnt 'undefined'
+    @
+
+  close: ->
+    hideOverlay @overlay
     @
 
   ###

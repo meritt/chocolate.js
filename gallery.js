@@ -1,7 +1,7 @@
 (function() {
   var Gallery, counter, hideOverlay, isOverlay, showOverlay, template;
 
-  template = '<div class="gallery-overlay">' + '<div class="gallery-image">' + '</div>' + '<div class="gallery-tumbnails">' + '</div>' + '</div>';
+  template = '<div class="gallery-overlay">' + '<div class="gallery-close"></div>' + '<div class="gallery-image"></div>' + '<div class="gallery-tumbnails"></div>' + '</div>';
 
   counter = 0;
 
@@ -22,27 +22,23 @@
       this.container = this.overlay.find('.gallery-image');
       this.tumbnails = this.overlay.find('.gallery-tumbnails');
       this.overlay.click(function(event) {
-        if ($(event.target).hasClass('gallery-overlay')) {
-          return hideOverlay(_this.overlay);
-        }
+        if ($(event.target).hasClass('gallery-overlay')) return _this.close();
+      });
+      this.overlay.find('.gallery-close').click(function(event) {
+        return _this.close();
+      });
+      this.container.click(function(event) {
+        return _this.next();
       });
       $(document).bind('keyup', function(event) {
-        var next, prev;
         if (isOverlay(_this.overlay)) {
           switch (event.keyCode) {
             case 27:
-              return hideOverlay(_this.overlay);
+              return _this.close();
             case 37:
-              prev = _this.current - 1;
-              if (typeof _this.images[prev] !== 'undefined') {
-                return _this.updateImage(prev);
-              }
-              break;
+              return _this.prev();
             case 39:
-              next = _this.current + 1;
-              if (typeof _this.images[next] !== 'undefined') {
-                return _this.updateImage(next);
-              }
+              return _this.next();
           }
         }
       });
@@ -87,6 +83,25 @@
     Gallery.prototype.show = function(cid) {
       this.updateImage(cid).updateThumbnails();
       showOverlay(this.overlay);
+      return this;
+    };
+
+    Gallery.prototype.next = function() {
+      var next;
+      next = this.current + 1;
+      if (typeof this.images[next] !== 'undefined') this.updateImage(next);
+      return this;
+    };
+
+    Gallery.prototype.prev = function() {
+      var prev;
+      prev = this.current - 1;
+      if (typeof this.images[prev] !== 'undefined') this.updateImage(prev);
+      return this;
+    };
+
+    Gallery.prototype.close = function() {
+      hideOverlay(this.overlay);
       return this;
     };
 
