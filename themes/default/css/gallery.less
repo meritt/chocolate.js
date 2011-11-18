@@ -1,4 +1,9 @@
-img.gallery {
+@import "../../less-framework/function.less";
+@import "keyframes.less";
+
+@tumbnails-height: 100px;
+
+img.sgl-item {
   cursor: pointer;
 
   &:hover {
@@ -7,7 +12,7 @@ img.gallery {
   }
 }
 
-div.gallery-overlay {
+div.sgl-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -18,7 +23,7 @@ div.gallery-overlay {
   z-index: 5;
 }
 
-div.gallery-close {
+div.sgl-close {
   position: fixed;
   right: 20px;
   top: 20px;
@@ -29,26 +34,50 @@ div.gallery-close {
   z-index: 15px;
 }
 
-div.gallery-previous {
+div.sgl-previous {
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   width: 50px;
+  height: 50px;
+  background-color: red;
   cursor: pointer;
 }
 
-div.gallery-image {
+.sgl-container() {
   position: fixed;
   top: 50%;
   left: 50%;
+}
+
+div.sgl-spinner {
+  .sgl-container();
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 15;
+
+  img {
+    .sgl-container();
+    margin-top: -((140px / 2) + (@tumbnails-height / 2));
+    margin-left: -(140px / 2);
+    width: 140px;
+    height: 140px;
+  }
+
+  img:first-child {
+    .animation(spin);
+  }
+}
+
+div.sgl-image {
+  .sgl-container();
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: 100% 100%;
   cursor: pointer;
   z-index: 10;
 
-  div.gallery-header {
+  div.sgl-header {
     background-color: rgba(0, 0, 0, 0.85);
     padding: 6px 10px;
 
@@ -62,27 +91,28 @@ div.gallery-image {
   }
 }
 
-div.gallery-tumbnails {
+div.sgl-tumbnails {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 95px;
+  height: @tumbnails-height - 5px;
   padding: 5px 0 0 10px;
   background-color: #000;
 
-  div.thumbnail {
+  div.sgl-thumbnail {
     display: inline-block;
-    width: 90px;
-    height: 90px;
+    width: @tumbnails-height - 10px;
+    height: @tumbnails-height - 10px;
     margin-right: 10px;
     background-position: 50% 50%;
     background-repeat: no-repeat;
-    background-size: auto 90px;
+    background-size: auto @tumbnails-height - 10px;
+    .border-radius(10px);
     cursor: pointer;
-    -webkit-border-radius: 10px;
-  }
 
-  div.selected {
-    border-color: blue;
+    &.selected {
+      padding: 2px;
+      background-color: red;
+    }
   }
 }
