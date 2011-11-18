@@ -130,6 +130,8 @@ class Gallery
           @images[cid].width  = element.width
           @images[cid].height = element.height
 
+          delete element
+
           callback.call @, cid
         ), 500
     else
@@ -179,7 +181,7 @@ class Gallery
     @tumbnails.html content
 
     @tumbnails.find('div.sgl-thumbnail').click (event) ->
-      _this.updateImage $(@).attr('data-gid')
+      _this.updateImage parseInt $(@).attr('data-gid'), 10
     @
 
 # Подключение к jQuery Plugins

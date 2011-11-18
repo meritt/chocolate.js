@@ -146,6 +146,7 @@
             _this.spinner.css('display', 'none');
             _this.images[cid].width = element.width;
             _this.images[cid].height = element.height;
+            delete element;
             return callback.call(_this, cid);
           }), 500);
         };
@@ -206,7 +207,7 @@
       });
       this.tumbnails.html(content);
       this.tumbnails.find('div.sgl-thumbnail').click(function(event) {
-        return _this.updateImage($(this).attr('data-gid'));
+        return _this.updateImage(parseInt($(this).attr('data-gid'), 10));
       });
       return this;
     };
