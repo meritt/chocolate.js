@@ -41,7 +41,6 @@ div.sgl-previous {
   left: 0;
   width: 50px;
   height: 50px;
-  background-color: red;
   cursor: pointer;
 }
 
@@ -73,7 +72,8 @@ div.sgl-image {
   .sgl-container();
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  .background-size(100%, 100%);
+  .box-shadow(10px, #111);
   cursor: pointer;
   z-index: 10;
 
@@ -106,7 +106,7 @@ div.sgl-tumbnails {
     margin-right: 10px;
     background-position: 50% 50%;
     background-repeat: no-repeat;
-    background-size: auto @tumbnails-height - 10px;
+    .background-size(auto, @tumbnails-height - 10px);
     .border-radius(10px);
     cursor: pointer;
 
