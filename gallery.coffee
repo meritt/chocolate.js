@@ -57,17 +57,26 @@ class Gallery
       if source
         cid = ++counter
 
-        image.addClass('sgl-item').attr('data-cid', cid).click (event) =>
-          event.stopPropagation()
-          event.preventDefault()
-          @current = cid
-          @show cid
+        image.addClass('sgl-item').click (event) => @_initialShow event, cid
 
         @images[cid] =
           source:    source
           title:     title
-          thumbnail: image.attr('src')
+          thumbnail: image.attr 'src'
+
+        element = new Image()
+        element.src = @images[cid].thumbnail
+        element.onload = (event) =>
+          image.before '<span class="sgl-item-hover" data-sglid="' + cid + '"></span>'
+          $('span[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) =>
+            @_initialShow event, cid
     @
+
+  _initialShow: (event, cid) ->
+    event.stopPropagation()
+    event.preventDefault()
+    @current = cid
+    @show cid
 
   ###
    Показать изображение на большом экране
@@ -98,7 +107,7 @@ class Gallery
     @current = cid
 
     @tumbnails.find('div.selected').removeClass 'selected'
-    @tumbnails.find('div[data-gid=' + cid + ']').addClass 'selected'
+    @tumbnails.find('div[data-cid=' + cid + ']').addClass 'selected'
 
     @getImageSize cid, (cid) ->
       image = @images[cid]
@@ -176,12 +185,12 @@ class Gallery
 
     $.each @images, (cid, image) ->
       selected = if current and current is image.source then ' selected' else ''
-      content += '<div class="sgl-thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (if image.title then ' title="' + image.title + '"' else '') + '></div>'
+      content += '<div class="sgl-thumbnail' + selected + '" data-cid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (if image.title then ' title="' + image.title + '"' else '') + '></div>'
 
     @tumbnails.html content
 
     @tumbnails.find('div.sgl-thumbnail').click (event) ->
-      _this.updateImage parseInt $(@).attr('data-gid'), 10
+      _this.updateImage parseInt $(@).attr('data-cid'), 10
     @
 
 # Подключение к jQuery Plugins

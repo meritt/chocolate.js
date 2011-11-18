@@ -58,26 +58,41 @@
       var _this = this;
       if (!images || images.length === 0) return this;
       $.each(images, function(index, image) {
-        var cid, source, title;
+        var cid, element, source, title;
         image = $(image);
         source = image.attr('data-src') || image.parent().attr('href') || null;
         title = image.attr('data-title') || image.attr('title') || null;
         if (source) {
           cid = ++counter;
-          image.addClass('sgl-item').attr('data-cid', cid).click(function(event) {
-            event.stopPropagation();
-            event.preventDefault();
-            _this.current = cid;
-            return _this.show(cid);
+          image.addClass('sgl-item').click(function(event) {
+            return _this._initialShow(event, cid);
           });
-          return _this.images[cid] = {
+          _this.images[cid] = {
             source: source,
             title: title,
             thumbnail: image.attr('src')
           };
+          element = new Image();
+          element.src = _this.images[cid].thumbnail;
+          return element.onload = function(event) {
+            image.before('<span class="sgl-item-hover" data-sglid="' + cid + '"></span>');
+            return $('span[data-sglid=' + cid + ']').css({
+              width: image.width(),
+              height: image.height()
+            }).click(function(event) {
+              return _this._initialShow(event, cid);
+            });
+          };
         }
       });
       return this;
+    };
+
+    Gallery.prototype._initialShow = function(event, cid) {
+      event.stopPropagation();
+      event.preventDefault();
+      this.current = cid;
+      return this.show(cid);
     };
 
     /*
@@ -116,7 +131,7 @@
     Gallery.prototype.updateImage = function(cid) {
       this.current = cid;
       this.tumbnails.find('div.selected').removeClass('selected');
-      this.tumbnails.find('div[data-gid=' + cid + ']').addClass('selected');
+      this.tumbnails.find('div[data-cid=' + cid + ']').addClass('selected');
       this.getImageSize(cid, function(cid) {
         var content, image;
         image = this.images[cid];
@@ -203,11 +218,11 @@
       $.each(this.images, function(cid, image) {
         var selected;
         selected = current && current === image.source ? ' selected' : '';
-        return content += '<div class="sgl-thumbnail' + selected + '" data-gid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (image.title ? ' title="' + image.title + '"' : '') + '></div>';
+        return content += '<div class="sgl-thumbnail' + selected + '" data-cid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (image.title ? ' title="' + image.title + '"' : '') + '></div>';
       });
       this.tumbnails.html(content);
       this.tumbnails.find('div.sgl-thumbnail').click(function(event) {
-        return _this.updateImage(parseInt($(this).attr('data-gid'), 10));
+        return _this.updateImage(parseInt($(this).attr('data-cid'), 10));
       });
       return this;
     };

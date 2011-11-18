@@ -1,4 +1,4 @@
-@-webkit-keyframes spin{from{-webkit-transform:rotate(0deg);} to{-webkit-transform:rotate(360deg);}}img.sgl-item{cursor:pointer;}img.sgl-item:hover{background-color:rgba(0, 0, 0, 0.9);border:4px dotted red;}
+@-webkit-keyframes spin{from{-webkit-transform:rotate(0deg);} to{-webkit-transform:rotate(360deg);}}.sgl-item-hover{position:absolute;display:block;cursor:pointer;}.sgl-item-hover:hover{background-color:rgba(0, 0, 0, 0.4);}
 div.sgl-overlay{position:fixed;top:0;left:0;display:none;width:100%;height:100%;background-color:rgba(0, 0, 0, 0.8);z-index:5;}
 div.sgl-close{position:fixed;right:20px;top:20px;width:25px;height:25px;background-color:red;cursor:pointer;z-index:15px;}
 div.sgl-previous{position:fixed;top:0;bottom:0;left:0;width:50px;height:50px;cursor:pointer;}
