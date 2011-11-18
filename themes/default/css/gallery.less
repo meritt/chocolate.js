@@ -35,14 +35,24 @@ div.sgl-close {
   z-index: 15px;
 }
 
-div.sgl-previous {
+.sgl-sidecolumn() {
   position: fixed;
   top: 0;
   bottom: 0;
-  left: 0;
   width: 50px;
   height: 50px;
+  background-color: blue;
+}
+
+div.sgl-leftside {
+  .sgl-sidecolumn();
+  left: 0;
   cursor: pointer;
+}
+
+div.sgl-rightside {
+  .sgl-sidecolumn();
+  right: 0;
 }
 
 .sgl-container() {

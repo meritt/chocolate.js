@@ -1,12 +1,13 @@
 template = '<div class="sgl-overlay">' +
-           '<div class="sgl-close"></div>' +
-           '<div class="sgl-previous"></div>' +
+           '<div class="sgl-leftside"></div>' +
            '<div class="sgl-spinner">' +
            ' <img src="../themes/default/images/spinner-bg.png" alt="">' +
            ' <img src="../themes/default/images/spinner-serenity.png" alt="">' +
            '</div>' +
            '<div class="sgl-image"></div>' +
+           '<div class="sgl-rightside"></div>' +
            '<div class="sgl-tumbnails"></div>' +
+           '<div class="sgl-close"></div>' +
            '</div>'
 
 counter = 0
@@ -21,14 +22,16 @@ class Gallery
   constructor: (@options = {}, images) ->
     @overlay   = $(template).appendTo 'body'
     @container = @overlay.find '.sgl-image'
-    @tumbnails = @overlay.find '.sgl-tumbnails'
-    @previous  = @overlay.find '.sgl-previous'
     @spinner   = @overlay.find '.sgl-spinner'
+    @leftside  = @overlay.find '.sgl-leftside'
+    @rightside = @overlay.find '.sgl-rightside'
+    @tumbnails = @overlay.find '.sgl-tumbnails'
 
-    @overlay.click (event) => @close() if $(event.target).hasClass 'sgl-overlay'
+    # @overlay.click (event) => @close() if $(event.target).hasClass 'sgl-overlay'
     @overlay.find('.sgl-close').click (event) => @close()
 
-    @previous.click (event) => @prev()
+    @leftside.click (event) => @prev()
+    @rightside.click (event) => @close()
     @container.click (event) => @next()
 
     $(document).bind 'keyup', (event) =>
@@ -151,9 +154,10 @@ class Gallery
    Обновление размеров блока с главным изображением
   ###
   updateDimensions: (width, height) ->
-    windowWidth  = window.innerWidth - 50 # padding: 50px
+    innerWidth   = window.innerWidth
+    windowWidth  = innerWidth - 50    # padding: 50px
     innerHeight  = window.innerHeight
-    windowHeight = innerHeight - 150      # padding: 50px - 100px (tumbnails height)
+    windowHeight = innerHeight - 150  # padding: 50px - 100px (tumbnails height)
 
     if width > windowWidth
       height = (windowWidth * height) / width
@@ -166,9 +170,13 @@ class Gallery
     left = parseInt(width / 2, 10)
     top  = parseInt(height / 2, 10) + parseInt(@tumbnails.height() / 2, 10)
 
+    style = 'width': (innerWidth / 2 - left) + 'px', 'height': innerHeight + 'px'
+
+    @leftside.css  style
+    @rightside.css style
+
     style = 'width': width, 'height': height, 'margin-left': '-' + left + 'px', 'margin-top': '-' + top + 'px'
 
-    @previous.css  'width': (windowWidth / 2 - left) + 'px', 'height': innerHeight + 'px'
     @container.css style
     @spinner.css   style
     @

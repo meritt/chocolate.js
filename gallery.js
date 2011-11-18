@@ -1,7 +1,7 @@
 (function() {
   var Gallery, counter, template;
 
-  template = '<div class="sgl-overlay">' + '<div class="sgl-close"></div>' + '<div class="sgl-previous"></div>' + '<div class="sgl-spinner">' + ' <img src="../themes/default/images/spinner-bg.png" alt="">' + ' <img src="../themes/default/images/spinner-serenity.png" alt="">' + '</div>' + '<div class="sgl-image"></div>' + '<div class="sgl-tumbnails"></div>' + '</div>';
+  template = '<div class="sgl-overlay">' + '<div class="sgl-leftside"></div>' + '<div class="sgl-spinner">' + ' <img src="../themes/default/images/spinner-bg.png" alt="">' + ' <img src="../themes/default/images/spinner-serenity.png" alt="">' + '</div>' + '<div class="sgl-image"></div>' + '<div class="sgl-rightside"></div>' + '<div class="sgl-tumbnails"></div>' + '<div class="sgl-close"></div>' + '</div>';
 
   counter = 0;
 
@@ -20,17 +20,18 @@
       this.options = options != null ? options : {};
       this.overlay = $(template).appendTo('body');
       this.container = this.overlay.find('.sgl-image');
-      this.tumbnails = this.overlay.find('.sgl-tumbnails');
-      this.previous = this.overlay.find('.sgl-previous');
       this.spinner = this.overlay.find('.sgl-spinner');
-      this.overlay.click(function(event) {
-        if ($(event.target).hasClass('sgl-overlay')) return _this.close();
-      });
+      this.leftside = this.overlay.find('.sgl-leftside');
+      this.rightside = this.overlay.find('.sgl-rightside');
+      this.tumbnails = this.overlay.find('.sgl-tumbnails');
       this.overlay.find('.sgl-close').click(function(event) {
         return _this.close();
       });
-      this.previous.click(function(event) {
+      this.leftside.click(function(event) {
         return _this.prev();
+      });
+      this.rightside.click(function(event) {
+        return _this.close();
       });
       this.container.click(function(event) {
         return _this.next();
@@ -176,8 +177,9 @@
     */
 
     Gallery.prototype.updateDimensions = function(width, height) {
-      var innerHeight, left, style, top, windowHeight, windowWidth;
-      windowWidth = window.innerWidth - 50;
+      var innerHeight, innerWidth, left, style, top, windowHeight, windowWidth;
+      innerWidth = window.innerWidth;
+      windowWidth = innerWidth - 50;
       innerHeight = window.innerHeight;
       windowHeight = innerHeight - 150;
       if (width > windowWidth) {
@@ -191,15 +193,17 @@
       left = parseInt(width / 2, 10);
       top = parseInt(height / 2, 10) + parseInt(this.tumbnails.height() / 2, 10);
       style = {
+        'width': (innerWidth / 2 - left) + 'px',
+        'height': innerHeight + 'px'
+      };
+      this.leftside.css(style);
+      this.rightside.css(style);
+      style = {
         'width': width,
         'height': height,
         'margin-left': '-' + left + 'px',
         'margin-top': '-' + top + 'px'
       };
-      this.previous.css({
-        'width': (windowWidth / 2 - left) + 'px',
-        'height': innerHeight + 'px'
-      });
       this.container.css(style);
       this.spinner.css(style);
       return this;
