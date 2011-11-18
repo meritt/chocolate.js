@@ -71,8 +71,6 @@
             return _this.show(cid);
           });
           return _this.images[cid] = {
-            index: cid,
-            element: image,
             source: source,
             title: title,
             thumbnail: image.attr('src')

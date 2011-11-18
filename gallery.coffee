@@ -64,8 +64,6 @@ class Gallery
           @show cid
 
         @images[cid] =
-          index:     cid
-          element:   image
           source:    source
           title:     title
           thumbnail: image.attr('src')
