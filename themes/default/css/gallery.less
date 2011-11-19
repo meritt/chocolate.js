@@ -1,7 +1,7 @@
 @import "../../less-framework/function.less";
 @import "keyframes.less";
 
-@tumbnails-height: 100px;
+@thumbnails-height: 100px;
 
 .sgl-item-hover {
   position: absolute;
@@ -67,7 +67,7 @@ div.sgl-spinner {
 
   img {
     .sgl-container();
-    margin-top: -((140px / 2) + (@tumbnails-height / 2));
+    margin-top: -((140px / 2) + (@thumbnails-height / 2));
     margin-left: -(140px / 2);
     width: 140px;
     height: 140px;
@@ -101,22 +101,22 @@ div.sgl-container {
   }
 }
 
-div.sgl-tumbnails {
+div.sgl-thumbnails {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: @tumbnails-height - 5px;
+  height: @thumbnails-height - 5px;
   padding: 5px 0 0 10px;
   background-color: #000;
 
-  div.sgl-tumbnail {
+  div.sgl-thumbnail {
     display: inline-block;
-    width: @tumbnails-height - 10px;
-    height: @tumbnails-height - 10px;
+    width: @thumbnails-height - 10px;
+    height: @thumbnails-height - 10px;
     margin-right: 10px;
     background-position: 50% 50%;
     background-repeat: no-repeat;
-    .background-size(auto, @tumbnails-height - 10px);
+    .background-size(auto, @thumbnails-height - 10px);
     .border-radius(10px);
     cursor: pointer;
 

@@ -9,7 +9,7 @@
   {{spinner}}\
   <div class="sgl-container"></div>\
   <div class="sgl-rightside"></div>\
-  {{tumbnails}}\
+  {{thumbnails}}\
   <div class="sgl-close"></div>\
 </div>\
 ',
@@ -19,11 +19,11 @@
  <img src="../themes/default/images/spinner-serenity.png" alt="">\
 </div>\
 ',
-    tumbnails: '\
-<div class="sgl-tumbnails"></div>\
+    thumbnails: '\
+<div class="sgl-thumbnails"></div>\
 ',
-    tumbnail: '\
-<div class="sgl-tumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url(\'{{tumbnail}}\')"{{title}}></div>\
+    thumbnail: '\
+<div class="sgl-thumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url(\'{{thumbnail}}\')"{{title}}></div>\
 ',
     header: '\
 <div class="sgl-header"><h1>{{title}}</h1></div>\
@@ -56,7 +56,7 @@
         container: nextAction,
         rightside: closeAction
       },
-      tumbnails: true
+      thumbnails: true
     };
 
     /*
@@ -71,10 +71,10 @@
       }
       template = templates.overlay;
       template = template.replace('{{spinner}}', templates.spinner);
-      template = template.replace('{{tumbnails}}', this.options.tumbnails ? templates.tumbnails : '');
+      template = template.replace('{{thumbnails}}', this.options.thumbnails ? templates.thumbnails : '');
       this.overlay = $(template).appendTo('body');
       elements = ['container', 'spinner', 'leftside', 'rightside'];
-      if (this.options.tumbnails) elements.push('tumbnails');
+      if (this.options.thumbnails) elements.push('thumbnails');
       for (_i = 0, _len = elements.length; _i < _len; _i++) {
         element = elements[_i];
         this[element] = this.overlay.find('.sgl-' + element);
@@ -135,10 +135,10 @@
           _this.images[cid] = {
             source: source,
             title: title,
-            tumbnail: image.attr('src')
+            thumbnail: image.attr('src')
           };
           element = new Image();
-          element.src = _this.images[cid].tumbnail;
+          element.src = _this.images[cid].thumbnail;
           return element.onload = function(event) {
             image.before(templates.hover.replace('{{cid}}', cid));
             return $('[data-sglid=' + cid + ']').css({
@@ -165,7 +165,7 @@
     */
 
     Gallery.prototype.show = function(cid) {
-      if (this.options.tumbnails) this.createTumbnails();
+      if (this.options.thumbnails) this.createThumbnails();
       this.updateImage(cid);
       this.overlay.css('display', 'block');
       return this;
@@ -196,9 +196,9 @@
 
     Gallery.prototype.updateImage = function(cid) {
       this.current = cid;
-      if (this.options.tumbnails) {
-        this.tumbnails.find('.selected').removeClass('selected');
-        this.tumbnails.find('[data-cid=' + cid + ']').addClass('selected');
+      if (this.options.thumbnails) {
+        this.thumbnails.find('.selected').removeClass('selected');
+        this.thumbnails.find('[data-cid=' + cid + ']').addClass('selected');
       }
       this.getImageSize(cid, function(cid) {
         var image;
@@ -245,12 +245,12 @@
     */
 
     Gallery.prototype.updateDimensions = function(width, height) {
-      var innerHeight, innerWidth, left, style, top, tumbnails, windowHeight, windowWidth;
-      tumbnails = this.options.tumbnails ? this.tumbnails.height() : 0;
+      var innerHeight, innerWidth, left, style, thumbnails, top, windowHeight, windowWidth;
+      thumbnails = this.options.thumbnails ? this.thumbnails.height() : 0;
       innerWidth = window.innerWidth;
       windowWidth = innerWidth - 50;
       innerHeight = window.innerHeight;
-      windowHeight = innerHeight - 50 - tumbnails;
+      windowHeight = innerHeight - 50 - thumbnails;
       if (width > windowWidth) {
         height = windowWidth * height / width;
         width = windowWidth;
@@ -261,7 +261,7 @@
       }
       left = parseInt(width / 2, 10);
       top = parseInt(height / 2, 10);
-      if (tumbnails > 0) top += parseInt(tumbnails / 2, 10);
+      if (thumbnails > 0) top += parseInt(thumbnails / 2, 10);
       style = {
         'width': (innerWidth / 2 - left) + 'px',
         'height': innerHeight + 'px'
@@ -283,9 +283,9 @@
        Создание панели для тумбнейлов
     */
 
-    Gallery.prototype.createTumbnails = function() {
+    Gallery.prototype.createThumbnails = function() {
       var content, current, _this;
-      if (!this.options.tumbnails || !this.current || this.images.length <= 1) {
+      if (!this.options.thumbnails || !this.current || this.images.length <= 1) {
         return this;
       }
       _this = this;
@@ -294,10 +294,10 @@
       $.each(this.images, function(cid, image) {
         var selected;
         selected = (current != null) === image.source ? ' selected' : '';
-        return content += templates.tumbnail.replace('{{selected}}', selected).replace('{{cid}}', cid).replace('{{tumbnail}}', image.tumbnail).replace('{{title}}', image.title ? ' title="' + image.title + '"' : '');
+        return content += templates.thumbnail.replace('{{selected}}', selected).replace('{{cid}}', cid).replace('{{thumbnail}}', image.thumbnail).replace('{{title}}', image.title ? ' title="' + image.title + '"' : '');
       });
-      this.tumbnails.html(content);
-      this.tumbnails.find('.sgl-tumbnail').click(function(event) {
+      this.thumbnails.html(content);
+      this.thumbnails.find('.sgl-thumbnail').click(function(event) {
         return _this.updateImage(parseInt($(this).attr('data-cid'), 10));
       });
       return this;

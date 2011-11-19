@@ -5,7 +5,7 @@ templates =
   {{spinner}}
   <div class="sgl-container"></div>
   <div class="sgl-rightside"></div>
-  {{tumbnails}}
+  {{thumbnails}}
   <div class="sgl-close"></div>
 </div>
 '
@@ -15,11 +15,11 @@ templates =
  <img src="../themes/default/images/spinner-serenity.png" alt="">
 </div>
 '
-  tumbnails: '
-<div class="sgl-tumbnails"></div>
+  thumbnails: '
+<div class="sgl-thumbnails"></div>
 '
-  tumbnail: '
-<div class="sgl-tumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url(\'{{tumbnail}}\')"{{title}}></div>
+  thumbnail: '
+<div class="sgl-thumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url(\'{{thumbnail}}\')"{{title}}></div>
 '
   header: '
 <div class="sgl-header"><h1>{{title}}</h1></div>
@@ -46,7 +46,7 @@ class Gallery
       leftside:   prevAction
       container:  nextAction
       rightside:  closeAction
-    tumbnails: true
+    thumbnails: true
 
   ###
    Конструктор
@@ -56,12 +56,12 @@ class Gallery
 
     template = templates.overlay
     template = template.replace '{{spinner}}', templates.spinner
-    template = template.replace '{{tumbnails}}', if @options.tumbnails then templates.tumbnails else ''
+    template = template.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
 
     @overlay = $(template).appendTo 'body'
 
     elements = ['container', 'spinner', 'leftside', 'rightside']
-    elements.push 'tumbnails' if @options.tumbnails
+    elements.push 'thumbnails' if @options.thumbnails
 
     @[element] = @overlay.find '.sgl-' + element for element in elements
 
@@ -107,10 +107,10 @@ class Gallery
         @images[cid] =
           source:   source
           title:    title
-          tumbnail: image.attr 'src'
+          thumbnail: image.attr 'src'
 
         element = new Image()
-        element.src = @images[cid].tumbnail
+        element.src = @images[cid].thumbnail
         element.onload = (event) =>
           image.before templates.hover.replace '{{cid}}', cid
           $('[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) =>
@@ -127,7 +127,7 @@ class Gallery
    Показать изображение на большом экране
   ###
   show: (cid) ->
-    @createTumbnails() if @options.tumbnails
+    @createThumbnails() if @options.thumbnails
     @updateImage cid
     @overlay.css 'display', 'block'
     @
@@ -152,9 +152,9 @@ class Gallery
   updateImage: (cid) ->
     @current = cid
 
-    if @options.tumbnails
-      @tumbnails.find('.selected').removeClass 'selected'
-      @tumbnails.find('[data-cid=' + cid + ']').addClass 'selected'
+    if @options.thumbnails
+      @thumbnails.find('.selected').removeClass 'selected'
+      @thumbnails.find('[data-cid=' + cid + ']').addClass 'selected'
 
     @getImageSize cid, (cid) ->
       image = @images[cid]
@@ -196,12 +196,12 @@ class Gallery
    Обновление размеров блока с главным изображением
   ###
   updateDimensions: (width, height) ->
-    tumbnails = if @options.tumbnails then @tumbnails.height() else 0
+    thumbnails = if @options.thumbnails then @thumbnails.height() else 0
 
     innerWidth   = window.innerWidth
     windowWidth  = innerWidth - 50               # padding: 50px
     innerHeight  = window.innerHeight
-    windowHeight = innerHeight - 50 - tumbnails  # padding: 50px - 100px (tumbnails height)
+    windowHeight = innerHeight - 50 - thumbnails  # padding: 50px - 100px (thumbnails height)
 
     if width > windowWidth
       height = windowWidth * height / width
@@ -213,7 +213,7 @@ class Gallery
 
     left = parseInt width / 2, 10
     top  = parseInt height / 2, 10
-    top += parseInt tumbnails / 2, 10 if tumbnails > 0
+    top += parseInt thumbnails / 2, 10 if thumbnails > 0
 
     style = 'width': (innerWidth / 2 - left) + 'px', 'height': innerHeight + 'px'
 
@@ -229,8 +229,8 @@ class Gallery
   ###
    Создание панели для тумбнейлов
   ###
-  createTumbnails: ->
-    return @ if not @options.tumbnails or not @current or @images.length <= 1
+  createThumbnails: ->
+    return @ if not @options.thumbnails or not @current or @images.length <= 1
 
     _this   = @
     current = @images[@current].source
@@ -238,14 +238,14 @@ class Gallery
 
     $.each @images, (cid, image) ->
       selected = if current? is image.source then ' selected' else ''
-      content += templates.tumbnail.replace('{{selected}}', selected)
-                                   .replace('{{cid}}', cid)
-                                   .replace('{{tumbnail}}', image.tumbnail)
-                                   .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
+      content += templates.thumbnail.replace('{{selected}}', selected)
+                                    .replace('{{cid}}', cid)
+                                    .replace('{{thumbnail}}', image.thumbnail)
+                                    .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
-    @tumbnails.html content
+    @thumbnails.html content
 
-    @tumbnails.find('.sgl-tumbnail').click (event) ->
+    @thumbnails.find('.sgl-thumbnail').click (event) ->
       _this.updateImage parseInt $(@).attr('data-cid'), 10
     @
 
