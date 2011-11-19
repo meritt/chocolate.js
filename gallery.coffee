@@ -99,9 +99,9 @@ class Gallery
       if object instanceof HTMLElement
         image  = $ object
         object =
-          source:    image.attr('data-src') || image.parent().attr('href') || null
-          title:     image.attr('data-title') || image.attr('title') || null
-          thumbnail: image.attr('src') || null
+          source:    image.attr('data-src') || image.parent().attr('href')
+          title:     image.attr('data-title') || image.attr('title')
+          thumbnail: image.attr('src')
 
       @_addToGallery object, image
     @
