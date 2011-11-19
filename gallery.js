@@ -85,7 +85,7 @@
       _ref = ['overlay', 'container', 'leftside', 'rightside'];
       for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
         element = _ref[_j];
-        this.prepareActionFor(element);
+        this._prepareActionFor(element);
       }
       $(document).bind('keyup', function(event) {
         if (_this.overlay.css('display') === 'block') {
@@ -102,7 +102,7 @@
       if (images) this.add(images);
     }
 
-    Gallery.prototype.prepareActionFor = function(element) {
+    Gallery.prototype._prepareActionFor = function(element) {
       var method, verify, _ref;
       var _this = this;
       method = (_ref = this.options.actions[element], __indexOf.call(existActions, _ref) >= 0) ? this.options.actions[element] : false;
@@ -120,44 +120,52 @@
     */
 
     Gallery.prototype.add = function(images) {
-      var _this = this;
+      var image, object, _i, _len;
       if (!images || images.length === 0) return this;
-      $.each(images, function(index, image) {
-        var cid, element, source, title;
-        image = $(image);
-        source = image.attr('data-src') || image.parent().attr('href') || null;
-        title = image.attr('data-title') || image.attr('title') || null;
-        if (source) {
-          cid = ++counter;
-          image.addClass('sgl-item').click(function(event) {
-            return _this._initialShow(event, cid);
-          });
-          _this.images[cid] = {
-            source: source,
-            title: title,
-            thumbnail: image.attr('src')
-          };
-          element = new Image();
-          element.src = _this.images[cid].thumbnail;
-          return element.onload = function(event) {
-            image.before(templates.hover.replace('{{cid}}', cid));
-            return $('[data-sglid=' + cid + ']').css({
-              width: image.width(),
-              height: image.height()
-            }).click(function(event) {
-              return _this._initialShow(event, cid);
-            });
+      for (_i = 0, _len = images.length; _i < _len; _i++) {
+        object = images[_i];
+        image = null;
+        if (object instanceof HTMLElement) {
+          image = $(object);
+          object = {
+            source: image.attr('data-src') || image.parent().attr('href') || null,
+            title: image.attr('data-title') || image.attr('title') || null,
+            thumbnail: image.attr('src') || null
           };
         }
-      });
+        this._addToGallery(object, image);
+      }
       return this;
     };
 
-    Gallery.prototype._initialShow = function(event, cid) {
-      event.stopPropagation();
-      event.preventDefault();
-      this.current = cid;
-      return this.show(cid);
+    Gallery.prototype._addToGallery = function(data, image) {
+      var cid, preload, showFirstImage;
+      var _this = this;
+      if (!data.source) return;
+      cid = ++counter;
+      if (!data.thumbnail) data.thumbnail = data.source;
+      this.images[cid] = data;
+      if (image) {
+        showFirstImage = function(event, cid) {
+          event.stopPropagation();
+          event.preventDefault();
+          return _this.show(cid);
+        };
+        image.addClass('sgl-item').click(function(event) {
+          return showFirstImage(event, cid);
+        });
+        preload = new Image();
+        preload.src = data.thumbnail;
+        return preload.onload = function(event) {
+          image.before(templates.hover.replace('{{cid}}', cid));
+          return $('[data-sglid=' + cid + ']').css({
+            width: image.width(),
+            height: image.height()
+          }).click(function(event) {
+            return showFirstImage(event, cid);
+          });
+        };
+      }
     };
 
     /*
@@ -165,6 +173,9 @@
     */
 
     Gallery.prototype.show = function(cid) {
+      if (cid == null) cid = 1;
+      if (this.images[cid] == null) throw 'Image not found';
+      if (this.current === null) this.current = cid;
       if (this.options.thumbnails) this.createThumbnails();
       this.updateImage(cid);
       this.overlay.css('display', 'block');
@@ -179,14 +190,14 @@
     Gallery.prototype.next = function() {
       var next;
       next = this.current + 1;
-      if (typeof this.images[next] !== 'undefined') this.updateImage(next);
+      if (this.images[next] != null) this.updateImage(next);
       return this;
     };
 
     Gallery.prototype.prev = function() {
       var prev;
       prev = this.current - 1;
-      if (typeof this.images[prev] !== 'undefined') this.updateImage(prev);
+      if (this.images[prev] != null) this.updateImage(prev);
       return this;
     };
 
@@ -205,9 +216,7 @@
         image = this.images[cid];
         this.updateDimensions(image.width, image.height);
         this.container.css('background-image', 'url(' + image.source + ')');
-        if (image.title) {
-          return this.container.html(templates.header.replace('{{title}}', image.title));
-        }
+        return this.container.html(image.title ? templates.header.replace('{{title}}', image.title) : '');
       });
       return this;
     };
@@ -225,19 +234,16 @@
         this.spinner.css('display', 'block');
         element = new Image();
         element.src = image.source;
-        element.onload = function(event) {
-          return setTimeout((function() {
-            _this.spinner.css('display', 'none');
-            _this.images[cid].width = element.width;
-            _this.images[cid].height = element.height;
-            delete element;
-            return after.call(_this, cid);
-          }), 500);
+        return element.onload = function(event) {
+          _this.spinner.css('display', 'none');
+          _this.images[cid].width = element.width;
+          _this.images[cid].height = element.height;
+          delete element;
+          return after.call(_this, cid);
         };
       } else {
-        after.call(this, cid);
+        return after.call(this, cid);
       }
-      return this;
     };
 
     /*
@@ -284,20 +290,20 @@
     */
 
     Gallery.prototype.createThumbnails = function() {
-      var content, current, _this;
+      var cid, content, current, image, selected, _ref, _this;
       if (!this.options.thumbnails || !this.current || this.images.length <= 1) {
         return this;
       }
       _this = this;
       current = this.images[this.current].source;
       content = '';
-      $.each(this.images, function(cid, image) {
-        var selected;
+      _ref = this.images;
+      for (cid in _ref) {
+        image = _ref[cid];
         selected = (current != null) === image.source ? ' selected' : '';
-        return content += templates.thumbnail.replace('{{selected}}', selected).replace('{{cid}}', cid).replace('{{thumbnail}}', image.thumbnail).replace('{{title}}', image.title ? ' title="' + image.title + '"' : '');
-      });
-      this.thumbnails.html(content);
-      this.thumbnails.find('.sgl-thumbnail').click(function(event) {
+        content += templates.thumbnail.replace('{{selected}}', selected).replace('{{cid}}', cid).replace('{{thumbnail}}', image.thumbnail).replace('{{title}}', image.title ? ' title="' + image.title + '"' : '');
+      }
+      this.thumbnails.html(content).find('.sgl-thumbnail').click(function(event) {
         return _this.updateImage(parseInt($(this).attr('data-cid'), 10));
       });
       return this;
@@ -306,6 +312,8 @@
     return Gallery;
 
   })();
+
+  window.sglGallery = Gallery;
 
   if (jQuery && jQuery.fn) {
     jQuery.fn.gallery = function() {

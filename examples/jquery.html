@@ -23,6 +23,20 @@
   <script src="../gallery.js"></script>
   <script>
     $(document).ready(function() {
+      // var images = [{
+      //   'source': 'http://edmullen.net/test/rc_small.jpg',
+      // }, {
+      //   'source': 'http://serenity.su/static/i/for_blog/2.png',
+      //   'title':  '222222'
+      // }, {
+      //   'source':    'http://serenity.su/static/i/for_blog/3.png',
+      //   'title':     '77777',
+      //   'thumbnail': 'http://serenity.su/static/i/for_blog/4.png'
+      // }];
+      //
+      // var gallery = new sglGallery();
+      // gallery.add(images).show();
+
       $('img[itemprop=image]').gallery({
         actions: {
           overlay:    'close',
@@ -30,7 +44,7 @@
           container:  false,
           rightside:  'next'
         },
-        thumbnails: false
+        // thumbnails: false
       });
     })
   </script>

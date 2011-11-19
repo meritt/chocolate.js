@@ -67,7 +67,7 @@ class Gallery
 
     @overlay.find('.sgl-close').click (event) => @close()
 
-    @prepareActionFor element for element in ['overlay', 'container', 'leftside', 'rightside']
+    @_prepareActionFor element for element in ['overlay', 'container', 'leftside', 'rightside']
 
     $(document).bind 'keyup', (event) =>
       if @overlay.css('display') is 'block'
@@ -81,7 +81,7 @@ class Gallery
 
     @add images if images
 
-  prepareActionFor: (element) ->
+  _prepareActionFor: (element) ->
     method = if @options.actions[element] in existActions then @options.actions[element] else false
     if method
       verify = @[element].attr 'class'
@@ -94,39 +94,50 @@ class Gallery
   add: (images) ->
     return @ if not images or images.length is 0
 
-    $.each images, (index, image) =>
-      image  = $ image
-      source = image.attr('data-src') || image.parent().attr('href') || null
-      title  = image.attr('data-title') || image.attr('title') || null
+    for object in images
+      image = null
+      if object instanceof HTMLElement
+        image  = $ object
+        object =
+          source:    image.attr('data-src') || image.parent().attr('href') || null
+          title:     image.attr('data-title') || image.attr('title') || null
+          thumbnail: image.attr('src') || null
 
-      if source
-        cid = ++counter
-
-        image.addClass('sgl-item').click (event) => @_initialShow event, cid
-
-        @images[cid] =
-          source:   source
-          title:    title
-          thumbnail: image.attr 'src'
-
-        element = new Image()
-        element.src = @images[cid].thumbnail
-        element.onload = (event) =>
-          image.before templates.hover.replace '{{cid}}', cid
-          $('[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) =>
-            @_initialShow event, cid
+      @_addToGallery object, image
     @
 
-  _initialShow: (event, cid) ->
-    event.stopPropagation()
-    event.preventDefault()
-    @current = cid
-    @show cid
+  _addToGallery: (data, image) ->
+    return unless data.source
+
+    cid = ++counter
+
+    data.thumbnail = data.source unless data.thumbnail
+    @images[cid] = data
+
+    if image
+      showFirstImage = (event, cid) =>
+        event.stopPropagation()
+        event.preventDefault()
+        @show cid
+
+      image.addClass('sgl-item').click (event) -> showFirstImage event, cid
+
+      preload = new Image()
+      preload.src = data.thumbnail
+      preload.onload = (event) =>
+        image.before templates.hover.replace '{{cid}}', cid
+        $('[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) ->
+          showFirstImage event, cid
 
   ###
    Показать изображение на большом экране
   ###
   show: (cid) ->
+    cid = 1 unless cid?
+    throw 'Image not found' unless @images[cid]?
+
+    @current = cid if @current is null
+
     @createThumbnails() if @options.thumbnails
     @updateImage cid
     @overlay.css 'display', 'block'
@@ -138,12 +149,12 @@ class Gallery
 
   next: ->
     next = @current + 1
-    @updateImage next if typeof @images[next] isnt 'undefined'
+    @updateImage next if @images[next]?
     @
 
   prev: ->
     prev = @current - 1
-    @updateImage prev if typeof @images[prev] isnt 'undefined'
+    @updateImage prev if @images[prev]?
     @
 
   ###
@@ -162,7 +173,7 @@ class Gallery
       @updateDimensions image.width, image.height
 
       @container.css 'background-image', 'url(' + image.source + ')'
-      @container.html templates.header.replace '{{title}}', image.title if image.title
+      @container.html if image.title then templates.header.replace '{{title}}', image.title else ''
     @
 
   ###
@@ -178,19 +189,16 @@ class Gallery
       element.src = image.source
 
       element.onload = (event) =>
-        setTimeout (=>
-          @spinner.css 'display', 'none'
+        @spinner.css 'display', 'none'
 
-          @images[cid].width  = element.width
-          @images[cid].height = element.height
+        @images[cid].width  = element.width
+        @images[cid].height = element.height
 
-          delete element
+        delete element
 
-          after.call @, cid
-        ), 500
+        after.call @, cid
     else
       after.call @, cid
-    @
 
   ###
    Обновление размеров блока с главным изображением
@@ -199,9 +207,9 @@ class Gallery
     thumbnails = if @options.thumbnails then @thumbnails.height() else 0
 
     innerWidth   = window.innerWidth
-    windowWidth  = innerWidth - 50               # padding: 50px
+    windowWidth  = innerWidth - 50
     innerHeight  = window.innerHeight
-    windowHeight = innerHeight - 50 - thumbnails  # padding: 50px - 100px (thumbnails height)
+    windowHeight = innerHeight - 50 - thumbnails
 
     if width > windowWidth
       height = windowWidth * height / width
@@ -236,18 +244,19 @@ class Gallery
     current = @images[@current].source
     content = ''
 
-    $.each @images, (cid, image) ->
+    for cid, image of @images
       selected = if current? is image.source then ' selected' else ''
       content += templates.thumbnail.replace('{{selected}}', selected)
                                     .replace('{{cid}}', cid)
                                     .replace('{{thumbnail}}', image.thumbnail)
                                     .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
-    @thumbnails.html content
-
-    @thumbnails.find('.sgl-thumbnail').click (event) ->
+    @thumbnails.html(content).find('.sgl-thumbnail').click (event) ->
       _this.updateImage parseInt $(@).attr('data-cid'), 10
     @
+
+# Экспорт в глобальное пространство
+window.sglGallery = Gallery
 
 # Подключение к jQuery Plugins
 if jQuery and jQuery.fn
