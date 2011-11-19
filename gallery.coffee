@@ -1,14 +1,32 @@
-template = '<div class="sgl-overlay">' +
-           '<div class="sgl-leftside"></div>' +
-           '<div class="sgl-spinner">' +
-           ' <img src="../themes/default/images/spinner-bg.png" alt="">' +
-           ' <img src="../themes/default/images/spinner-serenity.png" alt="">' +
-           '</div>' +
-           '<div class="sgl-image"></div>' +
-           '<div class="sgl-rightside"></div>' +
-           '<div class="sgl-tumbnails"></div>' +
-           '<div class="sgl-close"></div>' +
-           '</div>'
+templates =
+  overlay: '
+<div class="sgl-overlay">
+  <div class="sgl-leftside"></div>
+  {{spinner}}
+  <div class="sgl-container"></div>
+  <div class="sgl-rightside"></div>
+  {{tumbnails}}
+  <div class="sgl-close"></div>
+</div>
+'
+  spinner: '
+<div class="sgl-spinner">
+ <img src="../themes/default/images/spinner-bg.png" alt="">
+ <img src="../themes/default/images/spinner-serenity.png" alt="">
+</div>
+'
+  tumbnails: '
+<div class="sgl-tumbnails"></div>
+'
+  tumbnail: '
+<div class="sgl-tumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url(\'{{tumbnail}}\')"{{title}}></div>
+'
+  header: '
+<div class="sgl-header"><h1>{{title}}</h1></div>
+'
+  hover: '
+<span class="sgl-item-hover" data-sglid="{{cid}}"></span>
+'
 
 counter = 0
 
@@ -16,17 +34,19 @@ nextAction  = 'next'
 prevAction  = 'prev'
 closeAction = 'close'
 
+existActions = [nextAction, prevAction, closeAction]
+
 class Gallery
   images: {}
   current: null
 
   options:
-    overlay:    false
-    leftside:   prevAction
-    container:  nextAction
-    rightside:  closeAction
-
-  actions: [nextAction, prevAction, closeAction]
+    actions:
+      overlay:    false
+      leftside:   prevAction
+      container:  nextAction
+      rightside:  closeAction
+    tumbnails: true
 
   ###
    Конструктор
@@ -34,13 +54,16 @@ class Gallery
   constructor: (images, options) ->
     @options = $.extend @options, options if options and typeof options is 'object'
 
+    template = templates.overlay
+    template = template.replace '{{spinner}}', templates.spinner
+    template = template.replace '{{tumbnails}}', if @options.tumbnails then templates.tumbnails else ''
+
     @overlay = $(template).appendTo 'body'
 
-    @container = @overlay.find '.sgl-image'
-    @spinner   = @overlay.find '.sgl-spinner'
-    @leftside  = @overlay.find '.sgl-leftside'
-    @rightside = @overlay.find '.sgl-rightside'
-    @tumbnails = @overlay.find '.sgl-tumbnails'
+    elements = ['container', 'spinner', 'leftside', 'rightside']
+    elements.push 'tumbnails' if @options.tumbnails
+
+    @[element] = @overlay.find '.sgl-' + element for element in elements
 
     @overlay.find('.sgl-close').click (event) => @close()
 
@@ -59,7 +82,7 @@ class Gallery
     @add images if images
 
   prepareActionFor: (element) ->
-    method = if @options[element] in @actions then @options[element] else false
+    method = if @options.actions[element] in existActions then @options.actions[element] else false
     if method
       verify = @[element].attr 'class'
       @[element].click (event) => @[method]() if $(event.target).hasClass verify
@@ -82,15 +105,15 @@ class Gallery
         image.addClass('sgl-item').click (event) => @_initialShow event, cid
 
         @images[cid] =
-          source:    source
-          title:     title
-          thumbnail: image.attr 'src'
+          source:   source
+          title:    title
+          tumbnail: image.attr 'src'
 
         element = new Image()
-        element.src = @images[cid].thumbnail
+        element.src = @images[cid].tumbnail
         element.onload = (event) =>
-          image.before '<span class="sgl-item-hover" data-sglid="' + cid + '"></span>'
-          $('span[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) =>
+          image.before templates.hover.replace '{{cid}}', cid
+          $('[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) =>
             @_initialShow event, cid
     @
 
@@ -104,7 +127,8 @@ class Gallery
    Показать изображение на большом экране
   ###
   show: (cid) ->
-    @createThumbnails().updateImage cid
+    @createTumbnails() if @options.tumbnails
+    @updateImage cid
     @overlay.css 'display', 'block'
     @
 
@@ -128,24 +152,23 @@ class Gallery
   updateImage: (cid) ->
     @current = cid
 
-    @tumbnails.find('div.selected').removeClass 'selected'
-    @tumbnails.find('div[data-cid=' + cid + ']').addClass 'selected'
+    if @options.tumbnails
+      @tumbnails.find('.selected').removeClass 'selected'
+      @tumbnails.find('[data-cid=' + cid + ']').addClass 'selected'
 
     @getImageSize cid, (cid) ->
       image = @images[cid]
 
       @updateDimensions image.width, image.height
 
-      content = if image.title then '<div class="sgl-header"><h1>' + image.title + '</h1></div>' else ''
-
       @container.css 'background-image', 'url(' + image.source + ')'
-      @container.html content
+      @container.html templates.header.replace '{{title}}', image.title if image.title
     @
 
   ###
    Обновление размеров блока с главным изображением
   ###
-  getImageSize: (cid, callback = ->) ->
+  getImageSize: (cid, after = ->) ->
     image = @images[cid]
 
     if not image.width or not image.height
@@ -163,31 +186,34 @@ class Gallery
 
           delete element
 
-          callback.call @, cid
+          after.call @, cid
         ), 500
     else
-      callback.call @, cid
+      after.call @, cid
     @
 
   ###
    Обновление размеров блока с главным изображением
   ###
   updateDimensions: (width, height) ->
+    tumbnails = if @options.tumbnails then @tumbnails.height() else 0
+
     innerWidth   = window.innerWidth
-    windowWidth  = innerWidth - 50    # padding: 50px
+    windowWidth  = innerWidth - 50               # padding: 50px
     innerHeight  = window.innerHeight
-    windowHeight = innerHeight - 150  # padding: 50px - 100px (tumbnails height)
+    windowHeight = innerHeight - 50 - tumbnails  # padding: 50px - 100px (tumbnails height)
 
     if width > windowWidth
-      height = (windowWidth * height) / width
+      height = windowWidth * height / width
       width  = windowWidth
 
     if height > windowHeight
-      width  = (windowHeight * width) / height
+      width  = windowHeight * width / height
       height = windowHeight
 
-    left = parseInt(width / 2, 10)
-    top  = parseInt(height / 2, 10) + parseInt(@tumbnails.height() / 2, 10)
+    left = parseInt width / 2, 10
+    top  = parseInt height / 2, 10
+    top += parseInt tumbnails / 2, 10 if tumbnails > 0
 
     style = 'width': (innerWidth / 2 - left) + 'px', 'height': innerHeight + 'px'
 
@@ -203,20 +229,23 @@ class Gallery
   ###
    Создание панели для тумбнейлов
   ###
-  createThumbnails: ->
-    return @ if @images.length <= 1 or @current is null
+  createTumbnails: ->
+    return @ if not @options.tumbnails or not @current or @images.length <= 1
 
     _this   = @
     current = @images[@current].source
     content = ''
 
     $.each @images, (cid, image) ->
-      selected = if current and current is image.source then ' selected' else ''
-      content += '<div class="sgl-thumbnail' + selected + '" data-cid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (if image.title then ' title="' + image.title + '"' else '') + '></div>'
+      selected = if current? is image.source then ' selected' else ''
+      content += templates.tumbnail.replace('{{selected}}', selected)
+                                   .replace('{{cid}}', cid)
+                                   .replace('{{tumbnail}}', image.tumbnail)
+                                   .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
     @tumbnails.html content
 
-    @tumbnails.find('div.sgl-thumbnail').click (event) ->
+    @tumbnails.find('.sgl-tumbnail').click (event) ->
       _this.updateImage parseInt $(@).attr('data-cid'), 10
     @
 

@@ -1,8 +1,37 @@
 (function() {
-  var Gallery, closeAction, counter, nextAction, prevAction, template;
+  var Gallery, closeAction, counter, existActions, nextAction, prevAction, templates;
   var __hasProp = Object.prototype.hasOwnProperty, __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (__hasProp.call(this, i) && this[i] === item) return i; } return -1; };
 
-  template = '<div class="sgl-overlay">' + '<div class="sgl-leftside"></div>' + '<div class="sgl-spinner">' + ' <img src="../themes/default/images/spinner-bg.png" alt="">' + ' <img src="../themes/default/images/spinner-serenity.png" alt="">' + '</div>' + '<div class="sgl-image"></div>' + '<div class="sgl-rightside"></div>' + '<div class="sgl-tumbnails"></div>' + '<div class="sgl-close"></div>' + '</div>';
+  templates = {
+    overlay: '\
+<div class="sgl-overlay">\
+  <div class="sgl-leftside"></div>\
+  {{spinner}}\
+  <div class="sgl-container"></div>\
+  <div class="sgl-rightside"></div>\
+  {{tumbnails}}\
+  <div class="sgl-close"></div>\
+</div>\
+',
+    spinner: '\
+<div class="sgl-spinner">\
+ <img src="../themes/default/images/spinner-bg.png" alt="">\
+ <img src="../themes/default/images/spinner-serenity.png" alt="">\
+</div>\
+',
+    tumbnails: '\
+<div class="sgl-tumbnails"></div>\
+',
+    tumbnail: '\
+<div class="sgl-tumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url(\'{{tumbnail}}\')"{{title}}></div>\
+',
+    header: '\
+<div class="sgl-header"><h1>{{title}}</h1></div>\
+',
+    hover: '\
+<span class="sgl-item-hover" data-sglid="{{cid}}"></span>\
+'
+  };
 
   counter = 0;
 
@@ -12,6 +41,8 @@
 
   closeAction = 'close';
 
+  existActions = [nextAction, prevAction, closeAction];
+
   Gallery = (function() {
 
     Gallery.prototype.images = {};
@@ -19,36 +50,41 @@
     Gallery.prototype.current = null;
 
     Gallery.prototype.options = {
-      overlay: false,
-      leftside: prevAction,
-      container: nextAction,
-      rightside: closeAction
+      actions: {
+        overlay: false,
+        leftside: prevAction,
+        container: nextAction,
+        rightside: closeAction
+      },
+      tumbnails: true
     };
-
-    Gallery.prototype.actions = [nextAction, prevAction, closeAction];
 
     /*
        Конструктор
     */
 
     function Gallery(images, options) {
-      var element, _i, _len, _ref;
+      var element, elements, template, _i, _j, _len, _len2, _ref;
       var _this = this;
       if (options && typeof options === 'object') {
         this.options = $.extend(this.options, options);
       }
+      template = templates.overlay;
+      template = template.replace('{{spinner}}', templates.spinner);
+      template = template.replace('{{tumbnails}}', this.options.tumbnails ? templates.tumbnails : '');
       this.overlay = $(template).appendTo('body');
-      this.container = this.overlay.find('.sgl-image');
-      this.spinner = this.overlay.find('.sgl-spinner');
-      this.leftside = this.overlay.find('.sgl-leftside');
-      this.rightside = this.overlay.find('.sgl-rightside');
-      this.tumbnails = this.overlay.find('.sgl-tumbnails');
+      elements = ['container', 'spinner', 'leftside', 'rightside'];
+      if (this.options.tumbnails) elements.push('tumbnails');
+      for (_i = 0, _len = elements.length; _i < _len; _i++) {
+        element = elements[_i];
+        this[element] = this.overlay.find('.sgl-' + element);
+      }
       this.overlay.find('.sgl-close').click(function(event) {
         return _this.close();
       });
       _ref = ['overlay', 'container', 'leftside', 'rightside'];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        element = _ref[_i];
+      for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
+        element = _ref[_j];
         this.prepareActionFor(element);
       }
       $(document).bind('keyup', function(event) {
@@ -69,7 +105,7 @@
     Gallery.prototype.prepareActionFor = function(element) {
       var method, verify, _ref;
       var _this = this;
-      method = (_ref = this.options[element], __indexOf.call(this.actions, _ref) >= 0) ? this.options[element] : false;
+      method = (_ref = this.options.actions[element], __indexOf.call(existActions, _ref) >= 0) ? this.options.actions[element] : false;
       if (method) {
         verify = this[element].attr('class');
         this[element].click(function(event) {
@@ -99,13 +135,13 @@
           _this.images[cid] = {
             source: source,
             title: title,
-            thumbnail: image.attr('src')
+            tumbnail: image.attr('src')
           };
           element = new Image();
-          element.src = _this.images[cid].thumbnail;
+          element.src = _this.images[cid].tumbnail;
           return element.onload = function(event) {
-            image.before('<span class="sgl-item-hover" data-sglid="' + cid + '"></span>');
-            return $('span[data-sglid=' + cid + ']').css({
+            image.before(templates.hover.replace('{{cid}}', cid));
+            return $('[data-sglid=' + cid + ']').css({
               width: image.width(),
               height: image.height()
             }).click(function(event) {
@@ -129,7 +165,8 @@
     */
 
     Gallery.prototype.show = function(cid) {
-      this.createThumbnails().updateImage(cid);
+      if (this.options.tumbnails) this.createTumbnails();
+      this.updateImage(cid);
       this.overlay.css('display', 'block');
       return this;
     };
@@ -159,15 +196,18 @@
 
     Gallery.prototype.updateImage = function(cid) {
       this.current = cid;
-      this.tumbnails.find('div.selected').removeClass('selected');
-      this.tumbnails.find('div[data-cid=' + cid + ']').addClass('selected');
+      if (this.options.tumbnails) {
+        this.tumbnails.find('.selected').removeClass('selected');
+        this.tumbnails.find('[data-cid=' + cid + ']').addClass('selected');
+      }
       this.getImageSize(cid, function(cid) {
-        var content, image;
+        var image;
         image = this.images[cid];
         this.updateDimensions(image.width, image.height);
-        content = image.title ? '<div class="sgl-header"><h1>' + image.title + '</h1></div>' : '';
         this.container.css('background-image', 'url(' + image.source + ')');
-        return this.container.html(content);
+        if (image.title) {
+          return this.container.html(templates.header.replace('{{title}}', image.title));
+        }
       });
       return this;
     };
@@ -176,10 +216,10 @@
        Обновление размеров блока с главным изображением
     */
 
-    Gallery.prototype.getImageSize = function(cid, callback) {
+    Gallery.prototype.getImageSize = function(cid, after) {
       var element, image;
       var _this = this;
-      if (callback == null) callback = function() {};
+      if (after == null) after = function() {};
       image = this.images[cid];
       if (!image.width || !image.height) {
         this.spinner.css('display', 'block');
@@ -191,11 +231,11 @@
             _this.images[cid].width = element.width;
             _this.images[cid].height = element.height;
             delete element;
-            return callback.call(_this, cid);
+            return after.call(_this, cid);
           }), 500);
         };
       } else {
-        callback.call(this, cid);
+        after.call(this, cid);
       }
       return this;
     };
@@ -205,21 +245,23 @@
     */
 
     Gallery.prototype.updateDimensions = function(width, height) {
-      var innerHeight, innerWidth, left, style, top, windowHeight, windowWidth;
+      var innerHeight, innerWidth, left, style, top, tumbnails, windowHeight, windowWidth;
+      tumbnails = this.options.tumbnails ? this.tumbnails.height() : 0;
       innerWidth = window.innerWidth;
       windowWidth = innerWidth - 50;
       innerHeight = window.innerHeight;
-      windowHeight = innerHeight - 150;
+      windowHeight = innerHeight - 50 - tumbnails;
       if (width > windowWidth) {
-        height = (windowWidth * height) / width;
+        height = windowWidth * height / width;
         width = windowWidth;
       }
       if (height > windowHeight) {
-        width = (windowHeight * width) / height;
+        width = windowHeight * width / height;
         height = windowHeight;
       }
       left = parseInt(width / 2, 10);
-      top = parseInt(height / 2, 10) + parseInt(this.tumbnails.height() / 2, 10);
+      top = parseInt(height / 2, 10);
+      if (tumbnails > 0) top += parseInt(tumbnails / 2, 10);
       style = {
         'width': (innerWidth / 2 - left) + 'px',
         'height': innerHeight + 'px'
@@ -241,19 +283,21 @@
        Создание панели для тумбнейлов
     */
 
-    Gallery.prototype.createThumbnails = function() {
+    Gallery.prototype.createTumbnails = function() {
       var content, current, _this;
-      if (this.images.length <= 1 || this.current === null) return this;
+      if (!this.options.tumbnails || !this.current || this.images.length <= 1) {
+        return this;
+      }
       _this = this;
       current = this.images[this.current].source;
       content = '';
       $.each(this.images, function(cid, image) {
         var selected;
-        selected = current && current === image.source ? ' selected' : '';
-        return content += '<div class="sgl-thumbnail' + selected + '" data-cid="' + cid + '" style="background-image:url(\'' + image.thumbnail + '\')"' + (image.title ? ' title="' + image.title + '"' : '') + '></div>';
+        selected = (current != null) === image.source ? ' selected' : '';
+        return content += templates.tumbnail.replace('{{selected}}', selected).replace('{{cid}}', cid).replace('{{tumbnail}}', image.tumbnail).replace('{{title}}', image.title ? ' title="' + image.title + '"' : '');
       });
       this.tumbnails.html(content);
-      this.tumbnails.find('div.sgl-thumbnail').click(function(event) {
+      this.tumbnails.find('.sgl-tumbnail').click(function(event) {
         return _this.updateImage(parseInt($(this).attr('data-cid'), 10));
       });
       return this;

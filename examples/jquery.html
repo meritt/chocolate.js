@@ -24,10 +24,13 @@
   <script>
     $(document).ready(function() {
       $('img[itemprop=image]').gallery({
-        overlay:    'close',
-        leftside:   'prev',
-        container:  false,
-        rightside:  'next'
+        actions: {
+          overlay:    'close',
+          leftside:   'prev',
+          container:  false,
+          rightside:  'next'
+        },
+        tumbnails: false
       });
     })
   </script>
