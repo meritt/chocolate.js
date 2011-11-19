@@ -1,9 +1,16 @@
 (function() {
-  var Gallery, counter, template;
+  var Gallery, closeAction, counter, nextAction, prevAction, template;
+  var __hasProp = Object.prototype.hasOwnProperty, __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (__hasProp.call(this, i) && this[i] === item) return i; } return -1; };
 
   template = '<div class="sgl-overlay">' + '<div class="sgl-leftside"></div>' + '<div class="sgl-spinner">' + ' <img src="../themes/default/images/spinner-bg.png" alt="">' + ' <img src="../themes/default/images/spinner-serenity.png" alt="">' + '</div>' + '<div class="sgl-image"></div>' + '<div class="sgl-rightside"></div>' + '<div class="sgl-tumbnails"></div>' + '<div class="sgl-close"></div>' + '</div>';
 
   counter = 0;
+
+  nextAction = 'next';
+
+  prevAction = 'prev';
+
+  closeAction = 'close';
 
   Gallery = (function() {
 
@@ -11,13 +18,25 @@
 
     Gallery.prototype.current = null;
 
+    Gallery.prototype.options = {
+      overlay: false,
+      leftside: prevAction,
+      container: nextAction,
+      rightside: closeAction
+    };
+
+    Gallery.prototype.actions = [nextAction, prevAction, closeAction];
+
     /*
        Конструктор
     */
 
-    function Gallery(options, images) {
+    function Gallery(images, options) {
+      var element, _i, _len, _ref;
       var _this = this;
-      this.options = options != null ? options : {};
+      if (options && typeof options === 'object') {
+        this.options = $.extend(this.options, options);
+      }
       this.overlay = $(template).appendTo('body');
       this.container = this.overlay.find('.sgl-image');
       this.spinner = this.overlay.find('.sgl-spinner');
@@ -27,15 +46,11 @@
       this.overlay.find('.sgl-close').click(function(event) {
         return _this.close();
       });
-      this.leftside.click(function(event) {
-        return _this.prev();
-      });
-      this.rightside.click(function(event) {
-        return _this.close();
-      });
-      this.container.click(function(event) {
-        return _this.next();
-      });
+      _ref = ['overlay', 'container', 'leftside', 'rightside'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        element = _ref[_i];
+        this.prepareActionFor(element);
+      }
       $(document).bind('keyup', function(event) {
         if (_this.overlay.css('display') === 'block') {
           switch (event.keyCode) {
@@ -50,6 +65,19 @@
       });
       if (images) this.add(images);
     }
+
+    Gallery.prototype.prepareActionFor = function(element) {
+      var method, verify, _ref;
+      var _this = this;
+      method = (_ref = this.options[element], __indexOf.call(this.actions, _ref) >= 0) ? this.options[element] : false;
+      if (method) {
+        verify = this[element].attr('class');
+        this[element].click(function(event) {
+          if ($(event.target).hasClass(verify)) return _this[method]();
+        });
+      }
+      return this;
+    };
 
     /*
        Добавляем список изображений для работы в галереи
@@ -237,7 +265,7 @@
 
   if (jQuery && jQuery.fn) {
     jQuery.fn.gallery = function() {
-      return new Gallery(arguments[0], this);
+      return new Gallery(this, arguments[0]);
     };
   }
 

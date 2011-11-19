@@ -12,27 +12,39 @@ template = '<div class="sgl-overlay">' +
 
 counter = 0
 
+nextAction  = 'next'
+prevAction  = 'prev'
+closeAction = 'close'
+
 class Gallery
   images: {}
   current: null
 
+  options:
+    overlay:    false
+    leftside:   prevAction
+    container:  nextAction
+    rightside:  closeAction
+
+  actions: [nextAction, prevAction, closeAction]
+
   ###
    Конструктор
   ###
-  constructor: (@options = {}, images) ->
-    @overlay   = $(template).appendTo 'body'
+  constructor: (images, options) ->
+    @options = $.extend @options, options if options and typeof options is 'object'
+
+    @overlay = $(template).appendTo 'body'
+
     @container = @overlay.find '.sgl-image'
     @spinner   = @overlay.find '.sgl-spinner'
     @leftside  = @overlay.find '.sgl-leftside'
     @rightside = @overlay.find '.sgl-rightside'
     @tumbnails = @overlay.find '.sgl-tumbnails'
 
-    # @overlay.click (event) => @close() if $(event.target).hasClass 'sgl-overlay'
     @overlay.find('.sgl-close').click (event) => @close()
 
-    @leftside.click (event) => @prev()
-    @rightside.click (event) => @close()
-    @container.click (event) => @next()
+    @prepareActionFor element for element in ['overlay', 'container', 'leftside', 'rightside']
 
     $(document).bind 'keyup', (event) =>
       if @overlay.css('display') is 'block'
@@ -45,6 +57,13 @@ class Gallery
             @next()
 
     @add images if images
+
+  prepareActionFor: (element) ->
+    method = if @options[element] in @actions then @options[element] else false
+    if method
+      verify = @[element].attr 'class'
+      @[element].click (event) => @[method]() if $(event.target).hasClass verify
+    @
 
   ###
    Добавляем список изображений для работы в галереи
@@ -203,4 +222,4 @@ class Gallery
 
 # Подключение к jQuery Plugins
 if jQuery and jQuery.fn
-  jQuery.fn.gallery = -> new Gallery arguments[0], @
+  jQuery.fn.gallery = -> new Gallery @, arguments[0]

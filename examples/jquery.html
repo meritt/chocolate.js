@@ -23,7 +23,12 @@
   <script src="../gallery.js"></script>
   <script>
     $(document).ready(function() {
-      $('img[itemprop=image]').gallery();
+      $('img[itemprop=image]').gallery({
+        overlay:    'close',
+        leftside:   'prev',
+        container:  false,
+        rightside:  'next'
+      });
     })
   </script>
 </head>
