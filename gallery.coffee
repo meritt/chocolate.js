@@ -73,9 +73,8 @@ class Gallery
 
     if isHistory
       $(window).bind 'popstate', (event) =>
-        hash = window.location.hash
-        cid  = if hash then parseInt hash.replace('#image', ''), 10 else 0
-        if cid > 0
+        cid = @getImageFromUri()
+        if cid > 0 and cid isnt @current
           if @current is null then @show cid else @updateImage cid, false
 
     $(window).bind 'keyup', (event) =>
@@ -96,6 +95,10 @@ class Gallery
       verify = @[element].attr 'class'
       @[element].click (event) => @[method]() if $(event.target).hasClass verify
     @
+
+  getImageFromUri: ->
+    hash = window.location.hash
+    if hash then parseInt hash.replace('#image', ''), 10 else 0
 
   ###
    Добавляем список изображений для работы в галереи
@@ -142,7 +145,8 @@ class Gallery
    Показать изображение на большом экране
   ###
   show: (cid) ->
-    cid = 1 unless cid?
+    cid = @getImageFromUri() unless cid?
+    cid = 1 if cid <= 0
     throw 'Image not found' unless @images[cid]?
 
     @current = cid if @current is null

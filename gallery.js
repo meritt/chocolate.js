@@ -91,10 +91,9 @@
       }
       if (isHistory) {
         $(window).bind('popstate', function(event) {
-          var cid, hash;
-          hash = window.location.hash;
-          cid = hash ? parseInt(hash.replace('#image', ''), 10) : 0;
-          if (cid > 0) {
+          var cid;
+          cid = _this.getImageFromUri();
+          if (cid > 0 && cid !== _this.current) {
             if (_this.current === null) {
               return _this.show(cid);
             } else {
@@ -129,6 +128,16 @@
         });
       }
       return this;
+    };
+
+    Gallery.prototype.getImageFromUri = function() {
+      var hash;
+      hash = window.location.hash;
+      if (hash) {
+        return parseInt(hash.replace('#image', ''), 10);
+      } else {
+        return 0;
+      }
     };
 
     /*
@@ -189,7 +198,8 @@
     */
 
     Gallery.prototype.show = function(cid) {
-      if (cid == null) cid = 1;
+      if (cid == null) cid = this.getImageFromUri();
+      if (cid <= 0) cid = 1;
       if (this.images[cid] == null) throw 'Image not found';
       if (this.current === null) this.current = cid;
       if (this.options.thumbnails) this.createThumbnails();
