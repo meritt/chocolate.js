@@ -1,5 +1,5 @@
 (function() {
-  var Gallery, closeAction, counter, existActions, nextAction, prevAction, templates;
+  var Gallery, closeAction, counter, existActions, isHistory, nextAction, prevAction, templates;
   var __hasProp = Object.prototype.hasOwnProperty, __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (__hasProp.call(this, i) && this[i] === item) return i; } return -1; };
 
   templates = {
@@ -42,6 +42,8 @@
   closeAction = 'close';
 
   existActions = [nextAction, prevAction, closeAction];
+
+  isHistory = !!(window.history && history.pushState);
 
   Gallery = (function() {
 
@@ -87,7 +89,21 @@
         element = _ref[_j];
         this._prepareActionFor(element);
       }
-      $(document).bind('keyup', function(event) {
+      if (isHistory) {
+        $(window).bind('popstate', function(event) {
+          var cid, hash;
+          hash = window.location.hash;
+          cid = hash ? parseInt(hash.replace('#image', ''), 10) : 0;
+          if (cid > 0) {
+            if (_this.current === null) {
+              return _this.show(cid);
+            } else {
+              return _this.updateImage(cid, false);
+            }
+          }
+        });
+      }
+      $(window).bind('keyup', function(event) {
         if (_this.overlay.css('display') === 'block') {
           switch (event.keyCode) {
             case 27:
@@ -205,11 +221,17 @@
        Обновление изображения
     */
 
-    Gallery.prototype.updateImage = function(cid) {
+    Gallery.prototype.updateImage = function(cid, updateHistory) {
+      var title;
+      if (updateHistory == null) updateHistory = true;
       this.current = cid;
       if (this.options.thumbnails) {
         this.thumbnails.find('.selected').removeClass('selected');
         this.thumbnails.find('[data-cid=' + cid + ']').addClass('selected');
+      }
+      if (isHistory && updateHistory) {
+        title = this.images[cid].title ? 'Image: ' + this.images[cid].title : null;
+        history.pushState(null, title, '#image' + cid);
       }
       this.getImageSize(cid, function(cid) {
         var image;

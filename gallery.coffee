@@ -36,6 +36,8 @@ closeAction = 'close'
 
 existActions = [nextAction, prevAction, closeAction]
 
+isHistory = not not (window.history and history.pushState)
+
 class Gallery
   images: {}
   current: null
@@ -69,7 +71,14 @@ class Gallery
 
     @_prepareActionFor element for element in ['overlay', 'container', 'leftside', 'rightside']
 
-    $(document).bind 'keyup', (event) =>
+    if isHistory
+      $(window).bind 'popstate', (event) =>
+        hash = window.location.hash
+        cid  = if hash then parseInt hash.replace('#image', ''), 10 else 0
+        if cid > 0
+          if @current is null then @show cid else @updateImage cid, false
+
+    $(window).bind 'keyup', (event) =>
       if @overlay.css('display') is 'block'
         switch event.keyCode
           when 27    # ESC
@@ -160,12 +169,16 @@ class Gallery
   ###
    Обновление изображения
   ###
-  updateImage: (cid) ->
+  updateImage: (cid, updateHistory = true) ->
     @current = cid
 
     if @options.thumbnails
       @thumbnails.find('.selected').removeClass 'selected'
       @thumbnails.find('[data-cid=' + cid + ']').addClass 'selected'
+
+    if isHistory and updateHistory
+      title = if @images[cid].title then 'Image: ' + @images[cid].title else null
+      history.pushState null, title, '#image' + cid
 
     @getImageSize cid, (cid) ->
       image = @images[cid]
