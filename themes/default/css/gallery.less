@@ -47,6 +47,18 @@ div.sgl-leftside {
   .sgl-sidecolumn();
   left: 0;
   cursor: pointer;
+  color: #666;
+
+  &:before {
+    content: '←';
+    padding-left: 20px;
+    font-size: 2.5em;
+    font-weight: normal;
+  }
+
+  &:hover {
+    color: #fff;
+  }
 }
 
 div.sgl-rightside {
