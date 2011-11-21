@@ -106,7 +106,7 @@
         });
       }
       $(window).bind('keyup', function(event) {
-        if (_this.overlay.css('display') === 'block') {
+        if (_this.overlay.hasClass('show')) {
           switch (event.keyCode) {
             case 27:
               return _this.close();
@@ -207,12 +207,12 @@
       if (this.current === null) this.current = cid;
       if (this.options.thumbnails) this.createThumbnails();
       this.updateImage(cid);
-      this.overlay.css('display', 'block');
+      this.overlay.addClass('show');
       return this;
     };
 
     Gallery.prototype.close = function() {
-      this.overlay.css('display', 'none');
+      this.overlay.removeClass('show');
       return this;
     };
 
@@ -266,11 +266,13 @@
       if (after == null) after = function() {};
       image = this.images[cid];
       if (!image.width || !image.height) {
-        this.spinner.css('display', 'block');
+        this.spinner.removeClass('hide');
+        this.container.removeClass('show');
         element = new Image();
         element.src = image.source;
         return element.onload = function(event) {
-          _this.spinner.css('display', 'none');
+          _this.spinner.addClass('hide');
+          _this.container.addClass('show');
           _this.images[cid].width = element.width;
           _this.images[cid].height = element.height;
           delete element;

@@ -81,7 +81,7 @@ class Gallery
           if @current is null then @show cid else @updateImage cid, false
 
     $(window).bind 'keyup', (event) =>
-      if @overlay.css('display') is 'block'
+      if @overlay.hasClass 'show'
         switch event.keyCode
           when 27    # ESC
             @close()
@@ -156,11 +156,11 @@ class Gallery
 
     @createThumbnails() if @options.thumbnails
     @updateImage cid
-    @overlay.css 'display', 'block'
+    @overlay.addClass 'show'
     @
 
   close: ->
-    @overlay.css 'display', 'none'
+    @overlay.removeClass 'show'
     @
 
   next: ->
@@ -203,13 +203,15 @@ class Gallery
     image = @images[cid]
 
     if not image.width or not image.height
-      @spinner.css 'display', 'block'
+      @spinner.removeClass 'hide'
+      @container.removeClass 'show'
 
       element     = new Image()
       element.src = image.source
 
       element.onload = (event) =>
-        @spinner.css 'display', 'none'
+        @spinner.addClass 'hide'
+        @container.addClass 'show'
 
         @images[cid].width  = element.width
         @images[cid].height = element.height
