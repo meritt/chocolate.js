@@ -1,8 +1,10 @@
 Скрипт чертовски красивой галереи.
 ---------------------------------
 
-Для разработки удобно:
+Подготовка релиза
 
-Автоматическая генерация gallery.js файла при каждом изменении gallery.coffee
+    cake build
 
-    coffee --compile --watch --output . gallery.coffee
+Разработка: автоматическая генерация gallery.js файла при каждом изменении gallery.coffee
+
+    coffee --compile --watch --output lib src/gallery.coffee
