@@ -49,6 +49,7 @@ class Gallery
       container:  nextAction
       rightside:  closeAction
     thumbnails: true
+    history:    true
 
   ###
    Конструктор
@@ -59,6 +60,8 @@ class Gallery
     template = templates.overlay
     template = template.replace '{{spinner}}', templates.spinner
     template = template.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
+
+    isHistory = false if not @options.history
 
     @overlay = $(template).appendTo 'body'
 

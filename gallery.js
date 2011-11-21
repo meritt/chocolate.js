@@ -58,7 +58,8 @@
         container: nextAction,
         rightside: closeAction
       },
-      thumbnails: true
+      thumbnails: true,
+      history: true
     };
 
     /*
@@ -74,6 +75,7 @@
       template = templates.overlay;
       template = template.replace('{{spinner}}', templates.spinner);
       template = template.replace('{{thumbnails}}', this.options.thumbnails ? templates.thumbnails : '');
+      if (!this.options.history) isHistory = false;
       this.overlay = $(template).appendTo('body');
       elements = ['container', 'spinner', 'leftside', 'rightside'];
       if (this.options.thumbnails) elements.push('thumbnails');
