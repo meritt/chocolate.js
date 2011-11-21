@@ -266,7 +266,7 @@ class Gallery
 
     _this   = @
     current = @images[@current]
-    content = @thumbnails.html()
+    content = ''
 
     for cid, image of @images
       selected = if current.source? is image.source then ' selected' else ''

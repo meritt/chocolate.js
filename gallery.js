@@ -333,7 +333,7 @@
       }
       _this = this;
       current = this.images[this.current];
-      content = this.thumbnails.html();
+      content = '';
       _ref = this.images;
       for (cid in _ref) {
         image = _ref[cid];
