@@ -238,6 +238,7 @@
       var title;
       if (updateHistory == null) updateHistory = true;
       this.current = cid;
+      this.container.removeClass('show');
       if (this.options.thumbnails) {
         this.thumbnails.find('.selected').removeClass('selected');
         this.thumbnails.find('[data-cid=' + cid + ']').addClass('selected');
@@ -248,6 +249,7 @@
       }
       this.getImageSize(cid, function(cid) {
         var image;
+        this.container.addClass('show');
         image = this.images[cid];
         this.updateDimensions(image.width, image.height);
         this.container.css('background-image', 'url(' + image.source + ')');
@@ -267,12 +269,10 @@
       image = this.images[cid];
       if (!image.width || !image.height) {
         this.spinner.removeClass('hide');
-        this.container.removeClass('show');
         element = new Image();
         element.src = image.source;
         return element.onload = function(event) {
           _this.spinner.addClass('hide');
-          _this.container.addClass('show');
           _this.images[cid].width = element.width;
           _this.images[cid].height = element.height;
           delete element;

@@ -179,6 +179,8 @@ class Gallery
   updateImage: (cid, updateHistory = true) ->
     @current = cid
 
+    @container.removeClass 'show'
+
     if @options.thumbnails
       @thumbnails.find('.selected').removeClass 'selected'
       @thumbnails.find('[data-cid=' + cid + ']').addClass 'selected'
@@ -188,6 +190,8 @@ class Gallery
       history.pushState null, title, '#image' + cid
 
     @getImageSize cid, (cid) ->
+      @container.addClass 'show'
+
       image = @images[cid]
 
       @updateDimensions image.width, image.height
@@ -204,14 +208,12 @@ class Gallery
 
     if not image.width or not image.height
       @spinner.removeClass 'hide'
-      @container.removeClass 'show'
 
       element     = new Image()
       element.src = image.source
 
       element.onload = (event) =>
         @spinner.addClass 'hide'
-        @container.addClass 'show'
 
         @images[cid].width  = element.width
         @images[cid].height = element.height
