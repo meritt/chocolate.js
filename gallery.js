@@ -20,6 +20,7 @@
 </div>\
 ',
     thumbnails: '\
+<div class="sgl-thumbnails-toggle"></div>\
 <div class="sgl-thumbnails"></div>\
 ',
     thumbnail: '\
@@ -72,10 +73,10 @@
       if (options && typeof options === 'object') {
         this.options = $.extend(this.options, options);
       }
+      if (!this.options.history) isHistory = false;
       template = templates.overlay;
       template = template.replace('{{spinner}}', templates.spinner);
       template = template.replace('{{thumbnails}}', this.options.thumbnails ? templates.thumbnails : '');
-      if (!this.options.history) isHistory = false;
       this.overlay = $(template).appendTo('body');
       elements = ['container', 'spinner', 'leftside', 'rightside'];
       if (this.options.thumbnails) elements.push('thumbnails');
@@ -286,7 +287,7 @@
 
     Gallery.prototype.updateDimensions = function(width, height) {
       var innerHeight, innerWidth, left, style, thumbnails, top, windowHeight, windowWidth;
-      thumbnails = this.options.thumbnails ? this.thumbnails.height() : 0;
+      thumbnails = !this.options.thumbnails || this.thumbnails.css('display') === 'none' ? 0 : this.thumbnails.height();
       innerWidth = window.innerWidth;
       windowWidth = innerWidth - 50;
       innerHeight = window.innerHeight;
@@ -329,16 +330,23 @@
         return this;
       }
       _this = this;
-      current = this.images[this.current].source;
-      content = '';
+      current = this.images[this.current];
+      content = this.thumbnails.html();
       _ref = this.images;
       for (cid in _ref) {
         image = _ref[cid];
-        selected = (current != null) === image.source ? ' selected' : '';
+        selected = (current.source != null) === image.source ? ' selected' : '';
         content += templates.thumbnail.replace('{{selected}}', selected).replace('{{cid}}', cid).replace('{{thumbnail}}', image.thumbnail).replace('{{title}}', image.title ? ' title="' + image.title + '"' : '');
       }
       this.thumbnails.html(content).find('.sgl-thumbnail').click(function(event) {
         return _this.updateImage(parseInt($(this).attr('data-cid'), 10));
+      });
+      this.overlay.find('.sgl-thumbnails-toggle').click(function(event) {
+        var method;
+        method = _this.thumbnails.hasClass('hide') ? 'removeClass' : 'addClass';
+        _this.thumbnails[method]('hide');
+        $(this)[method]('hide');
+        return _this.updateDimensions(current.width, current.height);
       });
       return this;
     };

@@ -16,6 +16,7 @@ templates =
 </div>
 '
   thumbnails: '
+<div class="sgl-thumbnails-toggle"></div>
 <div class="sgl-thumbnails"></div>
 '
   thumbnail: '
@@ -55,13 +56,12 @@ class Gallery
    Конструктор
   ###
   constructor: (images, options) ->
-    @options = $.extend @options, options if options and typeof options is 'object'
+    @options  = $.extend @options, options if options and typeof options is 'object'
+    isHistory = false if not @options.history
 
     template = templates.overlay
     template = template.replace '{{spinner}}', templates.spinner
     template = template.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
-
-    isHistory = false if not @options.history
 
     @overlay = $(template).appendTo 'body'
 
@@ -224,7 +224,7 @@ class Gallery
    Обновление размеров блока с главным изображением
   ###
   updateDimensions: (width, height) ->
-    thumbnails = if @options.thumbnails then @thumbnails.height() else 0
+    thumbnails = if not @options.thumbnails or @thumbnails.css('display') is 'none' then 0 else @thumbnails.height()
 
     innerWidth   = window.innerWidth
     windowWidth  = innerWidth - 50
@@ -261,11 +261,11 @@ class Gallery
     return @ if not @options.thumbnails or not @current or @images.length <= 1
 
     _this   = @
-    current = @images[@current].source
-    content = ''
+    current = @images[@current]
+    content = @thumbnails.html()
 
     for cid, image of @images
-      selected = if current? is image.source then ' selected' else ''
+      selected = if current.source? is image.source then ' selected' else ''
       content += templates.thumbnail.replace('{{selected}}', selected)
                                     .replace('{{cid}}', cid)
                                     .replace('{{thumbnail}}', image.thumbnail)
@@ -273,6 +273,15 @@ class Gallery
 
     @thumbnails.html(content).find('.sgl-thumbnail').click (event) ->
       _this.updateImage parseInt $(@).attr('data-cid'), 10
+
+    @overlay.find('.sgl-thumbnails-toggle').click (event) ->
+      method = if _this.thumbnails.hasClass 'hide' then 'removeClass' else 'addClass'
+
+      _this.thumbnails[method] 'hide'
+      $(@)[method] 'hide'
+
+      _this.updateDimensions current.width, current.height
+
     @
 
 # Экспорт в глобальное пространство
