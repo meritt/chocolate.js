@@ -1,41 +1,6 @@
-templates =
-  overlay: '
-<div class="sgl-overlay">
-  <div class="sgl-leftside"></div>
-  {{spinner}}
-  <div class="sgl-container"></div>
-  <div class="sgl-rightside"></div>
-  {{thumbnails}}
-  <div class="sgl-close"></div>
-</div>
-'
-  spinner: '
-<div class="sgl-spinner">
- <img src="../themes/default/images/spinner-bg.png" alt="">
- <img src="../themes/default/images/spinner-serenity.png" alt="">
-</div>
-'
-  thumbnails: '
-<div class="sgl-thumbnails-toggle"></div>
-<div class="sgl-thumbnails"></div>
-'
-  thumbnail: '
-<div class="sgl-thumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url(\'{{thumbnail}}\')"{{title}}></div>
-'
-  header: '
-<div class="sgl-header"><h1>{{title}}</h1></div>
-'
-  hover: '
-<span class="sgl-item-hover" data-sglid="{{cid}}"></span>
-'
-
 counter = 0
 
-nextAction  = 'next'
-prevAction  = 'prev'
-closeAction = 'close'
-
-existActions = [nextAction, prevAction, closeAction]
+existActions = ['next', 'prev', 'close']
 
 isHistory = not not (window.history and history.pushState)
 
@@ -43,25 +8,18 @@ class Gallery
   images: {}
   current: null
 
-  options:
-    actions:
-      overlay:    false
-      leftside:   prevAction
-      container:  nextAction
-      rightside:  closeAction
-    thumbnails: true
-    history:    true
-
   ###
    Конструктор
   ###
-  constructor: (images, options) ->
-    @options  = $.extend @options, options if options and typeof options is 'object'
+  constructor: (images, options = {}) ->
+    throw "You don't have defaultOptions or templates variables" if not defaultOptions or not templates
+
+    @options  = $.extend defaultOptions, options
     isHistory = false if not @options.history
 
-    template = templates.overlay
-    template = template.replace '{{spinner}}', templates.spinner
-    template = template.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
+    template = templates['overlay']
+    template = template.replace '{{spinner}}', templates['spinner']
+    template = template.replace '{{thumbnails}}', if @options.thumbnails then templates['thumbnails'] else ''
 
     @overlay = $(template).appendTo 'body'
 
@@ -140,7 +98,7 @@ class Gallery
       preload = new Image()
       preload.src = data.thumbnail
       preload.onload = (event) =>
-        image.before templates.hover.replace '{{cid}}', cid
+        image.before templates['image-hover'].replace '{{cid}}', cid
         $('[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) ->
           showFirstImage event, cid
 
@@ -197,7 +155,7 @@ class Gallery
       @updateDimensions image.width, image.height
 
       @container.css 'background-image', 'url(' + image.source + ')'
-      @container.html if image.title then templates.header.replace '{{title}}', image.title else ''
+      @container.html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
     @
 
   ###
@@ -270,10 +228,11 @@ class Gallery
 
     for cid, image of @images
       selected = if current.source? is image.source then ' selected' else ''
-      content += templates.thumbnail.replace('{{selected}}', selected)
-                                    .replace('{{cid}}', cid)
-                                    .replace('{{thumbnail}}', image.thumbnail)
-                                    .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
+      template = templates['thumbnails-item']
+      content += template.replace('{{selected}}', selected)
+                         .replace('{{cid}}', cid)
+                         .replace('{{thumbnail}}', image.thumbnail)
+                         .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
     @thumbnails.html(content).find('.sgl-thumbnail').click (event) ->
       _this.updateImage parseInt $(@).attr('data-cid'), 10

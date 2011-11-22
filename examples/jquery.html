@@ -6,21 +6,12 @@
   <title>SEO vs Контекст &mdash; Serenity</title>
 
   <link rel="stylesheet" href="http://serenity.su/static/css/blog/style.min.css">
-  <style media="screen and (min-width: 1178px)">.side{width:12%}</style>
-  <style media="screen and (min-width: 1276px)">.side{width:13%}</style>
-  <style media="screen and (min-width: 1374px)">.side{width:14%}</style>
-  <style media="screen and (min-width: 1472px)">.side{width:15%}</style>
-  <style media="screen and (min-width: 1520px)">.side{width:16%}</style>
-  <!--[if lte IE 7]><link rel="stylesheet" href="http://serenity.su/static/css/blog/ie.min.css"><![endif]-->
-  <!--[if lte IE 6]><link rel="stylesheet" href="http://serenity.su/static/css/blog/ie6.min.css"><![endif]-->
-  <!--[if IE 8]><link rel="stylesheet" href="http://serenity.su/static/css/blog/ie8.min.css"><![endif]-->
-
-  <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-
-  <link rel="stylesheet" href="../themes/default/css/gallery.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-  <script src="../lib/gallery.min.js"></script>
+
+  <link href="../lib/default/css/gallery.min.css" rel="stylesheet">
+  <script src="../lib/default/js/gallery.min.js"></script>
+
   <script>
     $(document).ready(function() {
       // var images = [{
@@ -37,16 +28,7 @@
       // var gallery = new sglGallery();
       // gallery.add(images).show();
 
-      $('img[itemprop=image]').gallery({
-        actions: {
-          overlay:    'close',
-          leftside:   'prev',
-          container:  false,
-          rightside:  'next'
-        },
-        // thumbnails: false,
-        // history: false
-      });
+      $('img[itemprop=image]').gallery();
     })
   </script>
 </head>

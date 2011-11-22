@@ -1,0 +1,27 @@
+{
+  "image-hover": "<span class=\"sgl-item-hover\" data-sglid=\"{{cid}}\"></span>",
+
+  "overlay": "
+    <div class=\"sgl-overlay\">
+      <div class=\"sgl-leftside\"></div>
+      {{spinner}}
+      <div class=\"sgl-container\"></div>
+      <div class=\"sgl-rightside\"></div>
+      {{thumbnails}}
+      <div class=\"sgl-close\"></div>
+    </div>
+  ",
+
+  "spinner": "
+    <div class=\"sgl-spinner\">
+     <img src=\"../themes/default/images/spinner-bg.png\" alt=\"\">
+     <img src=\"../themes/default/images/spinner-serenity.png\" alt=\"\">
+    </div>
+  ",
+
+  "image-title": "<div class=\"sgl-header\"><h1>{{title}}</h1></div>",
+
+  "thumbnails": "<div class=\"sgl-thumbnails-toggle\"></div><div class=\"sgl-thumbnails\"></div>",
+
+  "thumbnails-item": "<div class=\"sgl-thumbnail{{selected}}\" data-cid=\"{{cid}}\" style=\"background-image:url('{{thumbnail}}')\"{{title}}></div>"
+}
