@@ -7,9 +7,11 @@ uglify    = require 'uglify-js'
 {cssmin}  = require 'cssmin'
 
 option '-t', '--themes [NAME]', 'theme for compiled gallery code'
+option '-b', '--basedir [DIR]', 'directory with css, js, image folders'
 
 task 'build', 'Build gallery', (options) ->
-  theme = options.themes or 'default'
+  theme   = options.themes  or 'default'
+  basedir = options.basedir or '/gallery'
 
   path = dirname(__filename)
   dist = path + '/lib/' + theme + '/'
@@ -22,11 +24,14 @@ task 'build', 'Build gallery', (options) ->
 
     spawn 'cp', ['-R', src + 'images', dist] if fs.statSync src + 'images'
 
-    compileJsContent dist, src
-    compileCssContent dist, src
+    compileJsContent dist, src, basedir
+    compileCssContent dist, src, basedir
 
-compileJsContent = (dist, src) ->
-  options   = "defaultOptions = `" + fs.readFileSync(src + 'options.json', 'utf8') + "`"
+compileJsContent = (dist, src, basedir) ->
+  options = JSON.parse fs.readFileSync(src + 'options.json', 'utf8')
+  options.basedir = basedir
+
+  options   = "defaultOptions = `" + JSON.stringify(options) + "`"
   templates = "templates = `" + fs.readFileSync(src + 'templates.json', 'utf8') + "`"
   gallery   = fs.readFileSync dirname(__filename) + '/src/gallery.coffee', 'utf8'
 
@@ -35,12 +40,15 @@ compileJsContent = (dist, src) ->
   fs.writeFileSync dist + 'js/gallery.js', js
   fs.writeFileSync dist + 'js/gallery.min.js', uglify js
 
-compileCssContent = (dist, src) ->
+compileCssContent = (dist, src, basedir) ->
   parser = new less.Parser
     paths:    [src + 'css']
     filename: 'gallery.less'
 
-  parser.parse fs.readFileSync(src + 'css/gallery.less', 'utf8'), (error, tree) ->
+  css = fs.readFileSync(src + 'css/gallery.less', 'utf8')
+  css = css.replace '{{basedir}}', basedir
+
+  parser.parse css, (error, tree) ->
     css = tree.toCSS()
 
     fs.writeFileSync dist + 'css/gallery.css', css

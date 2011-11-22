@@ -14,8 +14,8 @@
 
   "spinner": "
     <div class=\"sgl-spinner\">
-     <img src=\"../themes/default/images/spinner-bg.png\" alt=\"\">
-     <img src=\"../themes/default/images/spinner-serenity.png\" alt=\"\">
+     <img src=\"{{basedir}}/images/spinner-bg.png\" alt=\"\">
+     <img src=\"{{basedir}}/images/spinner-serenity.png\" alt=\"\">
     </div>
   ",
 

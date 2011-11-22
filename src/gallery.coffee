@@ -4,6 +4,9 @@ existActions = ['next', 'prev', 'close']
 
 isHistory = not not (window.history and history.pushState)
 
+updateBasedir = (template, basedir) ->
+  template.replace /\{\{basedir\}\}/g, basedir
+
 class Gallery
   images: {}
   current: null
@@ -20,6 +23,7 @@ class Gallery
     template = templates['overlay']
     template = template.replace '{{spinner}}', templates['spinner']
     template = template.replace '{{thumbnails}}', if @options.thumbnails then templates['thumbnails'] else ''
+    template = updateBasedir template, @options.basedir
 
     @overlay = $(template).appendTo 'body'
 
