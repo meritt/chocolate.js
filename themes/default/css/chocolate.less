@@ -4,7 +4,7 @@
 @basedir: "{{basedir}}";
 @thumbnails-height: 100px;
 
-.sgl-item-hover {
+.choco-item-hover {
   position: absolute;
   display: block;
   cursor: pointer;
@@ -14,7 +14,7 @@
   }
 }
 
-div.sgl-overlay {
+div.choco-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -29,7 +29,7 @@ div.sgl-overlay {
   }
 }
 
-div.sgl-close {
+div.choco-close {
   position: fixed;
   right: 20px;
   top: 20px;
@@ -40,7 +40,7 @@ div.sgl-close {
   z-index: 15px;
 }
 
-.sgl-sidecolumn() {
+.choco-sidecolumn() {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -48,8 +48,8 @@ div.sgl-close {
   height: 50px;
 }
 
-div.sgl-leftside {
-  .sgl-sidecolumn();
+div.choco-leftside {
+  .choco-sidecolumn();
   left: 0;
   cursor: pointer;
   color: #666;
@@ -66,19 +66,19 @@ div.sgl-leftside {
   }
 }
 
-div.sgl-rightside {
-  .sgl-sidecolumn();
+div.choco-rightside {
+  .choco-sidecolumn();
   right: 0;
 }
 
-.sgl-container() {
+.choco-container() {
   position: fixed;
   top: 50%;
   left: 50%;
 }
 
-div.sgl-spinner {
-  .sgl-container();
+div.choco-spinner {
+  .choco-container();
 /*  background-color: rgba(0, 0, 0, 0.4);*/
   z-index: 15;
 
@@ -87,7 +87,7 @@ div.sgl-spinner {
   }
 
   img {
-    .sgl-container();
+    .choco-container();
     margin-top: -((140px / 2) + (@thumbnails-height / 2));
     margin-left: -(140px / 2);
     width: 140px;
@@ -99,8 +99,8 @@ div.sgl-spinner {
   }
 }
 
-div.sgl-container {
-  .sgl-container();
+div.choco-container {
+  .choco-container();
   background-position: 50% 50%;
   background-repeat: no-repeat;
   .background-size(100%, 100%);
@@ -114,7 +114,7 @@ div.sgl-container {
     .opacity(1);
   }
 
-  div.sgl-header {
+  div.choco-header {
     background-color: rgba(0, 0, 0, 0.85);
     padding: 6px 10px;
 
@@ -128,7 +128,7 @@ div.sgl-container {
   }
 }
 
-div.sgl-thumbnails {
+div.choco-thumbnails {
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -140,7 +140,7 @@ div.sgl-thumbnails {
     display: none;
   }
 
-  div.sgl-thumbnail {
+  div.choco-thumbnail {
     display: inline-block;
     width: @thumbnails-height - 10px;
     height: @thumbnails-height - 10px;
@@ -158,7 +158,7 @@ div.sgl-thumbnails {
   }
 }
 
-div.sgl-thumbnails-toggle {
+div.choco-thumbnails-toggle {
   position: fixed;
   bottom: @thumbnails-height - 4px;
   left: 50%;

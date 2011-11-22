@@ -7,7 +7,7 @@ isHistory = not not (window.history and history.pushState)
 updateBasedir = (template, basedir) ->
   template.replace /\{\{basedir\}\}/g, basedir
 
-class Gallery
+class Chocolate
   images: {}
   current: null
 
@@ -30,9 +30,9 @@ class Gallery
     elements = ['container', 'spinner', 'leftside', 'rightside']
     elements.push 'thumbnails' if @options.thumbnails
 
-    @[element] = @overlay.find '.sgl-' + element for element in elements
+    @[element] = @overlay.find '.choco-' + element for element in elements
 
-    @overlay.find('.sgl-close').click (event) => @close()
+    @overlay.find('.choco-close').click (event) => @close()
 
     @_prepareActionFor element for element in ['overlay', 'container', 'leftside', 'rightside']
 
@@ -97,7 +97,7 @@ class Gallery
         event.preventDefault()
         @show cid
 
-      image.addClass('sgl-item').click (event) -> showFirstImage event, cid
+      image.addClass('choco-item').click (event) -> showFirstImage event, cid
 
       preload = new Image()
       preload.src = data.thumbnail
@@ -238,10 +238,10 @@ class Gallery
                          .replace('{{thumbnail}}', image.thumbnail)
                          .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
-    @thumbnails.html(content).find('.sgl-thumbnail').click (event) ->
+    @thumbnails.html(content).find('.choco-thumbnail').click (event) ->
       _this.updateImage parseInt $(@).attr('data-cid'), 10
 
-    @overlay.find('.sgl-thumbnails-toggle').click (event) ->
+    @overlay.find('.choco-thumbnails-toggle').click (event) ->
       method = if _this.thumbnails.hasClass 'hide' then 'removeClass' else 'addClass'
 
       _this.thumbnails[method] 'hide'
@@ -252,8 +252,8 @@ class Gallery
     @
 
 # Экспорт в глобальное пространство
-window.sglGallery = Gallery
+window.chocolate = Chocolate
 
 # Подключение к jQuery Plugins
 if jQuery and jQuery.fn
-  jQuery.fn.gallery = -> new Gallery @, arguments[0]
+  jQuery.fn.chocolate = -> new Chocolate @, arguments[0]
