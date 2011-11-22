@@ -6,5 +6,6 @@
     "rightside": "close"
   },
   "thumbnails": true,
-  "history":    true
+  "history":    true,
+  "repeat":     true
 }

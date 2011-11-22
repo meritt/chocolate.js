@@ -127,11 +127,19 @@ class Chocolate
 
   next: ->
     next = @current + 1
+
+    if @options.repeat
+      next = 1 unless @images[next]?
+
     @updateImage next if @images[next]?
     @
 
   prev: ->
     prev = @current - 1
+
+    if @options.repeat
+      prev = counter unless @images[prev]?
+
     @updateImage prev if @images[prev]?
     @
 
