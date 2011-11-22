@@ -8,7 +8,7 @@
       <div class=\"choco-container\"></div>
       <div class=\"choco-rightside\"></div>
       {{thumbnails}}
-      <div class=\"choco-close\"></div>
+      <div class=\"choco-close\">&times;</div>
     </div>
   ",
 
