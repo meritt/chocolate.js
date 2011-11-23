@@ -1,6 +1,7 @@
 @import "../../less-framework/function.less";
 @import "keyframes.less";
 
+//@basedir: "../themes/default";
 @basedir: "{{basedir}}";
 @thumbnails-height: 100px;
 
@@ -10,8 +11,7 @@
   cursor: pointer;
 
   &:hover {
-    background: url("../themes/default/images/lupa.png") 95% 95% no-repeat;
-    background-color: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, .4) url("@{basedir}/images/lupa.png") 95% 95% no-repeat;
   }
 }
 
