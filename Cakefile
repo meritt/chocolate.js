@@ -22,7 +22,7 @@ task 'build', 'Build chocolate.js', (options) ->
     spawn 'mkdir', ['-p', dist + 'js']
     spawn 'mkdir', ['-p', dist + 'css']
 
-    spawn 'cp', ['-R', src + 'images', dist] if fs.statSync src + 'images'
+    spawn 'cp', ['-R', src + 'images', dist + 'images'] if fs.statSync src + 'images'
 
     compileJsContent dist, src, basedir
     compileCssContent dist, src, basedir
