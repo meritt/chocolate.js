@@ -59,7 +59,12 @@ class Chocolate
     if method
       verify = @[element].attr 'class'
       @[element].click (event) => @[method]() if $(event.target).hasClass verify
+      if @options.actions[element] is 'close'
+        @[element].bind 'mouseenter mouseleave', (event) => @_hoverCloseButton()
     @
+
+  _hoverCloseButton: ->
+    @overlay.find('.choco-close').toggleClass 'hover'
 
   getImageFromUri: ->
     hash = window.location.hash

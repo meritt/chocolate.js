@@ -83,10 +83,14 @@ div.choco-close {
   right: 20px;
   top: 20px;
   width: 25px;
-  height: 25px;
-  background-color: red;
+  line-height: 25px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 41px;
   cursor: pointer;
   z-index: 15px;
+}
+div.choco-close.hover, div.choco-close:hover {
+  color: #fff;
 }
 div.choco-leftside {
   position: fixed;
@@ -214,14 +218,20 @@ div.choco-thumbnails-toggle {
   position: fixed;
   bottom: 96px;
   left: 50%;
-  width: 50px;
-  height: 6px;
+  width: 0;
+  height: 0;
   margin-left: -25px;
-  background-color: yellow;
+  background-color: #333;
   cursor: pointer;
   z-index: 20;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-top: 5px solid #fff;
 }
 div.choco-thumbnails-toggle.hide {
   bottom: 0;
-  height: 10px;
+  border-top: 0;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 5px solid #fff;
 }
