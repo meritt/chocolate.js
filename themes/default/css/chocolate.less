@@ -10,6 +10,7 @@
   cursor: pointer;
 
   &:hover {
+    background: url("../themes/default/images/lupa.png") 95% 95% no-repeat;
     background-color: rgba(0, 0, 0, 0.4);
   }
 }
@@ -33,17 +34,15 @@ div.choco-overlay {
 div.choco-close {
   position: fixed;
   right: 20px;
-  top: 20px;
-  width: 25px;
-  color: rgba(255, 255, 255, 0.5);
+  top: 22px;
+  width: 23px;
+  line-height: 23px;
+  color:#fff;
+  opacity:.5;
   font-size: 41px;
-  line-height: 15px;
   cursor: pointer;
   z-index: 15px;
-
-  &.hover, &:hover {
-    color: #fff;
-  }
+  &.hover, &:hover{opacity:1;}
 }
 
 .choco-sidecolumn() {
@@ -57,14 +56,28 @@ div.choco-close {
 div.choco-leftside {
   .choco-sidecolumn();
   left: 0;
-  padding: 20px 0 0 20px;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 41px;
-  line-height: 15px;
   cursor: pointer;
+  color: #666;
+
+  &:before {
+    content: '';
+    display:block;
+    width:0;
+    height:0;
+    border-left:0;
+    border-right:10px solid #fff;
+    border-top:11px solid transparent;
+    border-bottom:11px solid transparent;
+    opacity:.5;
+    left: 22px;
+    top:25px;
+    position:relative;
+  }
 
   &:hover {
     color: #fff;
+    
+    &:before{opacity:1;}
   }
 }
 
@@ -94,10 +107,12 @@ div.choco-spinner {
     margin-left: -(140px / 2);
     width: 140px;
     height: 140px;
+    opacity: .8;
   }
 
   img:first-child {
     .animation(spin);
+    opacity: .5;
   }
 }
 
@@ -165,20 +180,15 @@ div.choco-thumbnails-toggle {
   position: fixed;
   bottom: @thumbnails-height - 4px;
   left: 50%;
-  width:0;
-  height:0;
+  width: 50px;
+  height: 6px;
   margin-left: -25px;
-  background-color: #333;
+  background-color: #666;
   cursor: pointer;
   z-index: 20;
-  border-left:30px solid transparent;
-  border-right:30px solid transparent;
-  border-top:5px solid #fff;
+
   &.hide {
     bottom: 0;
-    border-top:0;
-    border-left:25px solid transparent;
-    border-right:25px solid transparent;
-    border-bottom:5px solid #fff;
+    height: 10px;
   }
 }
