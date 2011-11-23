@@ -205,10 +205,13 @@ class Chocolate
   updateDimensions: (width, height) ->
     thumbnails = if not @options.thumbnails or @thumbnails.css('display') is 'none' then 0 else @thumbnails.height()
 
+    horizontal = parseInt(@overlay.css('padding-left'), 10) + parseInt(@overlay.css('padding-right'), 10)
+    vertical   = parseInt(@overlay.css('padding-top'), 10) + parseInt(@overlay.css('padding-bottom'), 10)
+
     innerWidth   = window.innerWidth
-    windowWidth  = innerWidth - 50
+    windowWidth  = innerWidth - horizontal
     innerHeight  = window.innerHeight
-    windowHeight = innerHeight - 50 - thumbnails
+    windowHeight = innerHeight - vertical - thumbnails
 
     if width > windowWidth
       height = windowWidth * height / width

@@ -3,7 +3,7 @@
 
   "overlay": "
     <div class=\"choco-overlay\">
-      <div class=\"choco-leftside\"></div>
+      <div class=\"choco-leftside\">&larr;</div>
       {{spinner}}
       <div class=\"choco-container\"></div>
       <div class=\"choco-rightside\"></div>
