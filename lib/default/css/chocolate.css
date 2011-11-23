@@ -63,8 +63,7 @@
   cursor: pointer;
 }
 .choco-item-hover:hover {
-  background: url("../themes/default/images/lupa.png") 95% 95% no-repeat;
-  background-color: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.4) url("/chocolate/images/lupa.png") 95% 95% no-repeat;
 }
 div.choco-overlay {
   position: fixed;
