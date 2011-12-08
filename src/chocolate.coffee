@@ -2,7 +2,13 @@ counter = 0
 
 existActions = ['next', 'prev', 'close']
 
-isHistory = not not (window.history and history.pushState)
+isHistory    = not not (window.history and history.pushState)
+# isFullscreen = document.webkitRequestFullScreen || document.mozRequestFullScreen
+# test = document.getElementById 'choco-overlay'
+# if test.webkitRequestFullScreen
+#   test.webkitRequestFullScreen()
+# else
+#   test.mozRequestFullScreen()
 
 updateBasedir = (template, basedir) ->
   template.replace /\{\{basedir\}\}/g, basedir
@@ -27,7 +33,7 @@ class Chocolate
 
     @overlay = $(template).appendTo 'body'
 
-    elements = ['container', 'spinner', 'leftside', 'rightside']
+    elements = ['container', 'spinner', 'leftside', 'rightside', 'header']
     elements.push 'thumbnails' if @options.thumbnails
 
     @[element] = @overlay.find '.choco-' + element for element in elements
@@ -174,7 +180,7 @@ class Chocolate
       @updateDimensions image.width, image.height
 
       @container.css 'background-image', 'url(' + image.source + ')'
-      @container.html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
+      @header.html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
     @
 
   ###
@@ -205,6 +211,8 @@ class Chocolate
    Обновление размеров блока с главным изображением
   ###
   updateDimensions: (width, height) ->
+    title = not not @images[@current].title
+
     thumbnails = if not @options.thumbnails or @thumbnails.css('display') is 'none' then 0 else @thumbnails.height()
 
     horizontal = parseInt(@overlay.css('padding-left'), 10) + parseInt(@overlay.css('padding-right'), 10)
@@ -226,6 +234,7 @@ class Chocolate
     left = parseInt width / 2, 10
     top  = parseInt height / 2, 10
     top += parseInt thumbnails / 2, 10 if thumbnails > 0
+    top += 20 if title
 
     style = 'width': (innerWidth / 2 - left) + 'px', 'height': innerHeight + 'px'
 
@@ -233,6 +242,11 @@ class Chocolate
     @rightside.css style
 
     style = 'width': width, 'height': height, 'margin-left': '-' + left + 'px', 'margin-top': '-' + top + 'px'
+
+    if title
+      @header.css 'display': 'block', 'width': width, 'margin-left': '-' + left + 'px', 'padding-top': parseInt((height - 100) / 2, 10) + 'px'
+    else
+      @header.css 'display': 'none'
 
     @container.css style
     @spinner.css   style
