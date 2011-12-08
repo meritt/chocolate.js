@@ -127,7 +127,9 @@ class Chocolate
     @
 
   close: ->
-    @overlay.removeClass 'show'
+    if @overlay.hasClass 'show'
+      history.pushState null, null, '#' if isHistory
+      @overlay.removeClass 'show'
     @
 
   next: ->
