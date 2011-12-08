@@ -1,9 +1,16 @@
 @import "../../less-framework/function.less";
 @import "keyframes.less";
 
-//@basedir: "../themes/default";
-@basedir: "{{basedir}}";
+@basedir: "..";
+//@basedir: "{{basedir}}";
 @thumbnails-height: 100px;
+
+.choco-unselect {
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
 
 .choco-item-hover {
   position: absolute;
@@ -76,7 +83,7 @@ div.choco-leftside {
 
   &:hover {
     color: #fff;
-    
+
     &:before{opacity:1;}
   }
 }
