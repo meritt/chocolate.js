@@ -54,16 +54,24 @@
     -moz-transform: rotate(360deg);
   }
 }
-/*@-ms-keyframes spin {
+/*
+@-ms-keyframes spin {
   from { -ms-transform: rotate(0deg); }
   to   { -ms-transform: rotate(360deg); }
-}*/.choco-item-hover {
+}
+*/.choco-unselect {
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+.choco-item-hover {
   position: absolute;
   display: block;
   cursor: pointer;
 }
 .choco-item-hover:hover {
-  background: rgba(0, 0, 0, 0.4) url("/chocolate/images/lupa.png") 95% 95% no-repeat;
+  background: rgba(0, 0, 0, 0.4) url("../images/lupa.png") 95% 95% no-repeat;
 }
 div.choco-overlay {
   position: fixed;
