@@ -1,8 +1,8 @@
 @import "../../less-framework/function.less";
 @import "keyframes.less";
 
-//@basedir: "../themes/default";
-@basedir: "{{basedir}}";
+@basedir: "../themes/default";//перед коммитом вернуть обратно
+//@basedir: "{{basedir}}";
 @thumbnails-height: 100px;
 
 .choco-item-hover {
@@ -152,8 +152,9 @@ div.choco-thumbnails {
   right: 0;
   height: @thumbnails-height - 5px;
   padding: 5px 0 0 10px;
-  background-color: #000;
-
+  border-top:2px solid #fff;
+  text-align: center;
+  
   &.hide {
     display: none;
   }
@@ -165,13 +166,12 @@ div.choco-thumbnails {
     margin-right: 10px;
     background-position: 50% 50%;
     background-repeat: no-repeat;
-    .background-size(auto, @thumbnails-height - 10px);
-    .border-radius(10px);
+    .background-size(auto, @thumbnails-height - 4px);
+    .border-radius(4px);
     cursor: pointer;
 
     &.selected {
-      padding: 2px;
-      background-color: red;
+      border:2px solid #fff;
     }
   }
 }
@@ -179,11 +179,11 @@ div.choco-thumbnails {
 div.choco-thumbnails-toggle {
   position: fixed;
   bottom: @thumbnails-height - 4px;
-  left: 50%;
+  right: 10px;
   width: 50px;
   height: 6px;
   margin-left: -25px;
-  background-color: #666;
+  background: url("@{basedir}/images/arrow-b.png") no-repeat 50% 50%;
   cursor: pointer;
   z-index: 20;
 
