@@ -223,13 +223,14 @@ div.choco-thumbnails {
   position: fixed;
   left: 0;
   bottom: 0;
-  right: 0;
+  right: 53px;
   height: 95px;
-  padding: 5px 0 0 10px;
-  background-color: #000;
+  padding: 5px 0 0 63px;
+  border-top: 2px solid #fff;
+  text-align: center;
 }
 div.choco-thumbnails.hide {
-  display: none;
+  margin-bottom: -100px;
 }
 div.choco-thumbnails div.choco-thumbnail {
   display: inline-block;
@@ -238,33 +239,53 @@ div.choco-thumbnails div.choco-thumbnail {
   margin-right: 10px;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  -webkit-background-size: auto 90px;
-  -moz-background-size: auto 90px;
-  background-size: auto 90px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
+  -webkit-background-size: auto 96px;
+  -moz-background-size: auto 96px;
+  background-size: auto 96px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
   cursor: pointer;
+  vertical-align: middle;
 }
 div.choco-thumbnails div.choco-thumbnail.selected {
-  padding: 2px;
-  background-color: red;
+  border: 2px solid #fff;
 }
 div.choco-thumbnails-toggle {
   position: fixed;
-  bottom: 96px;
-  left: 50%;
-  width: 50px;
-  height: 6px;
-  margin-left: -25px;
-  background-color: #666;
+  right: 13px;
+  bottom: 84px;
+  width: 54px;
+  height: 28px;
   cursor: pointer;
   z-index: 20;
+  background: url("../images/arrow-b.png") 50% 50% no-repeat;
+}
+div.choco-thumbnails-toggle:after {
+  content: '';
+  display: block;
+  width: 26px;
+  height: 2px;
+  background-color: #FFF;
+  position: fixed;
+  right: 0;
+  cursor: default;
+  bottom: 100px;
 }
 div.choco-thumbnails-toggle.hide {
+  bottom: -9px;
+  background-image: url("../images/arrow-t.png");
+}
+div.choco-thumbnails-toggle.hide:after {
+  content: '';
+  display: block;
+  width: 26px;
+  height: 2px;
+  background-color: #FFF;
+  position: fixed;
+  right: 0;
   bottom: 0;
-  height: 10px;
 }

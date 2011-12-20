@@ -1,7 +1,6 @@
 @import "../../less-framework/function.less";
 @import "keyframes.less";
 
-//@basedir: "../themes/default";
 @basedir: "{{basedir}}";
 @thumbnails-height: 100px;
 
@@ -164,14 +163,14 @@ div.choco-thumbnails {
   position: fixed;
   left: 0;
   bottom: 0;
-  right: 0;
+  right: 53px;
   height: @thumbnails-height - 5px;
-  padding: 5px 0 0 10px;
+  padding: 5px 0 0 63px;
   border-top:2px solid #fff;
   text-align: center;
   
   &.hide {
-    display: none;
+    margin-bottom: -@thumbnails-height;
   }
 
   div.choco-thumbnail {
@@ -184,6 +183,7 @@ div.choco-thumbnails {
     .background-size(auto, @thumbnails-height - 4px);
     .border-radius(4px);
     cursor: pointer;
+    vertical-align: middle;
 
     &.selected {
       border:2px solid #fff;
@@ -193,17 +193,39 @@ div.choco-thumbnails {
 
 div.choco-thumbnails-toggle {
   position: fixed;
-  bottom: @thumbnails-height - 4px;
-  right: 10px;
-  width: 50px;
-  height: 6px;
-  margin-left: -25px;
-  background: url("@{basedir}/images/arrow-b.png") no-repeat 50% 50%;
+  right:13px;
+  bottom: @thumbnails-height - 16px;
+  width: 54px;
+  height: 28px;
   cursor: pointer;
   z-index: 20;
+  background: url("@{basedir}/images/arrow-b.png") 50% 50% no-repeat;
 
+  &:after{
+    content:'';
+    display:block;
+    width:26px;
+    height:2px;
+    background-color:#FFF;
+    position:fixed;
+    right:0;
+    cursor:default;
+    bottom: @thumbnails-height;
+  }
+  
   &.hide {
-    bottom: 0;
-    height: 10px;
+    bottom: -9px;
+    background-image: url("@{basedir}/images/arrow-t.png");
+    
+    &:after {
+      content:'';
+      display:block;
+      width:26px;
+      height:2px;
+      background-color:#FFF;
+      position:fixed;
+      right:0;
+      bottom:0;
+    }
   }
 }
