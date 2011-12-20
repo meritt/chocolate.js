@@ -3,12 +3,13 @@
 
   "overlay": "
     <div class=\"choco-overlay\">
-      <div class=\"choco-leftside\"></div>
+      <div class=\"choco-leftside choco-unselect\"></div>
       {{spinner}}
-      <div class=\"choco-container\"></div>
-      <div class=\"choco-rightside\"></div>
+      <div class=\"choco-container choco-unselect\"></div>
+      <div class=\"choco-header\"></div>
+      <div class=\"choco-rightside choco-unselect\"></div>
       {{thumbnails}}
-      <div class=\"choco-close\">&times;</div>
+      <div class=\"choco-close choco-unselect\">&times;</div>
     </div>
   ",
 
@@ -19,9 +20,9 @@
     </div>
   ",
 
-  "image-title": "<div class=\"choco-header\"><h1>{{title}}</h1></div>",
+  "image-title": "<h1>{{title}}</h1>",
 
-  "thumbnails": "<div class=\"choco-thumbnails-toggle\"></div><div class=\"choco-thumbnails\"></div>",
+  "thumbnails": "<div class=\"choco-thumbnails-toggle choco-unselect\"></div><div class=\"choco-thumbnails choco-unselect\"></div>",
 
   "thumbnails-item": "<div class=\"choco-thumbnail{{selected}}\" data-cid=\"{{cid}}\" style=\"background-image:url('{{thumbnail}}')\"{{title}}></div>"
 }

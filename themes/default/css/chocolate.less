@@ -1,9 +1,16 @@
 @import "../../less-framework/function.less";
 @import "keyframes.less";
 
-@basedir: "../themes/default";//перед коммитом вернуть обратно
-//@basedir: "{{basedir}}";
+//@basedir: "../themes/default";
+@basedir: "{{basedir}}";
 @thumbnails-height: 100px;
+
+.choco-unselect {
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
 
 .choco-item-hover {
   position: absolute;
@@ -22,7 +29,7 @@ div.choco-overlay {
   display: none;
   width: 100%;
   height: 100%;
-  padding: 25px;
+  padding: 50px 25px;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 5;
 
@@ -36,13 +43,16 @@ div.choco-close {
   right: 20px;
   top: 22px;
   width: 23px;
-  line-height: 23px;
+  .opacity(0.5);
   color:#fff;
-  opacity:.5;
   font-size: 41px;
+  line-height: 23px;
   cursor: pointer;
   z-index: 15px;
-  &.hover, &:hover{opacity:1;}
+
+  &.hover, &:hover {
+    .opacity(1);
+  }
 }
 
 .choco-sidecolumn() {
@@ -56,28 +66,30 @@ div.choco-close {
 div.choco-leftside {
   .choco-sidecolumn();
   left: 0;
-  cursor: pointer;
   color: #666;
+  cursor: pointer;
 
   &:before {
     content: '';
-    display:block;
-    width:0;
-    height:0;
-    border-left:0;
-    border-right:10px solid #fff;
-    border-top:11px solid transparent;
-    border-bottom:11px solid transparent;
-    opacity:.5;
+    display: block;
+    position: relative;
     left: 22px;
-    top:25px;
-    position:relative;
+    top: 25px;
+    width: 0;
+    height: 0;
+    border-left: 0;
+    border-right: 10px solid #fff;
+    border-top: 11px solid transparent;
+    border-bottom: 11px solid transparent;
+    .opacity(0.5);
   }
 
   &:hover {
     color: #fff;
-    
-    &:before{opacity:1;}
+
+    &:before {
+      .opacity(1);
+    }
   }
 }
 
@@ -94,7 +106,6 @@ div.choco-rightside {
 
 div.choco-spinner {
   .choco-container();
-/*  background-color: rgba(0, 0, 0, 0.4);*/
   z-index: 15;
 
   &.hide {
@@ -107,12 +118,12 @@ div.choco-spinner {
     margin-left: -(140px / 2);
     width: 140px;
     height: 140px;
-    opacity: .8;
+    .opacity(0.8);
   }
 
   img:first-child {
     .animation(spin);
-    opacity: .5;
+    .opacity(0.5);
   }
 }
 
@@ -122,26 +133,30 @@ div.choco-container {
   background-repeat: no-repeat;
   .background-size(100%, 100%);
   .box-shadow(10px, #111);
-  cursor: pointer;
-  z-index: 10;
   .opacity(0.4);
   .highlight(opacity, 500ms, ease-in-out);
+  cursor: pointer;
+  z-index: 10;
 
   &.show {
     .opacity(1);
   }
+}
 
-  div.choco-header {
+div.choco-header {
+  .choco-container();
+  display: none;
+  text-align: center;
+
+  h1 {
+    display: inline-block;
+    margin: 0;
+    padding: 4px 8px;
     background-color: rgba(0, 0, 0, 0.85);
-    padding: 6px 10px;
-
-    h1 {
-      margin: 0;
-      padding: 0;
-      color: #ccc;
-      font-size: 1.2em;
-      font-weight: normal;
-    }
+    .border-radius(10px);
+    color: #ccc;
+    font-size: 1em;
+    font-weight: normal;
   }
 }
 
