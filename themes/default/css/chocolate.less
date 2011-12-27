@@ -76,10 +76,10 @@ div.choco-close {
   top: 54px;
   width: 17px;
   height:17px;
-  .opacity(.5);
+  background: url("@{basedir}/images/close.png") 0 0 no-repeat;
+  .opacity(0.5);
   cursor: pointer;
   z-index: 15px;
-  background:url("@{basedir}/images/close.png") 0 0 no-repeat;
 
   &.hover, &:hover {
     .opacity(1);
@@ -109,7 +109,7 @@ div.choco-leftside {
     width: 17px;
     height: 17px;
     background:url("@{basedir}/images/arrow-l.png") 0 0 no-repeat;
-    .opacity(.5);
+    .opacity(0.5);
   }
 
   &:hover {
@@ -147,12 +147,12 @@ div.choco-spinner {
     margin-left: -(140px / 2);
     width: 140px;
     height: 140px;
-    .opacity(.8);
+    .opacity(0.8);
   }
 
   img:first-child {
     .animation(spin);
-    .opacity(.5);
+    .opacity(0.5);
   }
 }
 
@@ -162,7 +162,7 @@ div.choco-container {
   background-repeat: no-repeat;
   .background-size(100%, 100%);
   .box-shadow(10px, #111);
-  .opacity(.4);
+  .opacity(0.4);
   .highlight(opacity, 500ms, ease-in-out);
   cursor: pointer;
   z-index: 10;
@@ -210,7 +210,7 @@ div.choco-thumbnails {
   right: 53px;
   height: @thumbnails-height + 7px;
   padding: 11px 0 0 31px;
-  border-top:2px solid #fff;
+  border-top: 2px solid #fff;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -220,34 +220,35 @@ div.choco-thumbnails {
   }
 
   div.choco-thumbnail {
+    @height: @thumbnails-height - 10px;
     display: inline-block;
-    width: @thumbnails-height - 10px;
-    height: @thumbnails-height - 10px;
+    width: @height + (@height / 3);
+    height: @height;
+    margin: 3px 25px 3px 3px;
     background-position: 50% 50%;
     background-repeat: no-repeat;
     .background-size(auto, @thumbnails-height - 4px);
     .border-radius(7px);
     cursor: pointer;
     vertical-align: middle;
-    margin:3px 25px 3px 3px;
-    .opacity(.6);
-    .box-shadow-double (5px, rgba(0,0,0,.7), 15px, ((@thumbnails-height - 10px)/2), rgba(0,0,0,.3));
+    .opacity(0.6);
+    .box-shadow-double(5px, rgba(0, 0, 0, 0.7), 15px, (@height / 2), rgba(0, 0, 0, 0.3));
     .highlight2();
 
-    &:first-child{
-      margin-left:22px !important;
+    &:first-child {
+      margin-left: 22px !important;
     }
 
-    &:hover{
+    &:hover {
       .opacity(1);
-      .box-shadow-double (3px, rgba(0,0,0,.5), 15px, 0, rgba(0,0,0,.1));
+      .box-shadow-double(3px, rgba(0, 0, 0, 0.5), 15px, 0, rgba(0, 0, 0, 0.1));
     }
 
-    &.selected,&.selected:hover {
-      border:3px solid #fff;
-      margin:0 22px 0 0;
+    &.selected, &.selected:hover {
+      margin: 0 22px 0 0;
+      border: 3px solid #fff;
       .opacity(1);
-      .box-shadow-null;
+      .box-shadow-null();
     }
   }
 }
@@ -262,17 +263,17 @@ div.choco-thumbnails-toggle {
   z-index: 20;
   background: url("@{basedir}/images/arrow-b.png") 50% 50% no-repeat;
 
-  &:after{
-    content:'';
-    display:block;
-    width:26px;
-    height:2px;
-    background-color:#FFF;
-    position:fixed;
-    right:0;
-    .opacity(1);
-    cursor:default;
+  &:after {
+    content: '';
+    position: fixed;
+    right: 0;
     bottom: @thumbnails-height + 18px;
+    display: block;
+    width: 26px;
+    height: 2px;
+    background-color: #fff;
+    .opacity(1);
+    cursor: default;
   }
 
   &.hide {
@@ -280,14 +281,14 @@ div.choco-thumbnails-toggle {
     background-image: url("@{basedir}/images/arrow-t.png");
 
     &:after {
-      content:'';
-      display:block;
-      width:26px;
-      height:2px;
-      background-color:#FFF;
-      position:fixed;
-      right:0;
-      bottom:0;
+      content: '';
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      display: block;
+      width: 26px;
+      height: 2px;
+      background-color: #fff;
     }
   }
 }
