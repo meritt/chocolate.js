@@ -14,7 +14,7 @@ task 'build', 'Build chocolate.js', (options) ->
   basedir = options.basedir or '/chocolate'
 
   path = dirname(__filename)
-  dist = path + '/lib/' + theme + '/'
+  dist = path + '/dist/' + theme + '/'
   src  = path + '/themes/' + theme + '/'
 
   fs.stat dist, (error, stat) ->
