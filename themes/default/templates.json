@@ -1,5 +1,5 @@
 {
-  "image-hover": "<span class=\"choco-item-hover\" data-sglid=\"{{cid}}\"></span>",
+  "image-hover": "<span class=\"choco-item-hover\" data-pid=\"{{cid}}\"></span>",
 
   "overlay": "
     <div class=\"choco-overlay\">

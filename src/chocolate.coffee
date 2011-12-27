@@ -11,8 +11,9 @@ isHistory = not not (window.history and history.pushState)
 #   test.mozRequestFullScreen()
 
 class Chocolate
-  images: {}
+  images:  {}
   current: null
+  length:  0
 
   ###
    Конструктор
@@ -97,6 +98,7 @@ class Chocolate
 
     data.thumbnail = data.source unless data.thumbnail
     @images[cid] = data
+    @length++
 
     if image
       showFirstImage = (event, cid) =>
@@ -108,10 +110,14 @@ class Chocolate
 
       preload = new Image()
       preload.src = data.thumbnail
-      preload.onload = (event) =>
+      preload.onload = ->
         image.before templates['image-hover'].replace '{{cid}}', cid
-        $('[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) ->
-          showFirstImage event, cid
+
+        popover = $('[data-pid=' + cid + ']').css
+          'width':  image.width()
+          'height': image.height()
+
+        popover.click (event) -> showFirstImage event, cid
 
   ###
    Показать изображение на большом экране
