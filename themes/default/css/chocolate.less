@@ -4,6 +4,38 @@
 @basedir: "{{basedir}}";
 @thumbnails-height: 116px;
 
+.highlight2 (@attrib: none, @time: 0.4s, @method: ease-in-out) {
+  -webkit-transition: @arguments;
+     -moz-transition: @arguments;
+      -ms-transition: @arguments;
+       -o-transition: @arguments;
+          transition: @arguments;
+-webkit-transition-property:opacity, -webkit-box-shadow;
+-moz-transition-property:opacity, -moz-box-shadow;
+-ms-transition-property:opacity, -ms-box-shadow;
+-o-transition-property:opacity, -o-box-shadow;
+transition-property:opacity, box-shadow;
+}
+.box-shadow-null (@blur: 3px, @color: rgba(0,0,0,0.5)) {
+  @value: 0 0 @blur @color;
+
+  -webkit-box-shadow: @value;
+     -moz-box-shadow: @value;
+      -ms-box-shadow: @value;
+       -o-box-shadow: @value;
+          box-shadow: @value;
+}
+
+.box-shadow-double (@blur1: 3px, @color1: #000, @blur2: 3px, @tension2: 53px, @color2: rgba(0,0,0,0.3)) {
+  @value: 0 0 @blur1 @color1, inset 0 0 @blur2 @tension2 @color2;
+
+  -webkit-box-shadow: @value;
+     -moz-box-shadow: @value;
+      -ms-box-shadow: @value;
+       -o-box-shadow: @value;
+          box-shadow: @value;
+}
+
 .choco-unselect {
   -webkit-user-select: none;
   -moz-user-select: -moz-none;
@@ -39,15 +71,14 @@ div.choco-overlay {
 
 div.choco-close {
   position: fixed;
-  right: 20px;
-  top: 22px;
-  width: 23px;
+  right: 31px;
+  top: 54px;
+  width: 17px;
+  height:17px;
   .opacity(.5);
-  color:#fff;
-  font-size: 41px;
-  line-height: 23px;
   cursor: pointer;
   z-index: 15px;
+  background:url("@{basedir}/images/close.png") 0 0 no-repeat;
 
   &.hover, &:hover {
     .opacity(1);
@@ -72,14 +103,11 @@ div.choco-leftside {
     content: '';
     display: block;
     position: relative;
-    left: 22px;
-    top: 25px;
-    width: 0;
-    height: 0;
-    border-left: 0;
-    border-right: 10px solid #fff;
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
+    left: 34px;
+    top: 54px;
+    width: 17px;
+    height: 17px;
+    background:url("@{basedir}/images/arrow-l.png") 0 0 no-repeat;
     .opacity(.5);
   }
 
@@ -172,9 +200,11 @@ div.choco-thumbnails {
   bottom: 0;
   right: 53px;
   height: @thumbnails-height + 7px;
-  padding: 11px 0 0 63px;
+  padding: 11px 0 0 31px;
   border-top:2px solid #fff;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
   
   &.hide {
     margin-bottom: -@thumbnails-height - 18px;
@@ -191,19 +221,23 @@ div.choco-thumbnails {
     cursor: pointer;
     vertical-align: middle;
     margin:3px 25px 3px 3px;
-    opacity: .6;
+    .opacity(.6);
     .box-shadow-double (5px, rgba(0,0,0,.7), 15px, ((@thumbnails-height - 10px)/2), rgba(0,0,0,.3));
     .highlight2();
     
+    &:first-child{
+      margin-left:22px !important;
+    }
+    
     &:hover{
-      opacity: 1;
+      .opacity(1);
       .box-shadow-double (3px, rgba(0,0,0,.5), 15px, 0, rgba(0,0,0,.1));
     }
     
     &.selected,&.selected:hover {
       border:3px solid #fff;
       margin:0 22px 0 0;
-      opacity:1;
+      .opacity(1);
       .box-shadow-null;
     }
   }
@@ -218,7 +252,7 @@ div.choco-thumbnails-toggle {
   cursor: pointer;
   z-index: 20;
   background: url("@{basedir}/images/arrow-b.png") 50% 50% no-repeat;
-
+  
   &:after{
     content:'';
     display:block;
@@ -227,6 +261,7 @@ div.choco-thumbnails-toggle {
     background-color:#FFF;
     position:fixed;
     right:0;
+    .opacity(1);
     cursor:default;
     bottom: @thumbnails-height + 18px;
   }
