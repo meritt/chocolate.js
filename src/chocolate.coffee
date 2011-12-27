@@ -210,7 +210,7 @@ class Chocolate
   updateDimensions: (width, height) ->
     title = not not @images[@current].title
 
-    thumbnails = if not @options.thumbnails or @thumbnails.css('display') is 'none' then 0 else @thumbnails.height()
+    thumbnails = if not @options.thumbnails or @thumbnails.hasClass('hide') then 0 else @thumbnails.height()
 
     horizontal = toInt(@overlay.css('padding-left')) + toInt(@overlay.css('padding-right'))
     vertical   = toInt(@overlay.css('padding-top')) + toInt(@overlay.css('padding-bottom'))
@@ -288,7 +288,8 @@ class Chocolate
       _this.updateImage toInt $(@).attr('data-cid')
 
     @overlay.find('.choco-thumbnails-toggle').click (event) ->
-      method = if _this.thumbnails.hasClass 'hide' then 'removeClass' else 'addClass'
+      current = _this.images[_this.current]
+      method  = if _this.thumbnails.hasClass 'hide' then 'removeClass' else 'addClass'
 
       _this.thumbnails[method] 'hide'
       $(@)[method] 'hide'
