@@ -215,10 +215,16 @@ class Chocolate
     horizontal = toInt(@overlay.css('padding-left')) + toInt(@overlay.css('padding-right'))
     vertical   = toInt(@overlay.css('padding-top')) + toInt(@overlay.css('padding-bottom'))
 
+    if title
+      headerHeight = toInt @header.css('height')
+      headerHeight = 40 if headerHeight is 0
+    else
+      headerHeight = 0
+
     innerWidth   = window.innerWidth
     windowWidth  = innerWidth - horizontal
     innerHeight  = window.innerHeight
-    windowHeight = innerHeight - vertical - thumbnails
+    windowHeight = innerHeight - vertical - thumbnails - headerHeight
 
     if width > windowWidth
       height = windowWidth * height / width
@@ -229,12 +235,13 @@ class Chocolate
       height = windowHeight
 
     left = toInt width / 2
+
     top  = toInt height / 2
     top += toInt thumbnails / 2 if thumbnails > 0
-    top += 20 if title
+    top -= toInt headerHeight / 2 if title
 
     style =
-      'width':  (innerWidth / 2 - left) + 'px'
+      'width':  toInt(innerWidth / 2 - left) + 'px'
       'height': innerHeight + 'px'
 
     @leftside.css  style
@@ -251,7 +258,7 @@ class Chocolate
         'display':     'block'
         'width':       width
         'margin-left': '-' + left + 'px'
-        'padding-top': toInt((height - 100) / 2) + 'px'
+        'margin-top':  '-' + (top + headerHeight) + 'px'
     else
       @header.css 'display': 'none'
 
