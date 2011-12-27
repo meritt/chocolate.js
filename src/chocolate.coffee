@@ -2,7 +2,7 @@ counter = 0
 
 existActions = ['next', 'prev', 'close']
 
-isHistory    = not not (window.history and history.pushState)
+isHistory = not not (window.history and history.pushState)
 # isFullscreen = document.webkitRequestFullScreen || document.mozRequestFullScreen
 # test = document.getElementById 'choco-overlay'
 # if test.webkitRequestFullScreen
@@ -70,7 +70,7 @@ class Chocolate
 
   getImageFromUri: ->
     hash = window.location.hash
-    if hash then parseInt hash.replace('#image', ''), 10 else 0
+    if hash then toInt hash.replace('#image', '') else 0
 
   ###
    Добавляем список изображений для работы в галереи
@@ -203,6 +203,7 @@ class Chocolate
     else
       after.call @, cid
 
+
   ###
    Обновление размеров блока с главным изображением
   ###
@@ -211,8 +212,8 @@ class Chocolate
 
     thumbnails = if not @options.thumbnails or @thumbnails.css('display') is 'none' then 0 else @thumbnails.height()
 
-    horizontal = parseInt(@overlay.css('padding-left'), 10) + parseInt(@overlay.css('padding-right'), 10)
-    vertical   = parseInt(@overlay.css('padding-top'), 10) + parseInt(@overlay.css('padding-bottom'), 10)
+    horizontal = toInt(@overlay.css('padding-left')) + toInt(@overlay.css('padding-right'))
+    vertical   = toInt(@overlay.css('padding-top')) + toInt(@overlay.css('padding-bottom'))
 
     innerWidth   = window.innerWidth
     windowWidth  = innerWidth - horizontal
@@ -227,20 +228,30 @@ class Chocolate
       width  = windowHeight * width / height
       height = windowHeight
 
-    left = parseInt width / 2, 10
-    top  = parseInt height / 2, 10
-    top += parseInt thumbnails / 2, 10 if thumbnails > 0
+    left = toInt width / 2
+    top  = toInt height / 2
+    top += toInt thumbnails / 2 if thumbnails > 0
     top += 20 if title
 
-    style = 'width': (innerWidth / 2 - left) + 'px', 'height': innerHeight + 'px'
+    style =
+      'width':  (innerWidth / 2 - left) + 'px'
+      'height': innerHeight + 'px'
 
     @leftside.css  style
     @rightside.css style
 
-    style = 'width': width, 'height': height, 'margin-left': '-' + left + 'px', 'margin-top': '-' + top + 'px'
+    style =
+      'width':       width
+      'height':      height
+      'margin-left': '-' + left + 'px'
+      'margin-top':  '-' + top + 'px'
 
     if title
-      @header.css 'display': 'block', 'width': width, 'margin-left': '-' + left + 'px', 'padding-top': parseInt((height - 100) / 2, 10) + 'px'
+      @header.css
+        'display':     'block'
+        'width':       width
+        'margin-left': '-' + left + 'px'
+        'padding-top': toInt((height - 100) / 2) + 'px'
     else
       @header.css 'display': 'none'
 
@@ -267,7 +278,7 @@ class Chocolate
                          .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
     @thumbnails.html(content).find('.choco-thumbnail').click (event) ->
-      _this.updateImage parseInt $(@).attr('data-cid'), 10
+      _this.updateImage toInt $(@).attr('data-cid')
 
     @overlay.find('.choco-thumbnails-toggle').click (event) ->
       method = if _this.thumbnails.hasClass 'hide' then 'removeClass' else 'addClass'
@@ -278,6 +289,8 @@ class Chocolate
       _this.updateDimensions current.width, current.height
 
     @
+
+toInt = (string) -> parseInt string, 10
 
 # Экспорт в глобальное пространство
 window.chocolate = Chocolate
