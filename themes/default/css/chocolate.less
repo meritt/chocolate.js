@@ -10,11 +10,12 @@
       -ms-transition: @arguments;
        -o-transition: @arguments;
           transition: @arguments;
--webkit-transition-property:opacity, -webkit-box-shadow;
--moz-transition-property:opacity, -moz-box-shadow;
--ms-transition-property:opacity, -ms-box-shadow;
--o-transition-property:opacity, -o-box-shadow;
-transition-property:opacity, box-shadow;
+
+  -webkit-transition-property:opacity, -webkit-box-shadow;
+  -moz-transition-property:opacity, -moz-box-shadow;
+  -ms-transition-property:opacity, -ms-box-shadow;
+  -o-transition-property:opacity, -o-box-shadow;
+  transition-property:opacity, box-shadow;
 }
 .box-shadow-null (@blur: 3px, @color: rgba(0,0,0,0.5)) {
   @value: 0 0 @blur @color;
@@ -123,6 +124,7 @@ div.choco-leftside {
 div.choco-rightside {
   .choco-sidecolumn();
   right: 0;
+  cursor: pointer;
 }
 
 .choco-container() {
@@ -189,7 +191,7 @@ div.choco-header {
     margin-top: -1.2em;
     white-space:nowrap;
     float: right;
-    
+
     &:after{clear:both;display:block;content:'';width:0;height:0;}
   }
 }
@@ -205,7 +207,7 @@ div.choco-thumbnails {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  
+
   &.hide {
     margin-bottom: -@thumbnails-height - 18px;
   }
@@ -224,16 +226,16 @@ div.choco-thumbnails {
     .opacity(.6);
     .box-shadow-double (5px, rgba(0,0,0,.7), 15px, ((@thumbnails-height - 10px)/2), rgba(0,0,0,.3));
     .highlight2();
-    
+
     &:first-child{
       margin-left:22px !important;
     }
-    
+
     &:hover{
       .opacity(1);
       .box-shadow-double (3px, rgba(0,0,0,.5), 15px, 0, rgba(0,0,0,.1));
     }
-    
+
     &.selected,&.selected:hover {
       border:3px solid #fff;
       margin:0 22px 0 0;
@@ -252,7 +254,7 @@ div.choco-thumbnails-toggle {
   cursor: pointer;
   z-index: 20;
   background: url("@{basedir}/images/arrow-b.png") 50% 50% no-repeat;
-  
+
   &:after{
     content:'';
     display:block;
@@ -265,11 +267,11 @@ div.choco-thumbnails-toggle {
     cursor:default;
     bottom: @thumbnails-height + 18px;
   }
-  
+
   &.hide {
     bottom: -9px;
     background-image: url("@{basedir}/images/arrow-t.png");
-    
+
     &:after {
       content:'';
       display:block;
