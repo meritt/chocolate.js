@@ -4,3 +4,4 @@ node_modules
 .project
 .buildpath
 Thumbs.db
+dist/*
