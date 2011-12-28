@@ -138,6 +138,9 @@ class Chocolate
   close: ->
     if @overlay.hasClass 'show'
       history.pushState null, null, '#' if isHistory
+
+      @current = null
+      @thumbnails.html '' if @options.thumbnails
       @overlay.removeClass 'show'
     @
 
