@@ -131,8 +131,8 @@ class Chocolate
     @current = cid if @current is null
 
     @createThumbnails() if @options.thumbnails
-    @updateImage cid
     @overlay.addClass 'show'
+    @updateImage cid
     @
 
   close: ->
@@ -169,7 +169,18 @@ class Chocolate
 
     if @options.thumbnails
       @thumbnails.find('.selected').removeClass 'selected'
-      @thumbnails.find('[data-cid=' + cid + ']').addClass 'selected'
+      thumbnail = @thumbnails.find('[data-cid=' + cid + ']').addClass('selected')
+
+      width = thumbnail.outerWidth() + toInt thumbnail.css('margin-right')
+      left  = thumbnail.offset().left
+
+      if @thumbnails.width() < width + left
+        offset = @thumbnails.scrollLeft() + width
+        offset = width + left if @thumbnails.width() + offset < width + left
+        @thumbnails.scrollLeft offset
+      else if @thumbnails.scrollLeft() > left
+        offset = if left < width then 0 else @thumbnails.scrollLeft() - width
+        @thumbnails.scrollLeft offset
 
     if isHistory and updateHistory
       title = if @images[cid].title then 'Image: ' + @images[cid].title else null
