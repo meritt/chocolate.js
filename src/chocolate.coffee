@@ -223,7 +223,9 @@ class Chocolate
 
     if title
       headerHeight = toInt @header.css('height')
-      headerHeight = 40 if headerHeight is 0
+      if headerHeight is 0
+        headerHeight = 40
+        @header.css('height', headerHeight)
     else
       headerHeight = 0
 
