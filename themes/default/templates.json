@@ -20,9 +20,7 @@
     </div>
   ",
 
-  "image-title": "
-    <h1>{{title}}</h1><p class=\"choco-counter\">1 из 3</p>
-  ",
+  "image-title": "<h1>{{title}}</h1>",
 
   "thumbnails": "
     <div class=\"choco-thumbnails choco-unselect\"></div>
