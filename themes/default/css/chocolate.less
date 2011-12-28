@@ -4,30 +4,6 @@
 @basedir: "{{basedir}}";
 @thumbnails-height: 116px;
 
-.highlight2 (@attrib: none, @time: 0.4s, @method: ease-in-out) {
-  -webkit-transition: @arguments;
-     -moz-transition: @arguments;
-      -ms-transition: @arguments;
-       -o-transition: @arguments;
-          transition: @arguments;
-
-  -webkit-transition-property:opacity, -webkit-box-shadow;
-  -moz-transition-property:opacity, -moz-box-shadow;
-  -ms-transition-property:opacity, -ms-box-shadow;
-  -o-transition-property:opacity, -o-box-shadow;
-  transition-property:opacity, box-shadow;
-}
-
-.box-shadow-double (@blur1: 3px, @color1: #000, @blur2: 3px, @tension2: 53px, @color2: rgba(0,0,0,0.3)) {
-  @value: 0 0 @blur1 @color1, inset 0 0 @blur2 @tension2 @color2;
-
-  -webkit-box-shadow: @value;
-     -moz-box-shadow: @value;
-      -ms-box-shadow: @value;
-       -o-box-shadow: @value;
-          box-shadow: @value;
-}
-
 .choco-unselect {
   .user-select(none);
 }
@@ -151,7 +127,7 @@ div.choco-container {
   .background-size(100%, 100%);
   .box-shadow(1px, 1px, 10px, #111);
   .opacity(0.4);
-  .highlight(opacity, 500ms, ease-in-out);
+  .transition(opacity, 500ms, ease-in-out);
   cursor: pointer;
   z-index: 10;
 
@@ -210,18 +186,31 @@ div.choco-thumbnails {
   div.choco-thumbnail {
     @height: @thumbnails-height - 10px;
     display: inline-block;
+
     width: @height + (@height / 3);
     height: @height;
+
     margin: 3px 25px 3px 3px;
+
     background-position: 50% 50%;
     background-repeat: no-repeat;
     .background-size(auto, @thumbnails-height - 4px);
+
     .border-radius(7px);
+
+    .inset-box-shadow(5px, rgba(0, 0, 0, 0.7), 15px, (@height / 2), rgba(0, 0, 0, 0.3));
+
     cursor: pointer;
     vertical-align: middle;
     .opacity(0.6);
-    .box-shadow-double(5px, rgba(0, 0, 0, 0.7), 15px, (@height / 2), rgba(0, 0, 0, 0.3));
-    .highlight2();
+
+    .transition(none, 0.4s, ease-in-out);
+
+    -webkit-transition-property: opacity, -webkit-box-shadow;
+       -moz-transition-property: opacity, -moz-box-shadow;
+        -ms-transition-property: opacity, box-shadow;
+         -o-transition-property: opacity, box-shadow;
+            transition-property: opacity, box-shadow;
 
     &:first-child {
       margin-left: 22px !important;
@@ -229,7 +218,7 @@ div.choco-thumbnails {
 
     &:hover {
       .opacity(1);
-      .box-shadow-double(3px, rgba(0, 0, 0, 0.5), 15px, 0, rgba(0, 0, 0, 0.1));
+      .inset-box-shadow(3px, rgba(0, 0, 0, 0.5), 15px, 0, rgba(0, 0, 0, 0.1));
     }
 
     &.selected, &.selected:hover {
