@@ -290,7 +290,7 @@ class Chocolate
    Создание панели для тумбнейлов
   ###
   createThumbnails: ->
-    return @ if not @options.thumbnails or not @current or @images.length <= 1
+    return @ if not @options.thumbnails or not @current or @length <= 1
 
     _this   = @
     current = @images[@current]
