@@ -8,13 +8,17 @@
   .user-select(none);
 }
 
+.choco-item {
+  display: block;
+}
+
 .choco-item-hover {
-  position: absolute;
+  position: relative;
   display: block;
   cursor: pointer;
 
   &:hover {
-    background: rgba(0, 0, 0, .4) url("@{basedir}/images/lupa.png") 95% 95% no-repeat;
+    background: rgba(0, 0, 0, 0.4) url("@{basedir}/images/lupa.png") 95% 95% no-repeat;
   }
 }
 
@@ -26,7 +30,7 @@ div.choco-overlay {
   width: 100%;
   height: 100%;
   padding: 50px 25px;
-  background-color: rgba(0, 0, 0, .8);
+  background-color: rgba(0, 0, 0, 0.8);
   z-index: 5;
 
   &.show {
@@ -39,7 +43,7 @@ div.choco-close {
   right: 31px;
   top: 54px;
   width: 17px;
-  height:17px;
+  height: 17px;
   background: url("@{basedir}/images/close.png") 0 0 no-repeat;
   .opacity(0.5);
   cursor: pointer;
@@ -72,7 +76,7 @@ div.choco-leftside {
     top: 54px;
     width: 17px;
     height: 17px;
-    background:url("@{basedir}/images/arrow-l.png") 0 0 no-repeat;
+    background: url("@{basedir}/images/arrow-l.png") 0 0 no-repeat;
     .opacity(0.5);
   }
 
@@ -178,6 +182,7 @@ div.choco-thumbnails {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
+  z-index: 15;
 
   &.hide {
     margin-bottom: -@thumbnails-height - 18px;
@@ -232,7 +237,7 @@ div.choco-thumbnails {
 
 div.choco-thumbnails-toggle {
   position: fixed;
-  right:13px;
+  right: 13px;
   bottom: @thumbnails-height + 2px;
   width: 54px;
   height: 28px;

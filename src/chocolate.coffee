@@ -111,11 +111,12 @@ class Chocolate
       preload = new Image()
       preload.src = data.thumbnail
       preload.onload = ->
-        image.before templates['image-hover'].replace '{{cid}}', cid
+        image.after templates['image-hover'].replace '{{cid}}', cid
 
         popover = $('[data-pid=' + cid + ']').css
-          'width':  image.width()
-          'height': image.height()
+          'width':      image.width()
+          'height':     image.height()
+          'margin-top': '-' + image.height() + 'px'
 
         popover.click (event) -> showFirstImage event, cid
 
