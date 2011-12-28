@@ -17,15 +17,6 @@
   -o-transition-property:opacity, -o-box-shadow;
   transition-property:opacity, box-shadow;
 }
-.box-shadow-null (@blur: 3px, @color: rgba(0,0,0,0.5)) {
-  @value: 0 0 @blur @color;
-
-  -webkit-box-shadow: @value;
-     -moz-box-shadow: @value;
-      -ms-box-shadow: @value;
-       -o-box-shadow: @value;
-          box-shadow: @value;
-}
 
 .box-shadow-double (@blur1: 3px, @color1: #000, @blur2: 3px, @tension2: 53px, @color2: rgba(0,0,0,0.3)) {
   @value: 0 0 @blur1 @color1, inset 0 0 @blur2 @tension2 @color2;
@@ -38,10 +29,7 @@
 }
 
 .choco-unselect {
-  -webkit-user-select: none;
-  -moz-user-select: -moz-none;
-  -o-user-select: none;
-  user-select: none;
+  .user-select(none);
 }
 
 .choco-item-hover {
@@ -161,7 +149,7 @@ div.choco-container {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   .background-size(100%, 100%);
-  .box-shadow(10px, #111);
+  .box-shadow(1px, 1px, 10px, #111);
   .opacity(0.4);
   .highlight(opacity, 500ms, ease-in-out);
   cursor: pointer;
@@ -248,7 +236,7 @@ div.choco-thumbnails {
       margin: 0 22px 0 0;
       border: 3px solid #fff;
       .opacity(1);
-      .box-shadow-null();
+      .box-shadow(0, 0, 3px, rgba(0, 0, 0, 0.5));
     }
   }
 }
