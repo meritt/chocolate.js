@@ -1,5 +1,5 @@
 {
-  "image-hover": "<span class=\"choco-item-hover\" data-sglid=\"{{cid}}\"></span>",
+  "image-hover": "<span class=\"choco-item-hover\" data-pid=\"{{cid}}\"></span>",
 
   "overlay": "
     <div class=\"choco-overlay\">
@@ -20,9 +20,14 @@
     </div>
   ",
 
-  "image-title": "<h1>{{title}}</h1><p class=\"choco-counter\">1 из 3</p>",
+  "image-title": "<h1>{{title}}</h1>",
 
-  "thumbnails": "<div class=\"choco-thumbnails choco-unselect\"></div><div class=\"choco-thumbnails-toggle choco-unselect\"></div>",
+  "thumbnails": "
+    <div class=\"choco-thumbnails choco-unselect\"></div>
+    <div class=\"choco-thumbnails-toggle choco-unselect\"></div>
+  ",
 
-  "thumbnails-item": "<div class=\"choco-thumbnail{{selected}}\" data-cid=\"{{cid}}\" style=\"background-image:url('{{thumbnail}}')\"{{title}}></div>"
+  "thumbnails-item": "
+    <div class=\"choco-thumbnail{{selected}}\" data-cid=\"{{cid}}\" style=\"background-image:url('{{thumbnail}}')\"{{title}}></div>
+  "
 }

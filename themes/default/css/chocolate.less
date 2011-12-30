@@ -4,52 +4,21 @@
 @basedir: "{{basedir}}";
 @thumbnails-height: 116px;
 
-.highlight2 (@attrib: none, @time: 0.4s, @method: ease-in-out) {
-  -webkit-transition: @arguments;
-     -moz-transition: @arguments;
-      -ms-transition: @arguments;
-       -o-transition: @arguments;
-          transition: @arguments;
--webkit-transition-property:opacity, -webkit-box-shadow;
--moz-transition-property:opacity, -moz-box-shadow;
--ms-transition-property:opacity, -ms-box-shadow;
--o-transition-property:opacity, -o-box-shadow;
-transition-property:opacity, box-shadow;
-}
-.box-shadow-null (@blur: 3px, @color: rgba(0,0,0,0.5)) {
-  @value: 0 0 @blur @color;
-
-  -webkit-box-shadow: @value;
-     -moz-box-shadow: @value;
-      -ms-box-shadow: @value;
-       -o-box-shadow: @value;
-          box-shadow: @value;
-}
-
-.box-shadow-double (@blur1: 3px, @color1: #000, @blur2: 3px, @tension2: 53px, @color2: rgba(0,0,0,0.3)) {
-  @value: 0 0 @blur1 @color1, inset 0 0 @blur2 @tension2 @color2;
-
-  -webkit-box-shadow: @value;
-     -moz-box-shadow: @value;
-      -ms-box-shadow: @value;
-       -o-box-shadow: @value;
-          box-shadow: @value;
-}
-
 .choco-unselect {
-  -webkit-user-select: none;
-  -moz-user-select: -moz-none;
-  -o-user-select: none;
-  user-select: none;
+  .user-select(none);
+}
+
+.choco-item {
+  display: block;
 }
 
 .choco-item-hover {
-  position: absolute;
+  position: relative;
   display: block;
   cursor: pointer;
 
   &:hover {
-    background: rgba(0, 0, 0, .4) url("@{basedir}/images/lupa.png") 95% 95% no-repeat;
+    background: rgba(0, 0, 0, 0.4) url("@{basedir}/images/lupa.png") 95% 95% no-repeat;
   }
 }
 
@@ -60,8 +29,8 @@ div.choco-overlay {
   display: none;
   width: 100%;
   height: 100%;
-  padding: 50px 65px;
-  background-color: rgba(0, 0, 0, .8);
+  padding: 50px 25px;
+  background-color: rgba(0, 0, 0, 0.8);
   z-index: 5;
 
   &.show {
@@ -74,11 +43,11 @@ div.choco-close {
   right: 31px;
   top: 54px;
   width: 17px;
-  height:17px;
-  .opacity(.5);
+  height: 17px;
+  background: url("@{basedir}/images/close.png") 0 0 no-repeat;
+  .opacity(0.5);
   cursor: pointer;
   z-index: 15px;
-  background:url("@{basedir}/images/close.png") 0 0 no-repeat;
 
   &.hover, &:hover {
     .opacity(1);
@@ -91,6 +60,7 @@ div.choco-close {
   bottom: 0;
   width: 50px;
   height: 50px;
+  z-index: 20;
 }
 
 div.choco-leftside {
@@ -107,8 +77,8 @@ div.choco-leftside {
     top: 54px;
     width: 17px;
     height: 17px;
-    background:url("@{basedir}/images/arrow-l.png") 0 0 no-repeat;
-    .opacity(.5);
+    background: url("@{basedir}/images/arrow-l.png") 0 0 no-repeat;
+    .opacity(0.5);
   }
 
   &:hover {
@@ -123,6 +93,7 @@ div.choco-leftside {
 div.choco-rightside {
   .choco-sidecolumn();
   right: 0;
+  cursor: pointer;
 }
 
 .choco-container() {
@@ -145,12 +116,12 @@ div.choco-spinner {
     margin-left: -(140px / 2);
     width: 140px;
     height: 140px;
-    .opacity(.8);
+    .opacity(0.8);
   }
 
   img:first-child {
     .animation(spin);
-    .opacity(.5);
+    .opacity(0.5);
   }
 }
 
@@ -159,9 +130,9 @@ div.choco-container {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   .background-size(100%, 100%);
-  .box-shadow(10px, #111);
-  .opacity(.4);
-  .highlight(opacity, 500ms, ease-in-out);
+  .box-shadow(1px, 1px, 10px, #111);
+  .opacity(0.4);
+  .transition(opacity, 500ms, ease-in-out);
   cursor: pointer;
   z-index: 10;
 
@@ -173,6 +144,7 @@ div.choco-container {
 div.choco-header {
   .choco-container();
   display: none;
+  height: 30px;
   text-align: left;
   font-family: Arial, "Helvetica CY", "Nimbus Sans L", sans-serif;
 
@@ -180,17 +152,9 @@ div.choco-header {
     margin: 0;
     padding: 0;
     color: #fff;
-    font-size: 1.5em;
-    line-height: 1.1em;
+    font-size: 1.4em;
     font-weight: normal;
-  }
-  .choco-counter{
-    color:#fff;
-    margin-top: -1.2em;
-    white-space:nowrap;
-    float: right;
-    
-    &:after{clear:both;display:block;content:'';width:0;height:0;}
+    line-height: 1.1em;
   }
 }
 
@@ -200,85 +164,99 @@ div.choco-thumbnails {
   bottom: 0;
   right: 53px;
   height: @thumbnails-height + 7px;
+  background-color: #333;
   padding: 11px 0 0 31px;
-  border-top:2px solid #fff;
+  border-top: 2px solid #fff;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  
+  z-index: 25;
+
   &.hide {
     margin-bottom: -@thumbnails-height - 18px;
   }
 
   div.choco-thumbnail {
+    @height: @thumbnails-height - 10px;
     display: inline-block;
-    width: @thumbnails-height - 10px;
-    height: @thumbnails-height - 10px;
+
+    width: @height + (@height / 3);
+    height: @height;
+
+    margin: 3px 25px 3px 3px;
+
     background-position: 50% 50%;
     background-repeat: no-repeat;
     .background-size(auto, @thumbnails-height - 4px);
+
     .border-radius(7px);
+
+    .inset-box-shadow(5px, rgba(0, 0, 0, 0.7), 15px, (@height / 2), rgba(0, 0, 0, 0.3));
+
     cursor: pointer;
     vertical-align: middle;
-    margin:3px 25px 3px 3px;
-    .opacity(.6);
-    .box-shadow-double (5px, rgba(0,0,0,.7), 15px, ((@thumbnails-height - 10px)/2), rgba(0,0,0,.3));
-    .highlight2();
-    
-    &:first-child{
-      margin-left:22px !important;
+    .opacity(0.6);
+
+    .transition(none, 0.4s, ease-in-out);
+
+    -webkit-transition-property: opacity, -webkit-box-shadow;
+       -moz-transition-property: opacity, -moz-box-shadow;
+        -ms-transition-property: opacity, box-shadow;
+         -o-transition-property: opacity, box-shadow;
+            transition-property: opacity, box-shadow;
+
+    &:first-child {
+      margin-left: 22px !important;
     }
-    
-    &:hover{
+
+    &:hover, &.selected, &.selected:hover {
       .opacity(1);
-      .box-shadow-double (3px, rgba(0,0,0,.5), 15px, 0, rgba(0,0,0,.1));
+      .inset-box-shadow(3px, rgba(0, 0, 0, 0.5), 15px, 0, rgba(0, 0, 0, 0.1));
     }
-    
-    &.selected,&.selected:hover {
-      border:3px solid #fff;
-      margin:0 22px 0 0;
-      .opacity(1);
-      .box-shadow-null;
+
+    &.selected, &.selected:hover {
+      margin: 0 22px 0 0;
+      border: 3px solid #fff;
     }
   }
 }
 
 div.choco-thumbnails-toggle {
   position: fixed;
-  right:13px;
+  right: 13px;
   bottom: @thumbnails-height + 2px;
   width: 54px;
   height: 28px;
   cursor: pointer;
   z-index: 20;
   background: url("@{basedir}/images/arrow-b.png") 50% 50% no-repeat;
-  
-  &:after{
-    content:'';
-    display:block;
-    width:26px;
-    height:2px;
-    background-color:#FFF;
-    position:fixed;
-    right:0;
-    .opacity(1);
-    cursor:default;
+
+  &:after {
+    content: '';
+    position: fixed;
+    right: 0;
     bottom: @thumbnails-height + 18px;
+    display: block;
+    width: 26px;
+    height: 2px;
+    background-color: #fff;
+    .opacity(1);
+    cursor: default;
   }
-  
+
   &.hide {
     bottom: -9px;
     background-image: url("@{basedir}/images/arrow-t.png");
-    
+
     &:after {
-      content:'';
-      display:block;
-      width:26px;
-      height:2px;
-      background-color:#FFF;
-      position:fixed;
-      right:0;
-      bottom:0;
+      content: '';
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      display: block;
+      width: 26px;
+      height: 2px;
+      background-color: #fff;
     }
   }
 }

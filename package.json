@@ -1,0 +1,13 @@
+{
+    "name": "chocolate.js"
+  , "version": "0.0.1"
+  , "author": "Alexey Simonenko <alexey@simonenko.su>"
+  , "private": true
+  , "engine": ["node >=0.4.12"]
+  , "dependencies": {
+      "coffee-script": ">=1.2.0"
+    , "uglify-js": ">=1.2.3"
+    , "less": ">=1.1.6"
+    , "cssmin": ">=0.3.1"
+  }
+}

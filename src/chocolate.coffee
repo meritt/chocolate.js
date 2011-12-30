@@ -2,7 +2,7 @@ counter = 0
 
 existActions = ['next', 'prev', 'close']
 
-isHistory    = not not (window.history and history.pushState)
+isHistory = not not (window.history and history.pushState)
 # isFullscreen = document.webkitRequestFullScreen || document.mozRequestFullScreen
 # test = document.getElementById 'choco-overlay'
 # if test.webkitRequestFullScreen
@@ -10,12 +10,10 @@ isHistory    = not not (window.history and history.pushState)
 # else
 #   test.mozRequestFullScreen()
 
-updateBasedir = (template, basedir) ->
-  template.replace /\{\{basedir\}\}/g, basedir
-
 class Chocolate
-  images: {}
+  images:  {}
   current: null
+  length:  0
 
   ###
    Конструктор
@@ -29,7 +27,6 @@ class Chocolate
     template = templates['overlay']
     template = template.replace '{{spinner}}', templates['spinner']
     template = template.replace '{{thumbnails}}', if @options.thumbnails then templates['thumbnails'] else ''
-    template = updateBasedir template, @options.basedir
 
     @overlay = $(template).appendTo 'body'
 
@@ -74,7 +71,7 @@ class Chocolate
 
   getImageFromUri: ->
     hash = window.location.hash
-    if hash then parseInt hash.replace('#image', ''), 10 else 0
+    if hash then toInt hash.replace('#image', '') else 0
 
   ###
    Добавляем список изображений для работы в галереи
@@ -101,6 +98,7 @@ class Chocolate
 
     data.thumbnail = data.source unless data.thumbnail
     @images[cid] = data
+    @length++
 
     if image
       showFirstImage = (event, cid) =>
@@ -112,10 +110,15 @@ class Chocolate
 
       preload = new Image()
       preload.src = data.thumbnail
-      preload.onload = (event) =>
-        image.before templates['image-hover'].replace '{{cid}}', cid
-        $('[data-sglid=' + cid + ']').css(width: image.width(), height: image.height()).click (event) ->
-          showFirstImage event, cid
+      preload.onload = ->
+        image.after templates['image-hover'].replace '{{cid}}', cid
+
+        popover = $('[data-pid=' + cid + ']').css
+          'width':      image.width()
+          'height':     image.height()
+          'margin-top': '-' + image.height() + 'px'
+
+        popover.click (event) -> showFirstImage event, cid
 
   ###
    Показать изображение на большом экране
@@ -128,13 +131,16 @@ class Chocolate
     @current = cid if @current is null
 
     @createThumbnails() if @options.thumbnails
-    @updateImage cid
     @overlay.addClass 'show'
+    @updateImage cid
     @
 
   close: ->
     if @overlay.hasClass 'show'
       history.pushState null, null, '#' if isHistory
+
+      @current = null
+      @thumbnails.html '' if @options.thumbnails
       @overlay.removeClass 'show'
     @
 
@@ -166,7 +172,18 @@ class Chocolate
 
     if @options.thumbnails
       @thumbnails.find('.selected').removeClass 'selected'
-      @thumbnails.find('[data-cid=' + cid + ']').addClass 'selected'
+      thumbnail = @thumbnails.find('[data-cid=' + cid + ']').addClass('selected')
+
+      width = thumbnail.outerWidth() + toInt thumbnail.css('margin-right')
+      left  = thumbnail.offset().left
+
+      if @thumbnails.width() < width + left
+        offset = @thumbnails.scrollLeft() + width
+        offset = width + left if @thumbnails.width() + offset < width + left
+        @thumbnails.scrollLeft offset
+      else if @thumbnails.scrollLeft() > left
+        offset = if left < width then 0 else @thumbnails.scrollLeft() - width
+        @thumbnails.scrollLeft offset
 
     if isHistory and updateHistory
       title = if @images[cid].title then 'Image: ' + @images[cid].title else null
@@ -207,21 +224,30 @@ class Chocolate
     else
       after.call @, cid
 
+
   ###
    Обновление размеров блока с главным изображением
   ###
   updateDimensions: (width, height) ->
     title = not not @images[@current].title
 
-    thumbnails = if not @options.thumbnails or @thumbnails.css('display') is 'none' then 0 else @thumbnails.height()
+    thumbnails = if not @options.thumbnails or @thumbnails.hasClass('hide') then 0 else @thumbnails.height()
 
-    horizontal = parseInt(@overlay.css('padding-left'), 10) + parseInt(@overlay.css('padding-right'), 10)
-    vertical   = parseInt(@overlay.css('padding-top'), 10) + parseInt(@overlay.css('padding-bottom'), 10)
+    horizontal = toInt(@overlay.css('padding-left')) + toInt(@overlay.css('padding-right'))
+    vertical   = toInt(@overlay.css('padding-top')) + toInt(@overlay.css('padding-bottom'))
+
+    if title
+      headerHeight = toInt @header.css('height')
+      if headerHeight is 0
+        headerHeight = 40
+        @header.css('height', headerHeight)
+    else
+      headerHeight = 0
 
     innerWidth   = window.innerWidth
     windowWidth  = innerWidth - horizontal
     innerHeight  = window.innerHeight
-    windowHeight = innerHeight - vertical - thumbnails
+    windowHeight = innerHeight - vertical - thumbnails - headerHeight
 
     if width > windowWidth
       height = windowWidth * height / width
@@ -231,20 +257,31 @@ class Chocolate
       width  = windowHeight * width / height
       height = windowHeight
 
-    left = parseInt width / 2, 10
-    top  = parseInt height / 2, 10
-    top += parseInt thumbnails / 2, 10 if thumbnails > 0
-    top += 20 if title
+    left = toInt width / 2
 
-    style = 'width': (innerWidth / 2 - left) + 'px', 'height': innerHeight + 'px'
+    top  = toInt height / 2
+    top += toInt thumbnails / 2 if thumbnails > 0
+    top -= toInt headerHeight / 2 if title
+
+    style =
+      'width':  toInt(innerWidth / 2 - left) + 'px'
+      'height': innerHeight + 'px'
 
     @leftside.css  style
     @rightside.css style
 
-    style = 'width': width, 'height': height, 'margin-left': '-' + left + 'px', 'margin-top': '-' + top + 'px'
+    style =
+      'width':       width
+      'height':      height
+      'margin-left': '-' + left + 'px'
+      'margin-top':  '-' + top + 'px'
 
     if title
-      @header.css 'display': 'block', 'width': width, 'margin-left': '-' + left + 'px', 'padding-top': parseInt((height - 100) / 2, 10) + 'px'
+      @header.css
+        'display':     'block'
+        'width':       width
+        'margin-left': '-' + left + 'px'
+        'margin-top':  '-' + (top + headerHeight) + 'px'
     else
       @header.css 'display': 'none'
 
@@ -256,7 +293,7 @@ class Chocolate
    Создание панели для тумбнейлов
   ###
   createThumbnails: ->
-    return @ if not @options.thumbnails or not @current or @images.length <= 1
+    return @ if not @options.thumbnails or not @current or @length <= 1
 
     _this   = @
     current = @images[@current]
@@ -271,10 +308,11 @@ class Chocolate
                          .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
     @thumbnails.html(content).find('.choco-thumbnail').click (event) ->
-      _this.updateImage parseInt $(@).attr('data-cid'), 10
+      _this.updateImage toInt $(@).attr('data-cid')
 
     @overlay.find('.choco-thumbnails-toggle').click (event) ->
-      method = if _this.thumbnails.hasClass 'hide' then 'removeClass' else 'addClass'
+      current = _this.images[_this.current]
+      method  = if _this.thumbnails.hasClass 'hide' then 'removeClass' else 'addClass'
 
       _this.thumbnails[method] 'hide'
       $(@)[method] 'hide'
@@ -282,6 +320,8 @@ class Chocolate
       _this.updateDimensions current.width, current.height
 
     @
+
+toInt = (string) -> parseInt string, 10
 
 # Экспорт в глобальное пространство
 window.chocolate = Chocolate

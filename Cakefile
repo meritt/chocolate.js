@@ -14,7 +14,7 @@ task 'build', 'Build chocolate.js', (options) ->
   basedir = options.basedir or '/chocolate'
 
   path = dirname(__filename)
-  dist = path + '/lib/' + theme + '/'
+  dist = path + '/dist/' + theme + '/'
   src  = path + '/themes/' + theme + '/'
 
   fs.stat dist, (error, stat) ->
@@ -28,11 +28,12 @@ task 'build', 'Build chocolate.js', (options) ->
     compileCssContent dist, src, basedir
 
 compileJsContent = (dist, src, basedir) ->
-  options = JSON.parse fs.readFileSync(src + 'options.json', 'utf8')
-  options.basedir = basedir
+  options = "defaultOptions = `" + fs.readFileSync(src + 'options.json', 'utf8') + "`"
+  
+  templates = fs.readFileSync(src + 'templates.json', 'utf8')
+  templates = templates.replace /\{\{basedir\}\}/gi, basedir
+  templates = "templates = `" + templates + "`"
 
-  options   = "defaultOptions = `" + JSON.stringify(options) + "`"
-  templates = "templates = `" + fs.readFileSync(src + 'templates.json', 'utf8') + "`"
   chocolate = fs.readFileSync dirname(__filename) + '/src/chocolate.coffee', 'utf8'
 
   js = compile options + "\n\n" + templates + "\n\n" + chocolate
