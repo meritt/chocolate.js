@@ -1,6 +1,6 @@
 fs        = require 'fs'
 path      = require 'path'
-{spawn}   = require 'child_process'
+util      = require 'util'
 {compile} = require 'coffee-script'
 less      = require 'less'
 uglify    = require 'uglify-js'
@@ -18,11 +18,30 @@ task 'build', 'Build chocolate.js', (options) ->
   src  = path.normalize current + '/themes/' + theme + '/'
 
   fs.stat dist, (error, stat) ->
-    spawn 'rm', ['-R', dist] if stat
-    spawn 'mkdir', ['-p', dist + 'js']
-    spawn 'mkdir', ['-p', dist + 'css']
+    if stat
+      results = fs.readdirSync dist
 
-    spawn 'cp', ['-R', src + 'images', dist + 'images'] if fs.statSync src + 'images'
+      for folder in results
+        folder = path.normalize dist + folder
+        files  = fs.readdirSync folder
+        if files and files.length > 0
+          fs.unlinkSync path.normalize(folder + '/' + file) for file in files
+        fs.rmdirSync folder
+
+      fs.rmdirSync path.normalize dist
+
+    fs.mkdirSync dist
+    fs.mkdirSync dist + 'js'
+    fs.mkdirSync dist + 'css'
+
+    if fs.statSync src + 'images'
+      fs.mkdirSync dist + 'images'
+      images = fs.readdirSync src + 'images'
+      for image in images
+        from = fs.createReadStream path.normalize src + 'images/' + image
+        to   = fs.createWriteStream path.normalize dist + 'images/' + image
+
+        util.pump from, to
 
     compileJsContent dist, src, basedir
     compileCssContent dist, src, basedir
