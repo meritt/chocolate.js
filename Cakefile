@@ -1,5 +1,5 @@
 fs        = require 'fs'
-{dirname} = require 'path'
+path      = require 'path'
 {spawn}   = require 'child_process'
 {compile} = require 'coffee-script'
 less      = require 'less'
@@ -12,10 +12,10 @@ option '-b', '--basedir [DIR]', 'directory with css, js, image folders'
 task 'build', 'Build chocolate.js', (options) ->
   theme   = options.themes  or 'default'
   basedir = options.basedir or '/chocolate'
+  current = path.dirname __filename
 
-  path = dirname(__filename)
-  dist = path + '/dist/' + theme + '/'
-  src  = path + '/themes/' + theme + '/'
+  dist = path.normalize current + '/dist/' + theme + '/'
+  src  = path.normalize current + '/themes/' + theme + '/'
 
   fs.stat dist, (error, stat) ->
     spawn 'rm', ['-R', dist] if stat
@@ -28,29 +28,34 @@ task 'build', 'Build chocolate.js', (options) ->
     compileCssContent dist, src, basedir
 
 compileJsContent = (dist, src, basedir) ->
+  current = path.dirname __filename
+  source  = path.normalize current + '/src/chocolate.coffee'
+
   options = "defaultOptions = `" + fs.readFileSync(src + 'options.json', 'utf8') + "`"
-  
-  templates = fs.readFileSync(src + 'templates.json', 'utf8')
+
+  templates = fs.readFileSync src + 'templates.json', 'utf8'
   templates = templates.replace /\{\{basedir\}\}/gi, basedir
   templates = "templates = `" + templates + "`"
 
-  chocolate = fs.readFileSync dirname(__filename) + '/src/chocolate.coffee', 'utf8'
+  chocolate = fs.readFileSync source, 'utf8'
 
   js = compile options + "\n\n" + templates + "\n\n" + chocolate
 
-  fs.writeFileSync dist + 'js/chocolate.js', js
-  fs.writeFileSync dist + 'js/chocolate.min.js', uglify js
+  fs.writeFileSync path.normalize(dist + 'js/chocolate.js'), js
+  fs.writeFileSync path.normalize(dist + 'js/chocolate.min.js'), uglify js
 
 compileCssContent = (dist, src, basedir) ->
   parser = new less.Parser
     paths:    [src + 'css']
     filename: 'chocolate.less'
 
-  css = fs.readFileSync(src + 'css/chocolate.less', 'utf8')
+  source = path.normalize src + 'css/chocolate.less'
+
+  css = fs.readFileSync source, 'utf8'
   css = css.replace '{{basedir}}', basedir
 
   parser.parse css, (error, tree) ->
     css = tree.toCSS()
 
-    fs.writeFileSync dist + 'css/chocolate.css', css
-    fs.writeFileSync dist + 'css/chocolate.min.css', cssmin css
+    fs.writeFileSync path.normalize(dist + 'css/chocolate.css'), css
+    fs.writeFileSync path.normalize(dist + 'css/chocolate.min.css'), cssmin css

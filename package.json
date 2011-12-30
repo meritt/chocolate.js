@@ -3,7 +3,7 @@
   , "version": "0.0.1"
   , "author": "Alexey Simonenko <alexey@simonenko.su>"
   , "private": true
-  , "engine": ["node >=0.4.12"]
+  , "engine": ["node >=0.6.6"]
   , "dependencies": {
       "coffee-script": ">=1.2.0"
     , "uglify-js": ">=1.2.3"
