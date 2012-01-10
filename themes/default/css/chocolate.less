@@ -226,13 +226,13 @@ div.choco-thumbnails {
 
 div.choco-thumbnails-toggle {
   position: fixed;
-  right: 13px;
-  bottom: @thumbnails-height + 2px;
-  width: 54px;
-  height: 28px;
+  right: 0;
+  bottom: 0;
+  width: 53px;
+  height: @thumbnails-height + 20px;
   cursor: pointer;
   z-index: 20;
-  background: url("@{basedir}/images/arrow-b.png") 50% 50% no-repeat;
+  background: url("@{basedir}/images/arrow-b.png") 5px 0 no-repeat;
 
   &:after {
     content: '';
@@ -249,7 +249,10 @@ div.choco-thumbnails-toggle {
 
   &.hide {
     bottom: -9px;
-    background-image: url("@{basedir}/images/arrow-t.png");
+    right: 13px;
+    width: 54px;
+    height: 28px;
+    background: url("@{basedir}/images/arrow-t.png") 50% 50% no-repeat;
 
     &:after {
       content: '';
