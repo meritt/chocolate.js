@@ -224,7 +224,6 @@ class Chocolate
     else
       after.call @, cid
 
-
   ###
    Обновление размеров блока с главным изображением
   ###
@@ -278,12 +277,11 @@ class Chocolate
 
     if title
       @header.css
-        'display':     'block'
         'width':       width
         'margin-left': '-' + left + 'px'
         'margin-top':  '-' + (top + headerHeight) + 'px'
-    else
-      @header.css 'display': 'none'
+
+    @header[if title then 'addClass' else 'removeClass'] 'show'
 
     @container.css style
     @spinner.css   style

@@ -108,7 +108,8 @@ div.choco-spinner {
   &.hide {
     display: none;
   }
-  img{
+
+  img {
     .choco-container();
     margin-left: -45px;
     margin-top: -6px - (@thumbnails-height / 2);
@@ -123,7 +124,6 @@ div.choco-container {
   .background-size(100%, 100%);
   .box-shadow(1px, 1px, 10px, #111);
   .opacity(0.4);
-  .transition(opacity, 500ms, ease-in-out);
   cursor: pointer;
   z-index: 10;
 
@@ -139,6 +139,10 @@ div.choco-header {
   text-align: left;
   font-family: Arial, "Helvetica CY", "Nimbus Sans L", sans-serif;
 
+  &.show {
+    display: block;
+  }
+
   h1 {
     margin: 0;
     padding: 0;
@@ -146,9 +150,9 @@ div.choco-header {
     font-size: 1.4em;
     font-weight: normal;
     line-height: 1.1em;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
