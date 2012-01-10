@@ -1,4 +1,5 @@
 @import "../../less-framework/function.less";
+@import "keyframes.less";
 
 @basedir: "{{basedir}}";
 @thumbnails-height: 116px;
@@ -101,6 +102,12 @@ div.choco-rightside {
   left: 50%;
 }
 
+.animation2 (@name: spin, @duration: 0.8s, @type: linear, @count: infinite) {
+  -webkit-animation: @arguments;
+     -moz-animation: @arguments;
+      -ms-animation: @arguments;
+}
+
 div.choco-spinner {
   .choco-container();
   z-index: 15;
@@ -109,17 +116,11 @@ div.choco-spinner {
     display: none;
   }
   img{
+    @razmer: 31px;
     .choco-container();
-    margin-left: -45px;
-    margin-top: -6px - (@thumbnails-height / 2);
-    .opacity(0.8);
-  }
-  img.serenity {
-    @razmer: 140px;
-    margin-top: -((@razmer / 2) + (@thumbnails-height / 2));
-    margin-left: -(@razmer / 2);
-    width: @razmer;
-    height: @razmer;
+    margin-left: -(@razmer/2);
+    margin-top: -(@razmer/2) - (@thumbnails-height / 2);
+    .animation2();
   }
 }
 
