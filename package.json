@@ -2,7 +2,10 @@
     "name": "chocolate"
   , "version": "0.0.1"
   , "homepage": "http://chocolatejs.ru"
-  , "authors": ["Alexey Simonenko <alexey@simonenko.su> (https://github.com/meritt)", "Ann SaBoNim <a.sabonim@gmail.com> (https://github.com/sabonim)"]
+  , "authors": [
+      "Alexey Simonenko <alexey@simonenko.su> (https://github.com/meritt)"
+    , "Ann SaBoNim <a.sabonim@gmail.com> (https://github.com/sabonim)"
+  ]
   , "private": true
   , "engines": {
       "node": ">=0.6.0 <0.7.0"
