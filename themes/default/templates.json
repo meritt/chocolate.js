@@ -15,8 +15,9 @@
 
   "spinner": "
     <div class=\"choco-spinner\">
-     <img src=\"{{basedir}}/images/spinner-bg.png\" alt=\"\">
-     <img src=\"{{basedir}}/images/spinner-serenity.png\" alt=\"\">
+     <img src=\"/themes/default/images/loader.gif\" alt=\"\">
+     <!--<img src=\"{{basedir}}/images/spinner-bg.png\" class=\"serenity\" alt=\"\">
+     <img src=\"{{basedir}}/images/spinner-serenity.png\" class=\"serenity\" alt=\"\">-->
     </div>
   ",
 
