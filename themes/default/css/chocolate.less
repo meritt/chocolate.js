@@ -109,14 +109,18 @@ div.choco-spinner {
   &.hide {
     display: none;
   }
-
-  img.serenity {
+  img{
     .choco-container();
-    margin-top: -((140px / 2) + (@thumbnails-height / 2));
-    margin-left: -(140px / 2);
-    width: 140px;
-    height: 140px;
+    margin-left: -45px;
+    margin-top: -6px - (@thumbnails-height / 2);
     .opacity(0.8);
+  }
+  img.serenity {
+    @razmer: 140px;
+    margin-top: -((@razmer / 2) + (@thumbnails-height / 2));
+    margin-left: -(@razmer / 2);
+    width: @razmer;
+    height: @razmer;
   }
 
   img.serenity:first-child {
