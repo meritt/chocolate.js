@@ -11,9 +11,10 @@ isHistory = not not (window.history and history.pushState)
 #   test.mozRequestFullScreen()
 
 class Chocolate
-  images:  {}
+  images: {}
+  length: 0
+
   current: null
-  length:  0
 
   ###
    Конструктор
@@ -43,7 +44,7 @@ class Chocolate
       $(window).bind 'popstate', (event) =>
         cid = @getImageFromUri()
         if cid > 0 and cid isnt @current
-          if @current is null then @show cid else @updateImage cid, false
+          if @current is null then @show cid else @open cid, false
 
     $(window).bind 'keyup', (event) =>
       if @overlay.hasClass 'show'
@@ -132,7 +133,8 @@ class Chocolate
 
     @createThumbnails() if @options.thumbnails
     @overlay.addClass 'show'
-    @updateImage cid
+
+    @open cid
     @
 
   close: ->
@@ -142,6 +144,10 @@ class Chocolate
       @current = null
       @thumbnails.html '' if @options.thumbnails
       @overlay.removeClass 'show'
+    @
+
+  open: (cid) ->
+    @updateImage cid if @images[cid]?
     @
 
   next: ->
@@ -170,24 +176,11 @@ class Chocolate
 
     @container.removeClass 'show'
 
-    if @options.thumbnails
-      @thumbnails.find('.selected').removeClass 'selected'
-      thumbnail = @thumbnails.find('[data-cid=' + cid + ']').addClass('selected')
-
-      width = thumbnail.outerWidth() + toInt thumbnail.css('margin-right')
-      left  = thumbnail.offset().left
-
-      if @thumbnails.width() < width + left
-        offset = @thumbnails.scrollLeft() + width
-        offset = width + left if @thumbnails.width() + offset < width + left
-        @thumbnails.scrollLeft offset
-      else if @thumbnails.scrollLeft() > left
-        offset = if left < width then 0 else @thumbnails.scrollLeft() - width
-        @thumbnails.scrollLeft offset
-
     if isHistory and updateHistory
       title = if @images[cid].title then 'Image: ' + @images[cid].title else null
       history.pushState null, title, '#image' + cid
+
+    @updateThumbnails() if @options.thumbnails
 
     @getImageSize cid, (cid) ->
       @container.addClass 'show'
@@ -201,18 +194,40 @@ class Chocolate
     @
 
   ###
+   Обновление миниатюр
+  ###
+  updateThumbnails: ->
+    @thumbnails.find('.selected').removeClass 'selected'
+
+    thumbnail = @thumbnails.find('[data-cid=' + @current + ']').addClass 'selected'
+
+    width = thumbnail.outerWidth() + toInt thumbnail.css('margin-right')
+    left  = thumbnail.offset().left
+
+    if @thumbnails.width() < width + left
+      offset = @thumbnails.scrollLeft() + width
+      offset = width + left if @thumbnails.width() + offset < width + left
+
+    else if @thumbnails.scrollLeft() > left
+      offset = if left < width then 0 else @thumbnails.scrollLeft() - width
+
+    @thumbnails.scrollLeft offset if offset > 0
+    @
+
+  ###
    Обновление размеров блока с главным изображением
   ###
   getImageSize: (cid, after = ->) ->
     image = @images[cid]
 
+    fn = => after.call @, cid if cid is @current
+
     if not image.width or not image.height
       @spinner.removeClass 'hide'
 
-      element     = new Image()
-      element.src = image.source
-
-      element.onload = (event) =>
+      element        = new Image()
+      element.src    = image.source
+      element.onload = =>
         @spinner.addClass 'hide'
 
         @images[cid].width  = element.width
@@ -220,9 +235,9 @@ class Chocolate
 
         delete element
 
-        after.call @, cid
+        fn()
     else
-      after.call @, cid
+      fn()
 
   ###
    Обновление размеров блока с главным изображением
@@ -232,6 +247,7 @@ class Chocolate
 
     thumbnails = if not @options.thumbnails or @thumbnails.hasClass('hide') then 0 else @thumbnails.height()
 
+    # TODO оптимизация
     horizontal = toInt(@overlay.css('padding-left')) + toInt(@overlay.css('padding-right'))
     vertical   = toInt(@overlay.css('padding-top')) + toInt(@overlay.css('padding-bottom'))
 
@@ -306,7 +322,7 @@ class Chocolate
                          .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
     @thumbnails.html(content).find('.choco-thumbnail').click (event) ->
-      _this.updateImage toInt $(@).attr('data-cid')
+      _this.open toInt $(@).attr('data-cid')
 
     @overlay.find('.choco-thumbnails-toggle').click (event) ->
       current = _this.images[_this.current]
