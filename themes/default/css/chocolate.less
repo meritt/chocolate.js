@@ -167,7 +167,6 @@ div.choco-thumbnails {
   bottom: 0;
   right: 53px;
   height: @thumbnails-height + 7px;
-  background-color: #333;
   padding: 11px 0 0 31px;
   border-top: 2px solid #fff;
   text-align: center;
@@ -188,6 +187,7 @@ div.choco-thumbnails {
 
     margin: 3px 25px 3px 3px;
 
+    background-color:#000;
     background-position: 50% 50%;
     background-repeat: no-repeat;
     .background-size(auto, @thumbnails-height - 4px);
@@ -198,22 +198,20 @@ div.choco-thumbnails {
 
     cursor: pointer;
     vertical-align: middle;
-    .opacity(0.6);
 
-    .transition(none, 0.4s, ease-in-out);
+    .transition(none, 0.05s, ease-in-out);
 
-    -webkit-transition-property: opacity, -webkit-box-shadow;
-       -moz-transition-property: opacity, -moz-box-shadow;
-        -ms-transition-property: opacity, box-shadow;
-         -o-transition-property: opacity, box-shadow;
-            transition-property: opacity, box-shadow;
+    -webkit-transition-property: -webkit-box-shadow;
+       -moz-transition-property: -moz-box-shadow;
+        -ms-transition-property: box-shadow;
+         -o-transition-property: box-shadow;
+            transition-property: box-shadow;
 
     &:first-child {
       margin-left: 22px !important;
     }
 
     &:hover, &.selected, &.selected:hover {
-      .opacity(1);
       .inset-box-shadow(3px, rgba(0, 0, 0, 0.5), 15px, 0, rgba(0, 0, 0, 0.1));
     }
 
