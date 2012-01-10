@@ -11,7 +11,7 @@ option '-b', '--basedir [DIR]', 'directory with css, js, image folders'
 
 task 'build', 'Build chocolate.js', (options) ->
   theme   = options.themes  or 'default'
-  basedir = options.basedir or '/chocolate'
+  basedir = options.basedir or '/dist/' + theme
   current = path.dirname __filename
 
   dist = path.normalize current + '/dist/' + theme + '/'
