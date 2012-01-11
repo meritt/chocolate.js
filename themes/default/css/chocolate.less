@@ -126,7 +126,7 @@ div.choco-container {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   .background-size(100%, 100%);
-  .box-shadow(1px, 1px, 10px, #111);
+  .box-shadow(0, 0, 0, #111);
   .opacity(0);
   cursor: pointer;
   z-index: 15;
@@ -135,6 +135,7 @@ div.choco-container {
 
   &.show {
     .opacity(1);
+    .box-shadow(1px, 1px, 10px, #111);
   }
 }
 
@@ -151,7 +152,7 @@ div.choco-header {
 
   h1 {
     margin: 0;
-    padding: 0;
+    padding: 0 0 2px 0;
     color: #fff;
     font-size: 1.4em;
     font-weight: normal;
