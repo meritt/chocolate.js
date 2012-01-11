@@ -294,17 +294,34 @@ class Chocolate
 
     thumbnail = @thumbnails.find('[data-cid=' + @current + ']').addClass 'selected'
 
-    width = thumbnail.outerWidth() + toInt thumbnail.css('margin-right')
-    left  = thumbnail.offset().left
+    if not @dimensions.thumbnail
+      @dimensions.thumbnail = thumbnail.outerWidth() + toInt thumbnail.css('margin-right')
 
-    if @thumbnails.width() < width + left
-      offset = @thumbnails.scrollLeft() + width
-      offset = width + left if @thumbnails.width() + offset < width + left
+    width = @dimensions.thumbnail
+    left  = thumbnail.get(0).offsetLeft
 
-    else if @thumbnails.scrollLeft() > left
-      offset = if left < width then 0 else @thumbnails.scrollLeft() - width
+    range = (left, width) -> left: left, right: left + width
 
-    @thumbnails.scrollLeft offset if offset > 0
+    container = range @thumbnails.scrollLeft(), @thumbnails.width()
+    element   = range left, width
+
+    if container.left > element.left or container.right < element.right
+      if container.right < element.right
+        offset = container.left + width
+      else if container.left > element.left
+        offset = container.left - width
+      else
+        offset = null
+
+      if offset isnt null
+        future = range offset, @thumbnails.width()
+
+        if future.right < element.left
+          offset = width + left
+        else if future.left > element.left
+          offset = 0
+
+        @thumbnails.scrollLeft offset
     @
 
 
