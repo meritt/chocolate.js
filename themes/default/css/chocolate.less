@@ -48,6 +48,7 @@ div.choco-close {
   .opacity(0.5);
   cursor: pointer;
   z-index: 15px;
+  .animation(close, 0.8s, linear, 1);
 
   &.hover, &:hover {
     .opacity(1);
@@ -61,6 +62,7 @@ div.choco-close {
   width: 50px;
   height: 50px;
   z-index: 20;
+  .animation(smooth, 0.8s, linear, 1);
 }
 
 div.choco-leftside {
@@ -113,8 +115,8 @@ div.choco-spinner {
   img {
     @size: 31px;
     .choco-container();
-    margin-left: -(@size / 2);
-    margin-top: -(@size / 2) - (@thumbnails-height / 2);
+    margin-left: round(-(@size / 2));
+    margin-top: round(-(@size / 2) - (@thumbnails-height / 2));
     .animation(spin, 0.8s, linear, infinite);
   }
 }
@@ -128,6 +130,8 @@ div.choco-container {
   .opacity(0);
   cursor: pointer;
   z-index: 15;
+  zoom: 1;
+  .animation(shower, 200ms, ease-in-out, 1);
 
   &.show {
     .opacity(1);
@@ -170,6 +174,7 @@ div.choco-thumbnails {
   white-space: nowrap;
   overflow: hidden;
   z-index: 25;
+  .animation(thumbnails, 1.6s, ease-in-out, 1);
 
   &.hide {
     margin-bottom: -@thumbnails-height - 18px;
@@ -179,37 +184,31 @@ div.choco-thumbnails {
     @height: @thumbnails-height - 10px;
     display: inline-block;
 
-    width: @height + (@height / 3);
+    width: round(@height + (@height / 3));
     height: @height;
 
     margin: 3px 25px 3px 3px;
 
-    background-color:#000;
+    background-color: #000;
     background-position: 50% 50%;
     background-repeat: no-repeat;
     .background-size(auto, @thumbnails-height - 4px);
 
     .border-radius(7px);
 
-    .inset-box-shadow(5px, rgba(0, 0, 0, 0.7), 15px, (@height / 2), rgba(0, 0, 0, 0.3));
+    .box-shadow(5px, rgba(0, 0, 0, 0.7), 15px, round(@height / 2), rgba(0, 0, 0, 0.3));
 
     cursor: pointer;
     vertical-align: middle;
 
-    .transition(none, 0.05s, ease-in-out);
-
-    -webkit-transition-property: -webkit-box-shadow;
-       -moz-transition-property: -moz-box-shadow;
-        -ms-transition-property: box-shadow;
-         -o-transition-property: box-shadow;
-            transition-property: box-shadow;
+    .transition(box-shadow, 0.05s, ease-in-out);
 
     &:first-child {
       margin-left: 22px !important;
     }
 
     &:hover, &.selected, &.selected:hover {
-      .inset-box-shadow(3px, rgba(0, 0, 0, 0.5), 15px, 0, rgba(0, 0, 0, 0.1));
+      .box-shadow(3px, rgba(0, 0, 0, 0.5), 15px, 0, rgba(0, 0, 0, 0.1));
     }
 
     &.selected, &.selected:hover {
@@ -225,9 +224,10 @@ div.choco-thumbnails-toggle {
   bottom: 0;
   width: 53px;
   height: @thumbnails-height + 20px;
+  background: url("@{basedir}/images/arrow-b.png") 5px 0 no-repeat;
   cursor: pointer;
   z-index: 20;
-  background: url("@{basedir}/images/arrow-b.png") 5px 0 no-repeat;
+  .animation(thumbnails, 1.6s, ease-in-out, 1);
 
   &:after {
     content: '';
