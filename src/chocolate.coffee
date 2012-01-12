@@ -157,6 +157,7 @@ class Chocolate
 
     @container.removeClass 'show'
     @header.removeClass 'show' if @header.hasClass 'show'
+    @spinner.addClass 'hide' if not @spinner.hasClass 'hide'
 
     if isHistory and updateHistory
       title = if @images[cid].title then 'Image: ' + @images[cid].title else null
@@ -183,18 +184,18 @@ class Chocolate
 
     fn = => after.call @, cid if cid is @current
 
-    @spinner.removeClass 'hide' if @spinner.hasClass 'hide'
-
     if not image.width or not image.height
+      @spinner.removeClass 'hide' if @spinner.hasClass 'hide'
+
       element        = new Image()
       element.src    = image.source
       element.onload = =>
-        @spinner.addClass 'hide'
-
         @images[cid].width  = element.width
         @images[cid].height = element.height
 
         delete element
+
+        @spinner.addClass 'hide' if not @spinner.hasClass 'hide'
 
         fn()
     else
