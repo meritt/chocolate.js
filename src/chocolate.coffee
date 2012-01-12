@@ -183,9 +183,9 @@ class Chocolate
 
     fn = => after.call @, cid if cid is @current
 
-    if not image.width or not image.height
-      @spinner.removeClass 'hide'
+    @spinner.removeClass 'hide' if @spinner.hasClass 'hide'
 
+    if not image.width or not image.height
       element        = new Image()
       element.src    = image.source
       element.onload = =>
