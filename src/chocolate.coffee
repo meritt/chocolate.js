@@ -3,6 +3,7 @@ counter = 0
 existActions = ['next', 'prev', 'close']
 
 isHistory = not not (window.history and history.pushState)
+isStorage = 'localStorage' of window and window['localStorage']?
 # isFullscreen = document.webkitRequestFullScreen || document.mozRequestFullScreen
 # test = document.getElementById 'choco-overlay'
 # if test.webkitRequestFullScreen
@@ -277,12 +278,20 @@ class Chocolate
 
     @overlay.find('.choco-thumbnails-toggle').click ->
       current = _this.images[_this.current]
-      method  = if _this.thumbnails.hasClass 'hide' then 'removeClass' else 'addClass'
+      status  = _this.thumbnails.hasClass 'hide'
+      method  = if status then 'removeClass' else 'addClass'
+
+      if isStorage
+        localStorage.setItem 'choco-thumbnails', if status then 1 else 0
 
       _this.thumbnails[method] 'hide'
       $(@)[method] 'hide'
 
       _this.updateDimensions current.width, current.height
+
+    if isStorage and not @thumbnails.hasClass 'hide'
+      status = localStorage.getItem('choco-thumbnails') || 1
+      @overlay.find('.choco-thumbnails-toggle').trigger 'click' if toInt(status) is 0
 
     @
 
