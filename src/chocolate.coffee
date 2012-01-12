@@ -163,7 +163,7 @@ class Chocolate
     @spinner.addClass 'hide' if not @spinner.hasClass 'hide'
 
     if isHistory and updateHistory
-      title = if @images[cid].title then 'Image: ' + @images[cid].title else null
+      title = if @images[cid].title then @images[cid].title else 'Image №' + cid
       history.pushState null, title, '#image' + cid
 
     @updateThumbnails() if @options.thumbnails
