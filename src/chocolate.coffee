@@ -122,8 +122,11 @@ class Chocolate
     if @overlay.hasClass 'show'
       history.pushState null, null, '#' if isHistory
 
+      if @options.thumbnails
+        @thumbnails.html ''
+        @overlay.find('.choco-thumbnails-toggle').unbind 'click'
+
       @current = null
-      @thumbnails.html '' if @options.thumbnails
       @overlay.removeClass 'show'
     @
 
