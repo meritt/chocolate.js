@@ -22,11 +22,11 @@
   "image-title": "<h1>{{title}}</h1>",
 
   "thumbnails": "
-    <div class=\"choco-thumbnails choco-unselect\"></div>
+    <ul class=\"choco-thumbnails choco-unselect\"></ul>
     <div class=\"choco-thumbnails-toggle choco-unselect\"></div>
   ",
 
   "thumbnails-item": "
-    <div class=\"choco-thumbnail{{selected}}\" data-cid=\"{{cid}}\" style=\"background-image:url('{{thumbnail}}')\"{{title}}></div>
+    <li class=\"choco-thumbnail{{selected}}\" data-cid=\"{{cid}}\" style=\"background-image:url('{{thumbnail}}')\"{{title}}></li>
   "
 }
