@@ -26,7 +26,5 @@
     <div class=\"choco-thumbnails-toggle choco-unselect\"></div>
   ",
 
-  "thumbnails-item": "
-    <li class=\"choco-thumbnail{{selected}}\" data-cid=\"{{cid}}\" style=\"background-image:url('{{thumbnail}}')\"{{title}}></li>
-  "
+  "thumbnails-item": "<li class=\"choco-thumbnail{{selected}}\" data-cid=\"{{cid}}\" style=\"background-image:url('{{thumbnail}}')\"{{title}}></li>"
 }

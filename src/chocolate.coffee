@@ -65,7 +65,7 @@ class Chocolate
     isHistory = false if isHistory and not @options.history
 
     if isHistory
-      $(window).bind 'popstate', =>
+      onHistory = =>
         cid = @_getImageFromUri()
 
         if cid > 0 and cid isnt @current
@@ -73,6 +73,11 @@ class Chocolate
             @show cid
           else
             @open cid, false
+
+      $(window).bind 'load', -> onHistory()
+
+      if 'onhashchange' of window
+        $(window).bind 'hashchange', -> onHistory()
 
     ###
      Получаем параметры отступов и другие неизменяемые размеры
@@ -110,9 +115,7 @@ class Chocolate
     cid = 1 if cid <= 0
     throw 'Image not found' unless @images[cid]?
 
-    @current = cid if @current is null
-
-    @createThumbnails() if @options.thumbnails
+    @createThumbnails cid if @options.thumbnails
     @overlay.addClass 'show'
 
     @open cid
@@ -130,8 +133,9 @@ class Chocolate
       @overlay.removeClass 'show'
     @
 
-  open: (cid) ->
-    @updateImage cid if @images[cid]?
+  open: (cid, updateHistory) ->
+    if @current isnt cid
+      @updateImage cid, updateHistory if @images[cid]?
     @
 
   next: ->
@@ -262,11 +266,11 @@ class Chocolate
   ###
    Создание панели для тумбнейлов
   ###
-  createThumbnails: ->
-    return @ if not @options.thumbnails or not @current or @length <= 1
+  createThumbnails: (cid) ->
+    return @ if not @options.thumbnails or not cid or @length <= 1
 
     _this   = @
-    current = @images[@current]
+    current = @images[cid]
     content = ''
 
     for cid, image of @images
@@ -308,7 +312,7 @@ class Chocolate
     thumbnail = @thumbnails.find('[data-cid=' + @current + ']').addClass 'selected'
 
     if not @dimensions.thumbnail
-      @dimensions.thumbnail = thumbnail.outerWidth() + toInt thumbnail.css('margin-right')
+      @dimensions.thumbnail = toInt thumbnail.outerWidth true
 
     width = @dimensions.thumbnail
     left  = thumbnail.get(0).offsetLeft

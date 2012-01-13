@@ -169,8 +169,8 @@ ul.choco-thumbnails {
   bottom: 0;
   right: 53px;
   height: @thumbnails-height + 7px;
+  margin: 0;
   padding: 11px 0 0 53px;
-  margin:0;
   border-top: 2px solid #fff;
   text-align: center;
   white-space: nowrap;
@@ -188,7 +188,7 @@ ul.choco-thumbnails {
     width: round(@height + (@height / 3));
     height: @height;
     margin: 3px 25px 3px 3px;
-    padding:0;
+    padding: 0;
     background-color: #000;
     background-position: 50% 50%;
     background-repeat: no-repeat;
@@ -198,7 +198,10 @@ ul.choco-thumbnails {
     cursor: pointer;
     vertical-align: middle;
     .transition(box-shadow, 0.1s, ease-in-out);
-    &:last-child{margin-right:3px;}
+
+    &:last-child {
+      margin-right: 3px;
+    }
 
     &:hover, &.selected, &.selected:hover {
       .box-shadow(3px, rgba(0, 0, 0, 0.5), 15px, 0, rgba(0, 0, 0, 0.1));
@@ -207,7 +210,10 @@ ul.choco-thumbnails {
     &.selected, &.selected:hover {
       margin: 0 22px 0 0;
       border: 3px solid #fff;
-      &:last-child{margin-right:0;}
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 }
