@@ -379,6 +379,7 @@ class Chocolate
           'height':     image.height()
           'margin-top': '-' + image.height() + 'px'
 
+        image.hover (event) -> popover.toggleClass 'hover'
         popover.click (event) -> showFirstImage event, cid
 
   ###
