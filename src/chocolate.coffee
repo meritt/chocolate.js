@@ -217,6 +217,7 @@ class Chocolate
     thumbnails = headerHeight = 0
 
     if @dimensions.thumbnails isnt false and not @thumbnails.hasClass('hide')
+      @dimensions.thumbnails = @thumbnails.height() if @dimensions.thumbnails is 0
       thumbnails = @dimensions.thumbnails
 
     headerHeight = @dimensions.header if title
