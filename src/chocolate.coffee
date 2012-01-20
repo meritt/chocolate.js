@@ -96,8 +96,10 @@ class Chocolate
     return @ if not images or images.length is 0
 
     for object in images
-      image = null
-      if object instanceof HTMLElement
+      image     = null
+      isElement = if typeof HTMLElement is "object" then object instanceof HTMLElement else typeof object is "object" and object.nodeType is 1 and typeof object.nodeName is "string"
+
+      if isElement
         image  = $ object
         object =
           source:    image.attr('data-src') || image.parent().attr('href')

@@ -54,6 +54,7 @@ compileJsContent = (dist, src, basedir) ->
 
   templates = fs.readFileSync src + 'templates.json', 'utf8'
   templates = templates.replace /\{\{basedir\}\}/gi, basedir
+  templates = templates.replace /\n/g, ''
   templates = "templates = `" + templates + "`"
 
   chocolate = fs.readFileSync source, 'utf8'
