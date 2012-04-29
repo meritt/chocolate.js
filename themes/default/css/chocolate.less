@@ -1,5 +1,4 @@
 @import "../../less-framework/functions.less";
-@import "keyframes.less";
 
 @basedir: "{{basedir}}";
 @thumbnails-height: 116px;
@@ -38,6 +37,8 @@ div.choco-overlay {
   }
 }
 
+@import "animations/close.less";
+
 div.choco-close {
   position: fixed;
   right: 27px;
@@ -54,6 +55,8 @@ div.choco-close {
     #mlf > .opacity(1);
   }
 }
+
+@import "animations/smooth.less";
 
 .choco-sidecolumn() {
   position: fixed;
@@ -104,6 +107,8 @@ div.choco-rightside {
   left: 50%;
 }
 
+@import "animations/spin.less";
+
 div.choco-spinner {
   .choco-container();
   z-index: 10;
@@ -120,6 +125,8 @@ div.choco-spinner {
     #mlf > .animation(spin 0.8s infinite);
   }
 }
+
+@import "animations/shower.less";
 
 div.choco-container {
   .choco-container();
@@ -162,6 +169,8 @@ div.choco-header {
     text-overflow: ellipsis;
   }
 }
+
+@import "animations/thumbnails.less";
 
 ul.choco-thumbnails {
   position: fixed;
