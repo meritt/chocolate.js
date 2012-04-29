@@ -4,12 +4,6 @@ existActions = ['next', 'prev', 'close']
 
 isHistory = not not (window.history and history.pushState)
 isStorage = 'localStorage' of window and window['localStorage']?
-# isFullscreen = document.webkitRequestFullScreen || document.mozRequestFullScreen
-# test = document.getElementById 'choco-overlay'
-# if test.webkitRequestFullScreen
-#   test.webkitRequestFullScreen()
-# else
-#   test.mozRequestFullScreen()
 
 class Chocolate
   images: {}
@@ -308,38 +302,36 @@ class Chocolate
    Обновление тумбнейлов
   ###
   updateThumbnails: ->
-    @thumbnails.find('.selected').removeClass 'selected'
-
-    thumbnail = @thumbnails.find('[data-cid=' + @current + ']').addClass 'selected'
+    before = @thumbnails.find('.selected').removeClass('selected').attr 'data-cid'
+    after  = @thumbnails.find('[data-cid=' + @current + ']').addClass 'selected'
 
     if not @dimensions.thumbnail
-      @dimensions.thumbnail = toInt thumbnail.outerWidth true
+      @dimensions.thumbnail = toInt after.outerWidth true
 
     width = @dimensions.thumbnail
-    left  = thumbnail.get(0).offsetLeft
+    left  = after.get(0).offsetLeft
 
     range = (left, width) -> left: left, right: left + width
 
     container = range @thumbnails.scrollLeft(), @thumbnails.width()
     element   = range left, width
 
-    if container.left > element.left or container.right < element.right
-      if container.right < element.right
+    if before
+      if @current > before
         offset = container.left + width
-      else if container.left > element.left
-        offset = container.left - width
       else
-        offset = null
+        offset = container.left - width
+    else
+      offset = element.left - (@thumbnails.width() / 2) + (width / 2)
 
-      if offset isnt null
-        future = range offset, @thumbnails.width()
+    future = range offset, @thumbnails.width()
 
-        if future.right < element.left
-          offset = width + left
-        else if future.left > element.left
-          offset = 0
+    if future.right < element.left
+      offset = width + left
+    else if future.left > element.left
+      offset = 0
 
-        @thumbnails.scrollLeft offset
+    @thumbnails.scrollLeft offset
     @
 
 
