@@ -202,8 +202,6 @@ class Chocolate
         @images[cid].width  = element.width
         @images[cid].height = element.height
 
-        delete element
-
         @spinner.addClass 'hide' if not @spinner.hasClass 'hide'
 
         fn()
