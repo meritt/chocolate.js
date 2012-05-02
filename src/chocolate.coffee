@@ -290,7 +290,7 @@ class Chocolate
       _this.thumbnails[method] 'hide'
       $(@)[method] 'hide'
 
-      _this.updateDimensions current.width, current.height
+      _this.updateDimensions current.width, current.height if current
 
     if isStorage and not @thumbnails.hasClass 'hide'
       status = localStorage.getItem('choco-thumbnails') || 1
