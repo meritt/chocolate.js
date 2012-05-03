@@ -317,6 +317,7 @@ class Chocolate
       offset = if @current > before then container + thumbnail else container - thumbnail
     else
       offset = element - (width / 2) + (thumbnail / 2)
+      offset = 1 if offset <= 0
 
     if @options.repeat
       right = offset + width
@@ -324,7 +325,7 @@ class Chocolate
       if right < element
         offset = thumbnail + element
       else if offset > element
-        offset = 0
+        offset = 1
 
     @thumbnails.scrollLeft offset
     @
