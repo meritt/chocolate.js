@@ -308,27 +308,21 @@ class Chocolate
     if not @dimensions.thumbnail
       @dimensions.thumbnail = toInt after.outerWidth true
 
-    width = @dimensions.thumbnail
-    left  = after.get(0).offsetLeft
-
-    range = (left, width) -> left: left, right: left + width
-
-    container = range @thumbnails.scrollLeft(), @thumbnails.width()
-    element   = range left, width
+    width     = @thumbnails.width()
+    element   = after.get(0).offsetLeft
+    thumbnail = @dimensions.thumbnail
+    container = @thumbnails.scrollLeft()
 
     if before
-      if @current > before
-        offset = container.left + width
-      else
-        offset = container.left - width
+      offset = if @current > before then container + thumbnail else container - thumbnail
     else
-      offset = element.left - (@thumbnails.width() / 2) + (width / 2)
+      offset = element - (width / 2) + (thumbnail / 2)
 
-    future = range offset, @thumbnails.width()
+    right = offset + width
 
-    if future.right < element.left
-      offset = width + left
-    else if future.left > element.left
+    if right < element
+      offset = thumbnail + left
+    else if offset > element
       offset = 0
 
     @thumbnails.scrollLeft offset
