@@ -229,7 +229,7 @@ class Chocolate
       width  = windowHeight * width / height
       height = windowHeight
 
-    left = toInt width / 2
+    left = width / 2
 
     top  = height / 2
     top += thumbnails / 2   if thumbnails > 0
@@ -237,21 +237,21 @@ class Chocolate
 
     style =
       'width':  toInt(innerWidth / 2 - left) + 'px'
-      'height': innerHeight + 'px'
+      'height': toInt(innerHeight) + 'px'
 
     @leftside.css  style
     @rightside.css style
 
     if title
       @header.addClass('show').css
-        'width':       width
-        'margin-left': '-' + left + 'px'
+        'width':       toInt width
+        'margin-left': '-' + toInt(left) + 'px'
         'margin-top':  '-' + toInt(top + headerHeight) + 'px'
 
     style =
-      'width':       width
-      'height':      height
-      'margin-left': '-' + left + 'px'
+      'width':       toInt width
+      'height':      toInt height
+      'margin-left': '-' + toInt(left) + 'px'
       'margin-top':  '-' + toInt(top) + 'px'
 
     @container.css style
