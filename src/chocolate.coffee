@@ -15,7 +15,13 @@ class Chocolate
    Конструктор
   ###
   constructor: (images, options = {}) ->
-    throw "You don't have defaultOptions or templates variables" if not defaultOptions or not templates
+    if not document.querySelectorAll
+      throw "Please upgrade your browser to view chocolate"
+      return false
+
+    if not defaultOptions or not templates
+      throw "You don't have defaultOptions or templates variables"
+      return false
 
     @options = $.extend defaultOptions, options
 
