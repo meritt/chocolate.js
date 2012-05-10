@@ -117,8 +117,10 @@ class Chocolate
     cid = 1 if cid <= 0
     throw 'Image not found' unless @images[cid]?
 
-    @createThumbnails cid if @options.thumbnails
+    @createThumbnails cid
     @overlay.addClass 'show'
+
+    @_hideLess() if @length is 1
 
     @open cid
     @
@@ -172,7 +174,7 @@ class Chocolate
       title = if @images[cid].title then @images[cid].title else 'Image №' + cid
       history.pushState null, title, '#image' + cid
 
-    @updateThumbnails() if @options.thumbnails
+    @updateThumbnails()
 
     @getImageSize cid, (cid) ->
       @container.addClass 'show'
@@ -308,6 +310,8 @@ class Chocolate
    Обновление тумбнейлов
   ###
   updateThumbnails: ->
+    return @ if not @options.thumbnails or @length <= 1
+
     before = @thumbnails.find('.selected').removeClass('selected').attr 'data-cid'
     after  = @thumbnails.find('[data-cid=' + @current + ']').addClass 'selected'
 
@@ -416,6 +420,14 @@ class Chocolate
       @header.css 'height', header
 
     {horizontal, vertical, thumbnails, header}
+
+  ###
+   Private method
+  ###
+  _hideLess: ->
+    @dimensions.thumbnails = false if @options.thumbnails
+    @overlay.addClass 'choco-hideless'
+    @
 
 
 toInt = (string) -> parseInt string, 10

@@ -35,6 +35,17 @@ div.choco-overlay {
   &.show {
     display: block;
   }
+
+  &.choco-hideless {
+    div.choco-leftside, div.choco-rightside, ul.choco-thumbnails, div.choco-thumbnails-toggle {
+      display: none;
+      cursor: default;
+    }
+
+    div.choco-container {
+      cursor: default;
+    }
+  }
 }
 
 @import "animations/close.less";
