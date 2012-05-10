@@ -9,8 +9,8 @@
 Возможные проблемы поддержки CSS3 свойств для необходимых браузеров:
 
 * Multiple Backgrounds только для IE9+
-* Keyframe Animations только для IE10+, Firefox 5+, поддержки для Opera вообще нет
+* Keyframe Animations только для IE10+, Firefox 5+, Opera 12+
 * Background Size только для IE9+
 * Scale Transforms только для IE9+
 * Box Shadow только для IE9+
-* Transitions поддержки для IE вообще нет
+* Transitions только для IE10+
