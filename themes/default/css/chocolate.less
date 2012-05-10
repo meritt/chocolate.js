@@ -21,7 +21,7 @@
   }
 }
 
-div.choco-overlay {
+.choco-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -37,12 +37,12 @@ div.choco-overlay {
   }
 
   &.choco-hideless {
-    div.choco-leftside, div.choco-rightside, ul.choco-thumbnails, div.choco-thumbnails-toggle {
+    .choco-leftside, .choco-rightside, .choco-thumbnails, .choco-thumbnails-toggle {
       display: none;
       cursor: default;
     }
 
-    div.choco-container {
+    .choco-container {
       cursor: default;
     }
   }
@@ -50,7 +50,7 @@ div.choco-overlay {
 
 @import "animations/close.less";
 
-div.choco-close {
+.choco-close {
   position: fixed;
   right: 27px;
   top: 54px;
@@ -79,7 +79,7 @@ div.choco-close {
   #mlf > .animation(smooth 0.8s);
 }
 
-div.choco-leftside {
+.choco-leftside {
   .sidecolumn();
   left: 0;
   color: #666;
@@ -106,7 +106,7 @@ div.choco-leftside {
   }
 }
 
-div.choco-rightside {
+.choco-rightside {
   .sidecolumn();
   right: 0;
   cursor: pointer;
@@ -120,7 +120,7 @@ div.choco-rightside {
 
 @import "animations/spin.less";
 
-div.choco-spinner {
+.choco-spinner {
   .container();
   z-index: 10;
 
@@ -139,7 +139,7 @@ div.choco-spinner {
 
 @import "animations/shower.less";
 
-div.choco-container {
+.choco-container {
   .container();
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -157,7 +157,7 @@ div.choco-container {
   }
 }
 
-div.choco-header {
+.choco-header {
   .container();
   display: none;
   height: 35px;
@@ -183,7 +183,7 @@ div.choco-header {
 
 @import "animations/thumbnails.less";
 
-ul.choco-thumbnails {
+.choco-thumbnails {
   position: fixed;
   left: 0;
   bottom: 0;
@@ -202,7 +202,7 @@ ul.choco-thumbnails {
     margin-bottom: -@thumbnails-height - 18px;
   }
 
-  li.choco-thumbnail {
+  .choco-thumbnail {
     @height: @thumbnails-height - 10px;
     display: inline-block;
     width: round(@height + (@height / 3));
@@ -238,7 +238,7 @@ ul.choco-thumbnails {
   }
 }
 
-div.choco-thumbnails-toggle {
+.choco-thumbnails-toggle {
   position: fixed;
   right: 0;
   bottom: 0;
