@@ -201,12 +201,13 @@ class Chocolate
       element        = new Image()
       element.src    = image.source
       element.onload = =>
-        @images[cid].width  = element.width
-        @images[cid].height = element.height
+        if cid is @current
+          @images[cid].width  = element.width
+          @images[cid].height = element.height
 
-        @spinner.addClass 'hide' if not @spinner.hasClass 'hide'
+          @spinner.addClass 'hide' if not @spinner.hasClass 'hide'
 
-        fn()
+          fn()
     else
       fn()
 
