@@ -122,6 +122,10 @@ class Chocolate
 
     @_hideLess() if @length is 1
 
+    $(window).bind 'resize', =>
+      image = @images[@current]
+      @updateDimensions image.width, image.height
+
     @open cid
     @
 
@@ -132,6 +136,8 @@ class Chocolate
       if @options.thumbnails
         @thumbnails.html ''
         @overlay.find('.choco-thumbnails-toggle').unbind 'click'
+
+      $(window).unbind 'resize'
 
       @current = null
       @overlay.removeClass 'show'
