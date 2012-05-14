@@ -190,9 +190,9 @@ class Chocolate
 
       @updateDimensions image.width, image.height
 
-      @container.css 'background-image', 'url(' + image.source + ')'
-      # fix for IE background-size
-      @container.css '-ms-filter', "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "',sizingMethod='scale')"
+      @container.css
+        'background-image': 'url(' + image.source + ')'
+        '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "', sizingMethod='scale')\""
       @header.html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
     @
 
