@@ -173,6 +173,7 @@ class Chocolate
     @current = cid
 
     @container.removeClass 'choco-show'
+    @container.removeClass 'choco-error' if @container.hasClass 'choco-error'
     @header.removeClass 'choco-show' if @header.hasClass 'choco-show'
     @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
 
@@ -189,9 +190,9 @@ class Chocolate
 
       @updateDimensions image.width, image.height
 
-      @container.css 'background-image', 'url(' + image.source + ')'
-      # fix for IE background-size
-      @container.css '-ms-filter', "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "',sizingMethod='scale')"
+      @container.css
+        'background-image': 'url(' + image.source + ')'
+        '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "', sizingMethod='scale')\""
       @header.html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
     @
 
@@ -216,6 +217,13 @@ class Chocolate
           @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
 
           fn()
+
+      element.onerror = =>
+        if cid is @current
+          @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
+          @container.addClass 'choco-show choco-error'
+          @updateDimensions @container.width(), @container.height()
+
     else
       fn()
 
