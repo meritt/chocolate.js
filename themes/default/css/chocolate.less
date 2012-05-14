@@ -16,7 +16,7 @@
   display: block;
   cursor: pointer;
 
-  &:hover, &.hover {
+  &:hover, &.choco-hover {
     background: rgba(0, 0, 0, 0.4) url("@{basedir}/images/lupa.png") 50% 50% no-repeat;
   }
 }
@@ -32,7 +32,7 @@
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 5;
 
-  &.show {
+  &.choco-show {
     display: block;
   }
 
@@ -62,7 +62,7 @@
   z-index: 15px;
   #mlf > .animation(close 0.8s);
 
-  &.hover, &:hover {
+  &:hover, &.choco-hover {
     #mlf > .opacity(1);
   }
 }
@@ -124,7 +124,7 @@
   .container();
   z-index: 10;
 
-  &.hide {
+  &.choco-hide {
     display: none;
   }
 
@@ -152,7 +152,7 @@
   zoom: 1;
   #mlf > .animation(shower 200ms ease-in-out);
 
-  &.show {
+  &.choco-show {
     #mlf > .opacity(1);
     #mlf > .box-shadow(1px 1px 10px #111);
   }
@@ -165,7 +165,7 @@
   text-align: left;
   font-family: Arial, "Helvetica CY", "Nimbus Sans L", sans-serif;
 
-  &.show {
+  &.choco-show {
     display: block;
   }
 
@@ -199,7 +199,7 @@
   z-index: 25;
   #mlf > .animation(thumbnails 1.6s ease-in-out);
 
-  &.hide {
+  &.choco-hide {
     margin-bottom: -@thumbnails-height - 18px;
   }
 
@@ -263,7 +263,7 @@
     cursor: default;
   }
 
-  &.hide {
+  &.choco-hide {
     bottom: -9px;
     right: 13px;
     width: 54px;

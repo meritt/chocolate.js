@@ -50,7 +50,7 @@ class Chocolate
     @_prepareActionFor container for container in ['overlay', 'container', 'leftside', 'rightside']
 
     $(window).on 'keyup', (event) =>
-      if @overlay.hasClass 'show'
+      if @overlay.hasClass 'choco-show'
         switch event.keyCode
           when 27    # ESC
             @close()
@@ -118,7 +118,7 @@ class Chocolate
     throw 'Image not found' unless @images[cid]?
 
     @createThumbnails cid
-    @overlay.addClass 'show'
+    @overlay.addClass 'choco-show'
 
     @_hideLess() if @length is 1
 
@@ -130,7 +130,7 @@ class Chocolate
     @
 
   close: ->
-    if @overlay.hasClass 'show'
+    if @overlay.hasClass 'choco-show'
       history.pushState null, null, '#' if isHistory
 
       if @options.thumbnails
@@ -140,7 +140,7 @@ class Chocolate
       $(window).off 'resize'
 
       @current = null
-      @overlay.removeClass 'show'
+      @overlay.removeClass 'choco-show'
     @
 
   open: (cid, updateHistory) ->
@@ -172,9 +172,9 @@ class Chocolate
   updateImage: (cid, updateHistory = true) ->
     @current = cid
 
-    @container.removeClass 'show'
-    @header.removeClass 'show' if @header.hasClass 'show'
-    @spinner.addClass 'hide' if not @spinner.hasClass 'hide'
+    @container.removeClass 'choco-show'
+    @header.removeClass 'choco-show' if @header.hasClass 'choco-show'
+    @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
 
     if isHistory and updateHistory
       title = if @images[cid].title then @images[cid].title else 'Image №' + cid
@@ -183,7 +183,7 @@ class Chocolate
     @updateThumbnails()
 
     @getImageSize cid, (cid) ->
-      @container.addClass 'show'
+      @container.addClass 'choco-show'
 
       image = @images[cid]
 
@@ -202,7 +202,7 @@ class Chocolate
     fn = => after.call @, cid if cid is @current
 
     if not image.width or not image.height
-      @spinner.removeClass 'hide' if @spinner.hasClass 'hide'
+      @spinner.removeClass 'choco-hide' if @spinner.hasClass 'choco-hide'
 
       element        = new Image()
       element.src    = image.source
@@ -211,7 +211,7 @@ class Chocolate
           @images[cid].width  = element.width
           @images[cid].height = element.height
 
-          @spinner.addClass 'hide' if not @spinner.hasClass 'hide'
+          @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
 
           fn()
     else
@@ -225,7 +225,7 @@ class Chocolate
 
     thumbnails = headerHeight = 0
 
-    if @dimensions.thumbnails isnt false and not @thumbnails.hasClass('hide')
+    if @dimensions.thumbnails isnt false and not @thumbnails.hasClass('choco-hide')
       @dimensions.thumbnails = @thumbnails.height() if @dimensions.thumbnails is 0
       thumbnails = @dimensions.thumbnails
 
@@ -258,7 +258,7 @@ class Chocolate
     @rightside.css style
 
     if title
-      @header.addClass('show').css
+      @header.addClass('choco-show').css
         'width':       toInt width
         'margin-left': '-' + toInt(left) + 'px'
         'margin-top':  '-' + toInt(top + headerHeight) + 'px'
@@ -296,18 +296,18 @@ class Chocolate
 
     @overlay.find('.choco-thumbnails-toggle').on 'click', ->
       current = _this.images[_this.current]
-      status  = _this.thumbnails.hasClass 'hide'
+      status  = _this.thumbnails.hasClass 'choco-hide'
       method  = if status then 'removeClass' else 'addClass'
 
       if isStorage
         localStorage.setItem 'choco-thumbnails', if status then 1 else 0
 
-      _this.thumbnails[method] 'hide'
-      $(@)[method] 'hide'
+      _this.thumbnails[method] 'choco-hide'
+      $(@)[method] 'choco-hide'
 
       _this.updateDimensions current.width, current.height if current
 
-    if isStorage and not @thumbnails.hasClass 'hide'
+    if isStorage and not @thumbnails.hasClass 'choco-hide'
       status = localStorage.getItem('choco-thumbnails') || 1
       @overlay.find('.choco-thumbnails-toggle').trigger 'click' if toInt(status) is 0
 
@@ -385,7 +385,7 @@ class Chocolate
           'height':     image.height()
           'margin-top': '-' + image.height() + 'px'
 
-        image.on 'hover', (event) -> popover.toggleClass 'hover'
+        image.on 'hover', (event) -> popover.toggleClass 'choco-hover'
         popover.on 'click', (event) -> showFirstImage event, cid
 
   ###
@@ -402,7 +402,7 @@ class Chocolate
 
       if @options.actions[container] is 'close'
         @[container].on 'mouseenter mouseleave', =>
-          @overlay.find('.choco-close').toggleClass 'hover'
+          @overlay.find('.choco-close').toggleClass 'choco-hover'
     @
 
   ###
