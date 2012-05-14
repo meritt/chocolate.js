@@ -45,11 +45,11 @@ class Chocolate
     ###
      Добавляем события по-умолчанию для контейнеров
     ###
-    @overlay.find('.choco-close').bind 'click', => @close()
+    @overlay.find('.choco-close').on 'click', => @close()
 
     @_prepareActionFor container for container in ['overlay', 'container', 'leftside', 'rightside']
 
-    $(window).bind 'keyup', (event) =>
+    $(window).on 'keyup', (event) =>
       if @overlay.hasClass 'show'
         switch event.keyCode
           when 27    # ESC
@@ -74,10 +74,10 @@ class Chocolate
           else
             @open cid, false
 
-      $(window).bind 'load', -> onHistory()
+      $(window).on 'load', -> onHistory()
 
       if 'onhashchange' of window
-        $(window).bind 'hashchange', -> onHistory()
+        $(window).on 'hashchange', -> onHistory()
 
     ###
      Получаем параметры отступов и другие неизменяемые размеры
@@ -122,7 +122,7 @@ class Chocolate
 
     @_hideLess() if @length is 1
 
-    $(window).bind 'resize', =>
+    $(window).on 'resize', =>
       image = @images[@current]
       @updateDimensions image.width, image.height
 
@@ -135,9 +135,9 @@ class Chocolate
 
       if @options.thumbnails
         @thumbnails.html ''
-        @overlay.find('.choco-thumbnails-toggle').unbind 'click'
+        @overlay.find('.choco-thumbnails-toggle').off 'click'
 
-      $(window).unbind 'resize'
+      $(window).off 'resize'
 
       @current = null
       @overlay.removeClass 'show'
@@ -291,10 +291,10 @@ class Chocolate
                          .replace('{{thumbnail}}', image.thumbnail)
                          .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
-    @thumbnails.html(content).find('.choco-thumbnail').bind 'click', ->
+    @thumbnails.html(content).find('.choco-thumbnail').on 'click', ->
       _this.open toInt $(@).attr('data-cid')
 
-    @overlay.find('.choco-thumbnails-toggle').bind 'click', ->
+    @overlay.find('.choco-thumbnails-toggle').on 'click', ->
       current = _this.images[_this.current]
       status  = _this.thumbnails.hasClass 'hide'
       method  = if status then 'removeClass' else 'addClass'
@@ -372,7 +372,7 @@ class Chocolate
         event.preventDefault()
         @show cid
 
-      image.addClass('choco-item').bind 'click', (event) ->
+      image.addClass('choco-item').on 'click', (event) ->
         showFirstImage event, cid
 
       preload        = new Image()
@@ -385,8 +385,8 @@ class Chocolate
           'height':     image.height()
           'margin-top': '-' + image.height() + 'px'
 
-        image.bind 'hover', (event) -> popover.toggleClass 'hover'
-        popover.bind 'click', (event) -> showFirstImage event, cid
+        image.on 'hover', (event) -> popover.toggleClass 'hover'
+        popover.on 'click', (event) -> showFirstImage event, cid
 
   ###
    Private method
@@ -397,11 +397,11 @@ class Chocolate
     if method
       verify = @[container].attr 'class'
 
-      @[container].bind 'click', (event) =>
+      @[container].on 'click', (event) =>
         @[method]() if $(event.target).hasClass verify
 
       if @options.actions[container] is 'close'
-        @[container].bind 'mouseenter mouseleave', =>
+        @[container].on 'mouseenter mouseleave', =>
           @overlay.find('.choco-close').toggleClass 'hover'
     @
 
