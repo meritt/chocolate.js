@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Шаблоны</title>
+</head>
+<body>
+
+<!-- Шаблон при наведении на изображение в тексте сайта -->
+<script id="image-hover" type="text/x-template">
+  <span class="choco-item-hover" data-pid="{{cid}}"></span>
+</script>
+
+<!-- Шаблон блока перекрывающего весь сайт и добавляющий основную структуру шоколада -->
+<script id="overlay" type="text/x-template">
+  <div class="choco-overlay">
+    <div class="choco-leftside choco-unselect"></div>
+    {{spinner}}
+    <div class="choco-container choco-unselect"></div>
+    <div class="choco-header"></div>
+    <div class="choco-rightside choco-unselect"></div>
+    {{thumbnails}}
+    <div class="choco-close choco-unselect"></div>
+  </div>
+</script>
+
+<!-- Шаблон загрузчика при переключении изображений -->
+<script id="spinner" type="text/x-template">
+  <div class="choco-spinner">
+    <img src="{{basedir}}/images/loader.png" alt="">
+  </div>
+</script>
+
+<!-- Шаблон описания изображения -->
+<script id="image-title" type="text/x-template">
+  <h1>{{title}}</h1>
+</script>
+
+<!-- Шаблон блока со списком тумбнейлов -->
+<script id="thumbnails" type="text/x-template">
+  <ul class="choco-thumbnails choco-unselect"></ul>
+  <div class="choco-thumbnails-toggle choco-unselect"></div>
+</script>
+
+<!-- Шаблон тумбнейла -->
+<script id="thumbnails-item" type="text/x-template">
+  <li class="choco-thumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url('{{thumbnail}}')"{{title}}></li>
+</script>
+
+</body>
+</html>
