@@ -45,7 +45,7 @@ class Chocolate
     ###
      Добавляем события по-умолчанию для контейнеров
     ###
-    @overlay.find('.choco-close').click => @close()
+    @overlay.find('.choco-close').bind 'click', => @close()
 
     @_prepareActionFor container for container in ['overlay', 'container', 'leftside', 'rightside']
 
@@ -291,10 +291,10 @@ class Chocolate
                          .replace('{{thumbnail}}', image.thumbnail)
                          .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
-    @thumbnails.html(content).find('.choco-thumbnail').click ->
+    @thumbnails.html(content).find('.choco-thumbnail').bind 'click', ->
       _this.open toInt $(@).attr('data-cid')
 
-    @overlay.find('.choco-thumbnails-toggle').click ->
+    @overlay.find('.choco-thumbnails-toggle').bind 'click', ->
       current = _this.images[_this.current]
       status  = _this.thumbnails.hasClass 'hide'
       method  = if status then 'removeClass' else 'addClass'
@@ -320,15 +320,15 @@ class Chocolate
     return @ if not @options.thumbnails or @length <= 1
 
     before = @thumbnails.find('.selected').removeClass('selected').attr 'data-cid'
-    after  = @thumbnails.find('[data-cid=' + @current + ']').addClass 'selected'
+    after  = @thumbnails.find('[data-cid="' + @current + '"]').addClass 'selected'
 
     if not @dimensions.thumbnail
-      @dimensions.thumbnail = toInt after.outerWidth true
+      @dimensions.thumbnail = toInt @_outerWidth after
 
     width     = @thumbnails.width()
     element   = after.get(0).offsetLeft
     thumbnail = @dimensions.thumbnail
-    container = @thumbnails.scrollLeft()
+    container = @thumbnails.get(0).scrollLeft or 0
 
     if before
       offset = if @current > before then container + thumbnail else container - thumbnail
@@ -344,7 +344,7 @@ class Chocolate
       else if offset > element
         offset = 1
 
-    @thumbnails.scrollLeft offset
+    @thumbnails.get(0).scrollLeft = offset
     @
 
 
@@ -372,7 +372,7 @@ class Chocolate
         event.preventDefault()
         @show cid
 
-      image.addClass('choco-item').click (event) ->
+      image.addClass('choco-item').bind 'click', (event) ->
         showFirstImage event, cid
 
       preload        = new Image()
@@ -380,13 +380,13 @@ class Chocolate
       preload.onload = ->
         image.after templates['image-hover'].replace '{{cid}}', cid
 
-        popover = $('[data-pid=' + cid + ']').css
+        popover = $('[data-pid="' + cid + '"]').css
           'width':      image.width()
           'height':     image.height()
           'margin-top': '-' + image.height() + 'px'
 
-        image.hover (event) -> popover.toggleClass 'hover'
-        popover.click (event) -> showFirstImage event, cid
+        image.bind 'hover', (event) -> popover.toggleClass 'hover'
+        popover.bind 'click', (event) -> showFirstImage event, cid
 
   ###
    Private method
@@ -397,7 +397,7 @@ class Chocolate
     if method
       verify = @[container].attr 'class'
 
-      @[container].click (event) =>
+      @[container].bind 'click', (event) =>
         @[method]() if $(event.target).hasClass verify
 
       if @options.actions[container] is 'close'
@@ -436,6 +436,25 @@ class Chocolate
     @overlay.addClass 'choco-hideless'
     @
 
+  ###
+   Private method
+  ###
+  _outerWidth: (element) ->
+    return element.outerWidth true if element.outerWidth?
+
+    styles = [
+      'margin-left'
+      'margin-right'
+      'padding-left'
+      'padding-right'
+      'border-left-width'
+      'border-right-width'
+    ]
+
+    width = parseFloat element.css 'width'
+    $(styles).each (index, style) -> width += parseFloat element.css style
+    width
+
 
 toInt = (string) -> parseInt string, 10
 
@@ -443,5 +462,9 @@ toInt = (string) -> parseInt string, 10
 window.chocolate = Chocolate
 
 # Подключение к jQuery Plugins
-if jQuery and jQuery.fn
+if jQuery?.fn
   jQuery.fn.chocolate = -> new Chocolate @, arguments[0]
+
+# Подключение к Zepto Plugins
+if Zepto?.fn
+  Zepto.fn.chocolate = -> new Chocolate @, arguments[0]
