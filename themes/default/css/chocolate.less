@@ -29,6 +29,7 @@
   width: 100%;
   height: 100%;
   padding: 50px 70px;
+  background: transparent url("@{basedir}/images/black80.png") 0 0 repeat e("\9");
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 5;
 
@@ -252,7 +253,7 @@
 
   &:after {
     content: '';
-    position: fixed;
+    position: absolute;
     right: 0;
     bottom: @thumbnails-height + 18px;
     display: block;
@@ -260,7 +261,7 @@
     height: 2px;
     background-color: #fff;
     #mlf > .opacity(1);
-    cursor: default;
+    cursor: default; 
   }
 
   &.choco-hide {
@@ -281,4 +282,4 @@
       background-color: #fff;
     }
   }
-}
+}  
