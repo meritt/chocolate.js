@@ -173,6 +173,7 @@ class Chocolate
     @current = cid
 
     @container.removeClass 'choco-show'
+    @container.removeClass 'choco-error' if @container.hasClass 'choco-error'
     @header.removeClass 'choco-show' if @header.hasClass 'choco-show'
     @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
 
@@ -216,6 +217,13 @@ class Chocolate
           @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
 
           fn()
+
+      element.onerror = =>
+        if cid is @current
+          @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
+          @container.addClass 'choco-show choco-error'
+          @updateDimensions @container.width(), @container.height()
+
     else
       fn()
 
