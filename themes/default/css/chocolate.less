@@ -15,9 +15,14 @@
   position: relative;
   display: block;
   cursor: pointer;
+  filter: ~`'alpha(opacity=40)'`;
 
   &:hover, &.choco-hover {
-    background: rgba(0, 0, 0, 0.4) url("@{basedir}/images/lupa.png") 50% 50% no-repeat;
+    background-image: url("@{basedir}/images/lupa.png");
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-color: #000 e("\9");
   }
 }
 
