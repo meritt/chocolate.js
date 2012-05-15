@@ -5,6 +5,7 @@ util      = require 'util'
 less      = require 'less'
 uglify    = require 'uglify-js'
 {cssmin}  = require 'cssmin'
+jsdom     = require 'jsdom'
 
 option '-t', '--themes [NAME]', 'theme for compiled chocolate code'
 option '-b', '--basedir [DIR]', 'directory with css, js, image folders'
@@ -43,8 +44,32 @@ task 'build', 'Build chocolate.js', (options) ->
 
         util.pump from, to
 
-    compileJsContent dist, src, basedir
     compileCssContent dist, src, basedir
+    compileJsContent dist, src, basedir
+
+compileTemplate = (src, basedir, fn) ->
+  html = fs.readFileSync src + 'templates.html', 'utf8'
+  jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'], (error, window) ->
+    templates = {}
+
+    $ = window.$
+    $('script').each ->
+      key = $(@).attr('id')
+
+      if key
+        html = $(@).html()
+        html = html.replace /\{\{basedir\}\}/gi, basedir
+
+        lines = html.split "\n"
+        html  = ''
+        for line in lines
+          line = $.trim line
+          html += line if line isnt ''
+
+        templates[key] = $.trim html 
+
+    window.close()
+    fn templates
 
 compileJsContent = (dist, src, basedir) ->
   current = path.dirname __filename
@@ -52,17 +77,17 @@ compileJsContent = (dist, src, basedir) ->
 
   options = "defaultOptions = `" + fs.readFileSync(src + 'options.json', 'utf8') + "`"
 
-  templates = fs.readFileSync src + 'templates.json', 'utf8'
-  templates = templates.replace /\{\{basedir\}\}/gi, basedir
-  templates = templates.replace /\n/g, ''
-  templates = "templates = `" + templates + "`"
+  compileTemplate src, basedir, (templates) ->
+    templates = "templates = `" + JSON.stringify(templates) + "`"
 
-  chocolate = fs.readFileSync source, 'utf8'
+    chocolate = fs.readFileSync source, 'utf8'
 
-  js = compile options + "\n\n" + templates + "\n\n" + chocolate
+    js = compile options + "\n\n" + templates + "\n\n" + chocolate
 
-  fs.writeFileSync path.normalize(dist + 'js/chocolate.js'), js
-  fs.writeFileSync path.normalize(dist + 'js/chocolate.min.js'), uglify js
+    fs.writeFileSync path.normalize(dist + 'js/chocolate.js'), js
+    fs.writeFileSync path.normalize(dist + 'js/chocolate.min.js'), uglify js
+
+    console.log 'done'
 
 compileCssContent = (dist, src, basedir) ->
   parser = new less.Parser
