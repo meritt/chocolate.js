@@ -462,7 +462,7 @@ class Chocolate
     ]
 
     width = parseFloat element.css 'width'
-    $(styles).each (index, style) -> width += parseFloat element.css style
+    width += parseFloat element.css style for style in styles
     width
 
 
@@ -471,10 +471,8 @@ toInt = (string) -> parseInt string, 10
 # Экспорт в глобальное пространство
 window.chocolate = Chocolate
 
-# Подключение к jQuery Plugins
-if jQuery?.fn
-  jQuery.fn.chocolate = -> new Chocolate @, arguments[0]
-
-# Подключение к Zepto Plugins
-if Zepto?.fn
-  Zepto.fn.chocolate = -> new Chocolate @, arguments[0]
+# Подключение к jQuery Plugins / Ender Plugins / Zepto Plugins
+frameworks = ['jQuery', 'ender', 'Zepto']
+for framework in frameworks
+  if window[framework]?.fn
+    window[framework].fn.chocolate = -> new Chocolate @, arguments[0]
