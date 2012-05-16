@@ -140,6 +140,20 @@
     margin-left: round(-(@size / 2));
     margin-top: round(-(@size / 2) - (@thumbnails-height / 2));
     #mlf > .animation(spin 0.8s linear infinite);
+
+    &.choco-spinner-cssanimation {
+      display: none;
+    }
+  }
+}
+
+.cssanimations {
+  .choco-spinner-cssanimation {
+    display: inline-block;
+  }
+
+  .choco-spinner-gifanimation {
+    display: none;
   }
 }
 

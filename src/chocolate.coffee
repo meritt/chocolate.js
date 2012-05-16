@@ -59,6 +59,8 @@ class Chocolate
           when 39    # Right arrow
             @next()
 
+    cssAnimationsSupport()
+
     ###
      Если можно использовать History API добавляем событие на отслеживание изменений в адресе
     ###
@@ -467,6 +469,25 @@ class Chocolate
 
 
 toInt = (string) -> parseInt string, 10
+
+cssAnimationsSupport = ->
+  return true if $('html').hasClass 'cssanimations'
+
+  support = false
+  element = document.createElement 'div'
+
+  support = true if element.style.animationName
+
+  prefixes = ['Webkit', 'Moz', 'O', 'ms']
+
+  if support is false
+    for prefix in prefixes
+      if element.style[prefix + 'AnimationName'] isnt undefined
+        support = true
+        break
+
+  $('html').addClass 'cssanimations' if support is true
+  support
 
 # Экспорт в глобальное пространство
 window.chocolate = Chocolate
