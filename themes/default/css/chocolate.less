@@ -36,7 +36,7 @@
   padding: 50px 70px;
   background: transparent url("@{basedir}/images/black80.png") 0 0 repeat e("\9");
   background-color: rgba(0, 0, 0, 0.8);
-  z-index: 5;
+  z-index: 105;
 
   &.choco-show {
     display: block;
@@ -65,7 +65,7 @@
   background: url("@{basedir}/images/close.png") 0 0 no-repeat;
   #mlf > .opacity(0.5);
   cursor: pointer;
-  z-index: 15px;
+  z-index: 125;
   #mlf > .animation(close 0.8s);
 
   &:hover, &.choco-hover {
@@ -81,7 +81,7 @@
   bottom: 0;
   width: 50px;
   height: 50px;
-  z-index: 20;
+  z-index: 120;
   #mlf > .animation(smooth 0.8s);
 }
 
@@ -128,7 +128,7 @@
 
 .choco-spinner {
   .container();
-  z-index: 10;
+  z-index: 110;
 
   &.choco-hide {
     display: none;
@@ -168,7 +168,7 @@
   #mlf > .box-shadow(0 0 0 #111);
   #mlf > .opacity(0);
   cursor: pointer;
-  z-index: 15;
+  z-index: 115;
   zoom: 1;
   #mlf > .animation(shower 200ms ease-in-out);
 
@@ -226,7 +226,7 @@
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  z-index: 25;
+  z-index: 130;
   #mlf > .animation(thumbnails 1.6s ease-in-out);
 
   &.choco-hide {
@@ -277,7 +277,7 @@
   height: @thumbnails-height + 20px;
   background: url("@{basedir}/images/arrow-b.png") 5px 0 no-repeat;
   cursor: pointer;
-  z-index: 20;
+  z-index: 120;
   #mlf > .animation(thumbnails 1.6s ease-in-out);
 
   &:after {
