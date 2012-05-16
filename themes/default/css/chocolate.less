@@ -147,7 +147,7 @@
   }
 }
 
-.cssanimations {
+.cssanimations .choco-spinner{
   .choco-spinner-cssanimation {
     display: inline-block;
   }
@@ -292,9 +292,11 @@
     #mlf > .opacity(1);
     cursor: default; 
   }
+}
 
-  &.choco-hide {
+.choco-thumbnails-toggle.choco-hide {
     bottom: -9px;
+    bottom: -10px e("\9");
     right: 13px;
     width: 54px;
     height: 28px;
@@ -302,13 +304,14 @@
 
     &:after {
       content: '';
-      position: fixed;
-      right: 0;
-      bottom: 0;
+      position: absolute;
+      bottom: 9px;
+      bottom: 10px e("\9");
+      right: -13px;
       display: block;
       width: 26px;
       height: 2px;
       background-color: #fff;
     }
   }
-}  
+}
