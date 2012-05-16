@@ -15,7 +15,7 @@ class Chocolate
    Конструктор
   ###
   constructor: (images, options = {}) ->
-    if not isStorage
+    if not document.querySelectorAll
       # throw "Please upgrade your browser to view chocolate"
       return false
 
