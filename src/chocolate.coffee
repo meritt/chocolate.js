@@ -194,7 +194,8 @@ class Chocolate
 
       @container.css
         'background-image': 'url(' + image.source + ')'
-        '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "', sizingMethod='scale')\""
+        '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "',sizingMethod='scale')\""
+
       @header.html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
     @
 
@@ -209,8 +210,8 @@ class Chocolate
     if not image.width or not image.height
       @spinner.removeClass 'choco-hide' if @spinner.hasClass 'choco-hide'
 
-      element        = new Image()
-      element.src    = image.source
+      element = new Image()
+
       element.onload = =>
         if cid is @current
           @images[cid].width  = element.width
@@ -225,6 +226,8 @@ class Chocolate
           @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
           @container.addClass 'choco-show choco-error'
           @updateDimensions @container.width(), @container.height()
+
+      element.src = image.source
 
     else
       fn()
@@ -243,9 +246,9 @@ class Chocolate
 
     headerHeight = @dimensions.header if title
 
-    innerWidth   = window.innerWidth
+    innerWidth   = window.innerWidth or document.documentElement.clientWidth
     windowWidth  = innerWidth - @dimensions.horizontal
-    innerHeight  = window.innerHeight
+    innerHeight  = window.innerHeight or document.documentElement.clientHeight
     windowHeight = innerHeight - @dimensions.vertical - thumbnails - headerHeight
 
     if width > windowWidth
@@ -298,13 +301,20 @@ class Chocolate
     for cid, image of @images
       selected = if current.source? is image.source then ' selected' else ''
       template = templates['thumbnails-item']
+
       content += template.replace('{{selected}}', selected)
                          .replace('{{cid}}', cid)
-                         .replace('{{thumbnail}}', image.thumbnail)
+                         .replace('{{image}}', image.thumbnail)
                          .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
 
-    @thumbnails.html(content).find('.choco-thumbnail').on 'click', ->
-      _this.open toInt $(@).attr('data-cid')
+    @thumbnails.html(content).find('.choco-thumbnail').each ->
+      thumbnail = $ @
+      image = thumbnail.attr 'data-image'
+
+      thumbnail.on 'click', -> _this.open toInt thumbnail.attr 'data-cid'
+      thumbnail.css
+        'background-image': 'url(' + image + ')'
+        '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image + "',sizingMethod='scale')\""
 
     @overlay.find('.choco-thumbnails-toggle').on 'click', ->
       current = _this.images[_this.current]
@@ -387,8 +397,7 @@ class Chocolate
       image.addClass('choco-item').on 'click', (event) ->
         showFirstImage event, cid
 
-      preload        = new Image()
-      preload.src    = data.thumbnail
+      preload = new Image()
       preload.onload = ->
         image.after templates['image-hover'].replace '{{cid}}', cid
 
@@ -399,6 +408,8 @@ class Chocolate
 
         image.on 'hover', (event) -> popover.toggleClass 'choco-hover'
         popover.on 'click', (event) -> showFirstImage event, cid
+
+      preload.src = data.thumbnail
 
   ###
    Private method

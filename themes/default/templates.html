@@ -27,8 +27,8 @@
 <!-- Шаблон загрузчика при переключении изображений -->
 <script id="spinner" type="text/x-template">
   <div class="choco-spinner">
-    <img src="{{basedir}}/images/loader.png" alt="" class="choco-spinner-cssanimation">
-    <img src="{{basedir}}/images/loader.gif" alt="" class="choco-spinner-gifanimation">
+    <img src="{{basedir}}/images/loader.png" width="30" height="30" alt="" class="choco-spinner-cssanimation">
+    <img src="{{basedir}}/images/loader.gif" width="34" height="34" alt="" class="choco-spinner-gifanimation">
   </div>
 </script>
 
@@ -45,7 +45,7 @@
 
 <!-- Шаблон тумбнейла -->
 <script id="thumbnails-item" type="text/x-template">
-  <li class="choco-thumbnail{{selected}}" data-cid="{{cid}}" style="background-image:url('{{thumbnail}}')"{{title}}></li>
+  <li class="choco-thumbnail{{selected}}" data-cid="{{cid}}" data-image="{{image}}"{{title}}></li>
 </script>
 
 </body>
