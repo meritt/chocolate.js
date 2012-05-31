@@ -4,6 +4,7 @@ existActions = ['next', 'prev', 'close']
 
 isHistory = not not (window.history and history.pushState)
 isStorage = 'localStorage' of window and window['localStorage']?
+isIE8     = document.documentMode? and document.documentMode is 8
 
 class Chocolate
   images: {}
@@ -316,6 +317,7 @@ class Chocolate
         'background-image': 'url(' + image + ')'
         '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image + "',sizingMethod='scale')\""
 
+    @overlay.find('.choco-thumbnails-toggle-ie8fix').addClass 'choco-show' if isIE8
     @overlay.find('.choco-thumbnails-toggle').on 'click', ->
       current = _this.images[_this.current]
       status  = _this.thumbnails.hasClass 'choco-hide'
