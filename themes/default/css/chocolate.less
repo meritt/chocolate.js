@@ -318,30 +318,13 @@
     &:hover, &.choco-hover {background-color: #000;}
   }
   
-  .choco-thumbnails-toggle,.choco-thumbnails-toggle.choco-hide{
+  .choco-thumbnails-toggle{
+    background:none;
+    position:absolute;
     &:after{display:none;}
   }
-  .choco-thumbnails-toggle + .choco-thumbnails-toggle-ie8fix{
-    position: fixed;
-    right: 0;
-    bottom: @thumbnails-height + 18px;
-    display: block;
-    width: 26px;
-    height: 2px;
-    background-color: #fff;
-    #mlf > .opacity(1);
-    cursor: default;
-  }
-  
-  .choco-thumbnails-toggle.choco-hide{
-    bottom: -10px;
-    
-    & + .choco-thumbnails-toggle-ie8fix{
-      display:block;
-      bottom: 0;
-      right: 0;
-      width: 26px;
-      height: 2px;
-    }
+  .choco-thumbnails-toggle.choco-hide{display:none;}
+  .choco-thumbnails{
+    right:0;
   }
 }
