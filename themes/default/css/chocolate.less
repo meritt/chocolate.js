@@ -21,8 +21,7 @@
     background-image: url("@{basedir}/images/lupa.png");
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    background-color: rgba(0, 0, 0, 0.4);
-    background-color: #000 e("\9");
+    background-color: rgba(0, 0, 0, .4);
   }
 }
 
@@ -34,8 +33,7 @@
   width: 100%;
   height: 100%;
   padding: 50px 70px;
-  background: transparent url("@{basedir}/images/black80.png") 0 0 repeat e("\9");
-  background-color: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, .8);
   z-index: 105;
 
   &.choco-show {
@@ -296,7 +294,6 @@
 
 .choco-thumbnails-toggle.choco-hide {
     bottom: -9px;
-    bottom: -10px e("\9");
     right: 13px;
     width: 54px;
     height: 28px;
@@ -305,21 +302,46 @@
     &:after {
       content: '';
       position: absolute;
+      display:block;
       bottom: 9px;
-      bottom: 10px e("\9");
       right: -13px;
-      display: block;
       width: 26px;
       height: 2px;
-      background-color: #fff;
     }
   }
-}
-
-.choco-thumbnails-toggle-ie8fix {
-  display: none;
-
-  &.choco-show {
+.choco-ie8{
+  &.choco-overlay {
+    background: transparent url("@{basedir}/images/black80.png") 0 0 repeat;
+  }
+  
+  .choco-item-hover{
+    &:hover, &.choco-hover {background-color: #000;}
+  }
+  
+  .choco-thumbnails-toggle,.choco-thumbnails-toggle.choco-hide{
+    &:after{display:none;}
+  }
+  .choco-thumbnails-toggle + .choco-thumbnails-toggle-ie8fix{
+    position: fixed;
+    right: 0;
+    bottom: @thumbnails-height + 18px;
     display: block;
+    width: 26px;
+    height: 2px;
+    background-color: #fff;
+    #mlf > .opacity(1);
+    cursor: default;
+  }
+  
+  .choco-thumbnails-toggle.choco-hide{
+    bottom: -10px;
+    
+    & + .choco-thumbnails-toggle-ie8fix{
+      display:block;
+      bottom: 0;
+      right: 0;
+      width: 26px;
+      height: 2px;
+    }
   }
 }
