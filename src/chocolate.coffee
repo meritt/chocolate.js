@@ -42,6 +42,7 @@ class Chocolate
     containers.push 'thumbnails' if @options.thumbnails
 
     @[container] = @overlay.find '.choco-' + container for container in containers
+    @overlay.addClass 'choco-ie8' if isIE8
 
     ###
      Добавляем события по-умолчанию для контейнеров
@@ -317,7 +318,6 @@ class Chocolate
         'background-image': 'url(' + image + ')'
         '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image + "',sizingMethod='scale')\""
 
-    @overlay.find('.choco-thumbnails-toggle-ie8fix').addClass 'choco-show' if isIE8
     @overlay.find('.choco-thumbnails-toggle').on 'click', ->
       current = _this.images[_this.current]
       status  = _this.thumbnails.hasClass 'choco-hide'
