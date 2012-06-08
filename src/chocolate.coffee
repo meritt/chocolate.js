@@ -314,9 +314,8 @@ class Chocolate
       image = thumbnail.attr 'data-image'
 
       thumbnail.on 'click', -> _this.open toInt thumbnail.attr 'data-cid'
-      thumbnail.css
-        'background-image': 'url(' + image + ')'
-        '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image + "',sizingMethod='scale')\""
+      thumbnail.css 'background-image': 'url(' + image + ')'
+      thumbnail.get(0).style['-ms-filter'] = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image + "',sizingMethod='scale')"
 
     @overlay.find('.choco-thumbnails-toggle').on 'click', ->
       current = _this.images[_this.current]
