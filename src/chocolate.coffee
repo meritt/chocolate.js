@@ -122,6 +122,7 @@ class Chocolate
     throw 'Image not found' unless @images[cid]?
 
     @createThumbnails cid
+    $('body').addClass 'choco-body'
     @overlay.addClass 'choco-show'
 
     @_hideLess() if @length is 1
@@ -145,6 +146,7 @@ class Chocolate
 
       @current = null
       @overlay.removeClass 'choco-show'
+      $('body').removeClass 'choco-body'
     @
 
   open: (cid, updateHistory) ->
