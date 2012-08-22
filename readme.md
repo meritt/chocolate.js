@@ -1,4 +1,4 @@
-Serenity Chocolate — nice gallery script
+Chocolate.js — nice gallery script
 ----------------------------------------
 
 Для того чтобы создать релиз используйте комманду
