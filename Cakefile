@@ -12,11 +12,11 @@ option '-b', '--basedir [DIR]', 'directory with css, js, image folders'
 
 task 'build', 'Build chocolate.js', (options) ->
   theme   = options.themes  or 'default'
-  basedir = options.basedir or '/dist/' + theme
+  basedir = options.basedir or "/dist/#{theme}"
   current = path.dirname __filename
 
-  dist = path.normalize current + '/dist/' + theme + '/'
-  src  = path.normalize current + '/themes/' + theme + '/'
+  dist = path.normalize "#{current}/dist/#{theme}/"
+  src  = path.normalize "#{current}/themes/#{theme}/"
 
   fs.stat dist, (error, stat) ->
     if stat
@@ -26,7 +26,7 @@ task 'build', 'Build chocolate.js', (options) ->
         folder = path.normalize dist + folder
         files  = fs.readdirSync folder
         if files and files.length > 0
-          fs.unlinkSync path.normalize(folder + '/' + file) for file in files
+          fs.unlinkSync path.normalize "#{folder}/#{file}" for file in files
         fs.rmdirSync folder
 
       fs.rmdirSync path.normalize dist
@@ -39,8 +39,8 @@ task 'build', 'Build chocolate.js', (options) ->
       fs.mkdirSync dist + 'images'
       images = fs.readdirSync src + 'images'
       for image in images
-        from = fs.createReadStream path.normalize src + 'images/' + image
-        to   = fs.createWriteStream path.normalize dist + 'images/' + image
+        from = fs.createReadStream path.normalize "#{src}images/#{image}"
+        to   = fs.createWriteStream path.normalize "#{dist}images/#{image}"
 
         util.pump from, to
 
@@ -48,8 +48,8 @@ task 'build', 'Build chocolate.js', (options) ->
     compileJsContent dist, src, basedir
 
 compileTemplate = (src, basedir, fn) ->
-  html = fs.readFileSync src + 'templates.html', 'utf8'
-  jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'], (error, window) ->
+  html = fs.readFileSync "#{src}templates.html", 'utf8'
+  jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js'], (error, window) ->
     templates = {}
 
     $ = window.$
@@ -73,7 +73,7 @@ compileTemplate = (src, basedir, fn) ->
 
 compileJsContent = (dist, src, basedir) ->
   current = path.dirname __filename
-  source  = path.normalize current + '/src/chocolate.coffee'
+  source  = path.normalize "#{current}/src/chocolate.coffee"
 
   options = "defaultOptions = `" + fs.readFileSync(src + 'options.json', 'utf8') + "`"
 
