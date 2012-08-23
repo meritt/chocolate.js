@@ -82,7 +82,8 @@ compileJsContent = (dist, src, basedir) ->
 
     chocolate = fs.readFileSync source, 'utf8'
 
-    js = compile options + "\n\n" + templates + "\n\n" + chocolate
+    js = compile "#{options}\n\n#{templates}\n\n#{chocolate}", bare: true
+    js = "(function(window, document) {\n\n#{js}\n\n})(window, document);"
 
     fs.writeFileSync path.normalize(dist + 'js/chocolate.js'), js
     fs.writeFileSync path.normalize(dist + 'js/chocolate.min.js'), uglify js
