@@ -101,13 +101,13 @@ class Chocolate
 
     for object in images
       image     = null
-      isElement = if typeof HTMLElement is "object" then object instanceof HTMLElement else typeof object is "object" and object.nodeType is 1 and typeof object.nodeName is "string"
+      isElement = if typeof HTMLElement is 'object' then object instanceof HTMLElement else typeof object is 'object' and object.nodeType is 1 and typeof object.nodeName is 'string'
 
       if isElement
         image  = $ object
         object =
-          source:    image.attr('data-src') || image.parent().attr('href')
-          title:     image.attr('data-title') || image.attr('title')
+          source:    image.attr('data-src') or image.parent().attr('href')
+          title:     image.attr('data-title') or image.attr('title')
           thumbnail: image.attr('src')
 
       @_addToGallery object, image
@@ -184,8 +184,8 @@ class Chocolate
     @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
 
     if isHistory and updateHistory
-      title = if @images[cid].title then @images[cid].title else 'Image №' + cid
-      history.pushState null, title, '#image' + cid
+      title = if @images[cid].title then @images[cid].title else @images[cid].hashbang
+      history.pushState null, title, "##{@images[cid].hashbang}"
 
     @updateThumbnails()
 
@@ -333,7 +333,7 @@ class Chocolate
       _this.updateDimensions current.width, current.height if current
 
     if isStorage and not @thumbnails.hasClass 'choco-hide'
-      status = localStorage.getItem('choco-thumbnails') || 1
+      status = localStorage.getItem('choco-thumbnails') or 1
       @overlay.find('.choco-thumbnails-toggle').trigger 'click' if toInt(status) is 0
 
     @
@@ -387,7 +387,11 @@ class Chocolate
     cid = ++counter
 
     data.thumbnail = data.source unless data.thumbnail
-    @images[cid]   = data
+
+    fragments     = data.source.split '/'
+    data.hashbang = fragments[fragments.length-1]
+
+    @images[cid] = data
 
     @length++
 
@@ -436,7 +440,14 @@ class Chocolate
   ###
   _getImageFromUri: ->
     hash = window.location.hash
-    if hash then toInt hash.replace('#image', '') else 0
+    cid  = 0
+
+    for key, image of @images
+      if "##{image.hashbang}" is hash
+        cid = key
+        break
+
+    cid
 
   ###
    Private method
@@ -495,10 +506,7 @@ cssAnimationsSupport = ->
   prefixes = ['Webkit', 'Moz', 'O', 'ms']
 
   if support is false
-    for prefix in prefixes
-      if element.style[prefix + 'AnimationName'] isnt undefined
-        support = true
-        break
+    support = true for prefix in prefixes when element.style[prefix + 'AnimationName'] isnt undefined
 
   $('html').addClass 'cssanimations' if support is true
   support
