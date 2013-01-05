@@ -49,7 +49,7 @@ task 'build', 'Build chocolate.js', (options) ->
 
 compileTemplate = (src, basedir, fn) ->
   html = fs.readFileSync "#{src}templates.html", 'utf8'
-  jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js'], (error, window) ->
+  jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'], (error, window) ->
     templates = {}
 
     $ = window.$
@@ -66,7 +66,7 @@ compileTemplate = (src, basedir, fn) ->
           line = $.trim line
           html += line if line isnt ''
 
-        templates[key] = $.trim html 
+        templates[key] = $.trim html
 
     window.close()
     fn templates
@@ -86,7 +86,11 @@ compileJsContent = (dist, src, basedir) ->
     js = "(function(window, document) {\n\n#{js}\n\n})(window, document);"
 
     fs.writeFileSync path.normalize(dist + 'js/chocolate.js'), js
-    fs.writeFileSync path.normalize(dist + 'js/chocolate.min.js'), uglify js
+
+    source = uglify.minify js, fromString: true
+    source = source.code
+
+    fs.writeFileSync path.normalize(dist + 'js/chocolate.min.js'), source
 
     console.log 'done'
 
