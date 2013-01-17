@@ -15,15 +15,15 @@ task 'build', 'Build chocolate.js', (options) ->
   basedir = options.basedir or "/dist/#{theme}"
   current = path.dirname __filename
 
-  dist = path.normalize "#{current}/dist/#{theme}/"
-  src  = path.normalize "#{current}/themes/#{theme}/"
+  dist = path.normalize "#{current}/dist/#{theme}"
+  src  = path.normalize "#{current}/themes/#{theme}"
 
   fs.stat dist, (error, stat) ->
     if stat
       results = fs.readdirSync dist
 
       for folder in results
-        folder = path.normalize dist + folder
+        folder = path.normalize "#{dist}/#{folder}"
         files  = fs.readdirSync folder
         if files and files.length > 0
           fs.unlinkSync path.normalize "#{folder}/#{file}" for file in files
@@ -32,15 +32,15 @@ task 'build', 'Build chocolate.js', (options) ->
       fs.rmdirSync path.normalize dist
 
     fs.mkdirSync dist
-    fs.mkdirSync dist + 'js'
-    fs.mkdirSync dist + 'css'
+    fs.mkdirSync "#{dist}/js"
+    fs.mkdirSync "#{dist}/css"
 
-    if fs.statSync src + 'images'
-      fs.mkdirSync dist + 'images'
-      images = fs.readdirSync src + 'images'
+    if fs.statSync "#{src}/images"
+      fs.mkdirSync "#{dist}/images"
+      images = fs.readdirSync "#{src}/images"
       for image in images
-        from = fs.createReadStream path.normalize "#{src}images/#{image}"
-        to   = fs.createWriteStream path.normalize "#{dist}images/#{image}"
+        from = fs.createReadStream path.normalize "#{src}/images/#{image}"
+        to   = fs.createWriteStream path.normalize "#{dist}/images/#{image}"
 
         util.pump from, to
 
@@ -48,7 +48,7 @@ task 'build', 'Build chocolate.js', (options) ->
     compileJsContent dist, src, basedir
 
 compileTemplate = (src, basedir, fn) ->
-  html = fs.readFileSync "#{src}templates.html", 'utf8'
+  html = fs.readFileSync "#{src}/templates.html", 'utf8'
   jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'], (error, window) ->
     templates = {}
 
@@ -75,7 +75,7 @@ compileJsContent = (dist, src, basedir) ->
   current = path.dirname __filename
   source  = path.normalize "#{current}/src/chocolate.coffee"
 
-  options = "defaultOptions = `" + fs.readFileSync(src + 'options.json', 'utf8') + "`"
+  options = "defaultOptions = `" + fs.readFileSync("#{src}/options.json", 'utf8') + "`"
 
   compileTemplate src, basedir, (templates) ->
     templates = "templates = `" + JSON.stringify(templates) + "`"
@@ -85,21 +85,21 @@ compileJsContent = (dist, src, basedir) ->
     js = compile "#{options}\n\n#{templates}\n\n#{chocolate}", bare: true
     js = "(function(window, document) {\n\n#{js}\n\n})(window, document);"
 
-    fs.writeFileSync path.normalize(dist + 'js/chocolate.js'), js
+    fs.writeFileSync path.normalize("#{dist}/js/chocolate.js"), js
 
     source = uglify.minify js, fromString: true
     source = source.code
 
-    fs.writeFileSync path.normalize(dist + 'js/chocolate.min.js'), source
+    fs.writeFileSync path.normalize("#{dist}/js/chocolate.min.js"), source
 
     console.log 'done'
 
 compileCssContent = (dist, src, basedir) ->
   parser = new less.Parser
-    paths:    [src + 'css']
+    paths:    ["#{src}/css"]
     filename: 'chocolate.less'
 
-  source = path.normalize src + 'css/chocolate.less'
+  source = path.normalize "#{src}/css/chocolate.less"
 
   css = fs.readFileSync source, 'utf8'
   css = css.replace '{{basedir}}', basedir
@@ -107,5 +107,5 @@ compileCssContent = (dist, src, basedir) ->
   parser.parse css, (error, tree) ->
     css = tree.toCSS()
 
-    fs.writeFileSync path.normalize(dist + 'css/chocolate.css'), css
-    fs.writeFileSync path.normalize(dist + 'css/chocolate.min.css'), cssmin css
+    fs.writeFileSync path.normalize("#{dist}/css/chocolate.css"), css
+    fs.writeFileSync path.normalize("#{dist}/css/chocolate.min.css"), cssmin css
