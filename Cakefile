@@ -49,7 +49,7 @@ task 'build', 'Build chocolate.js', (options) ->
 
 compileTemplate = (src, basedir, fn) ->
   html = fs.readFileSync "#{src}templates.html", 'utf8'
-  jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'], (error, window) ->
+  jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'], (error, window) ->
     templates = {}
 
     $ = window.$
