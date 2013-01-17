@@ -413,7 +413,7 @@ class Chocolate
           'height':     image.height()
           'margin-top': '-' + image.height() + 'px'
 
-        image.on 'hover', (event) -> popover.toggleClass 'choco-hover'
+        image.on 'mouseenter mouseleave', (event) -> popover.toggleClass 'choco-hover'
         popover.on 'click', (event) -> showFirstImage event, cid
 
       preload.src = data.thumbnail
