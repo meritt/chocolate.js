@@ -1,61 +1,59 @@
+"use strict"
+
+merge = (o1, o2) ->
+    return o1 if o1 == null or o2 == null
+    for key of o2
+        o1[key] = o2[key] if o2.hasOwnProperty key
+    o1
+
+_elements = {}
+counter = 0
 
 class ChocolateStorage
 
-    merge = (o1, o2) ->
-        return o1 if o1 == null or o2 == null
-        for key of o2
-            o1[key] = o2[key] if o2.hasOwnProperty key
-        o1
-
-    constructor: () ->
-        @_elements = []
-        @length = 0
-
     add: (options) ->
-        @_elements[@length] = merge {
-                'i': @length, # ID
-                't': '',      # title
-                'p': '',      # preview
-                'f': '',      # filename
-                'o': '',      # original
-                'w': null,    # width
-                'h': null     # height
+        _elements[counter] = merge {
+                'cid': counter, # ID
+                'name': '',    # title
+                'thumb': '',   # preview
+                'file': '',    # filename
+                'orig': '',    # original
+                'w': null,     # width
+                'h': null      # height
             }, options
-        merge {}, @_elements[@length++]
+        merge {}, _elements[counter++]
 
     get: (key, fn) ->
-        item = @_elements[key]
-        if item.h? and item.w? or item.o == ''
+        item = _elements[key]
+        if item.h isnt null and item.w isnt null or item.o is ''
             fn item
-            return item
-        image = new Image
-        image.src = item.o
+        image = new Image()
+        image.src = item.orig
         image.addEventListener "error", () ->
-            item.o = ''
+            item.orig = ''
             item.w = 0
             item.h = 0
             fn item
-            item
         , false
         image.addEventListener "load", () ->
             item.w = image.naturalWidth
             item.h = image.naturalHeight
             fn item
-            item
         , false
-        item
 
     next: (key, fn) ->
-        if ++key < @length
-            console.log 'next '+key
-            return @get key, fn
-        false
+        len = @length()
+        while not _elements[++key]? and key < len then
+        @get key, fn if _elements[key]?
 
     prev: (key, fn) ->
-        if --key > -1
-            console.log 'prev '+key
-            return @get key, fn
-        false
+        while not _elements[--key]? and key > -1 then
+        @get key, fn if _elements[key]?
 
+    length: () ->
+        i = 0
+        for key of _elements
+            i++ if _elements.hasOwnProperty key
+        i
 
 window.ChocolateStorage = ChocolateStorage
