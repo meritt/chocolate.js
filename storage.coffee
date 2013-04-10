@@ -25,20 +25,18 @@ class ChocolateStorage
 
     get: (key, fn) ->
         item = _elements[key]
-        if item.h isnt null and item.w isnt null or item.o is ''
-            fn item
+        if item.h isnt null and item.w isnt null or item.origin is ''
+            fn merge {},item
         image = new Image()
         image.src = item.orig
         image.addEventListener "error", () ->
             item.orig = ''
-            item.w = 0
-            item.h = 0
-            fn item
+            fn merge {},item
         , false
         image.addEventListener "load", () ->
             item.w = image.naturalWidth
             item.h = image.naturalHeight
-            fn item
+            fn merge {},item
         , false
 
     next: (key, fn) ->
