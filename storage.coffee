@@ -49,6 +49,7 @@ class ChocolateStorage
         @get key, fn if _elements[key]?
 
     length: () ->
+        return Object.keys(_elements).length if Object.keys?
         i = 0
         for key of _elements
             i++ if _elements.hasOwnProperty key
