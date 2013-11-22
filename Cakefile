@@ -1,6 +1,5 @@
 fs        = require 'fs'
 path      = require 'path'
-util      = require 'util'
 {compile} = require 'coffee-script'
 less      = require 'less'
 uglify    = require 'uglify-js'
@@ -42,7 +41,7 @@ task 'build', 'Build chocolate.js', (options) ->
         from = fs.createReadStream path.normalize "#{src}/images/#{image}"
         to   = fs.createWriteStream path.normalize "#{dist}/images/#{image}"
 
-        util.pump from, to
+        from.pipe to
 
     compileCssContent dist, src, basedir
     compileJsContent dist, src, basedir
