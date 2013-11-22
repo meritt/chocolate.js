@@ -243,7 +243,7 @@ class Chocolate
         'background-image': 'url(' + image.source + ')'
         '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "',sizingMethod='scale')\""
 
-      @header.html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
+      $(@header).html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
     @
 
   ###
@@ -317,8 +317,8 @@ class Chocolate
       'width':  toInt(innerWidth / 2 - left) + 'px'
       'height': toInt(innerHeight) + 'px'
 
-    @leftside.css  style
-    @rightside.css style
+    $(@leftside).css  style
+    $(@rightside).css style
 
     if title
       @header.addClass('choco-show').css
@@ -332,8 +332,8 @@ class Chocolate
       'margin-left': '-' + toInt(left) + 'px'
       'margin-top':  '-' + toInt(top) + 'px'
 
-    @container.css style
-    @spinner.css   style
+    $(@container).css style
+    $(@spinner).css   style
     @
 
   ###
@@ -396,7 +396,7 @@ class Chocolate
     if not @dimensions.thumbnail
       @dimensions.thumbnail = toInt @_outerWidth after
 
-    width     = @thumbnails.width()
+    width     = $(@thumbnails).width()
     element   = $(after).get(0).offsetLeft
     thumbnail = @dimensions.thumbnail
     container = $(@thumbnails).get(0).scrollLeft or 0
@@ -415,7 +415,7 @@ class Chocolate
       else if offset > element
         offset = 1
 
-    @thumbnails.get(0).scrollLeft = offset
+    $(@thumbnails).get(0).scrollLeft = offset
     @
 
 
@@ -529,6 +529,8 @@ class Chocolate
   _outerWidth: (element) ->
     return element.outerWidth true if element.outerWidth?
 
+    css = getComputedStyle element
+
     styles = [
       'margin-left'
       'margin-right'
@@ -538,8 +540,8 @@ class Chocolate
       'border-right-width'
     ]
 
-    width = parseFloat element.css 'width'
-    width += parseFloat element.css style for style in styles
+    width = parseFloat css.getPropertyValue 'width'
+    width += parseFloat css.getPropertyValue style for style in styles
     width
 
 
