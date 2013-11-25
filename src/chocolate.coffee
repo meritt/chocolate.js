@@ -423,9 +423,9 @@ class Chocolate
 
         popover = document.querySelector "[data-pid=\"#{cid}\"]"
         setStyle popover,
-          'width':      image.offsetWidth
-          'height':     image.offsetHeight
-          'margin-top': -1 * image.offsetHeight + 'px'
+          'width':      "#{image.offsetWidth}px"
+          'height':     "#{image.offsetHeight}px"
+          'margin-top': "#{-1 * image.offsetHeight}px"
 
         addHandler image, ['mouseenter', 'mouseleave'], ->
           toggleClass popover[0], 'choco-hover'
