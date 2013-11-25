@@ -472,10 +472,11 @@ class Chocolate
   _getInitialParams: ->
     thumbnails = if not @options.thumbnails then false else $(@thumbnails).height()
 
-    horizontal = toInt($(@overlay).css('padding-left')) + toInt($(@overlay).css('padding-right'))
-    vertical   = toInt($(@overlay).css('padding-top')) + toInt($(@overlay).css('padding-bottom'))
+    css = getStyle @overlay
+    horizontal = toInt(css 'padding-left') + toInt(css 'padding-right')
+    vertical   = toInt(css 'padding-top') + toInt(css 'padding-bottom')
 
-    header = toInt $(@header).css('height')
+    header = toInt getStyle(@header)('height')
     if header is 0
       header = 40
       $(@header).css 'height', header
@@ -496,7 +497,7 @@ class Chocolate
   _outerWidth: (element) ->
     return element.outerWidth true if element.outerWidth?
 
-    css = getComputedStyle element
+    css = getStyle element
 
     styles = [
       'margin-left'
@@ -507,8 +508,8 @@ class Chocolate
       'border-right-width'
     ]
 
-    width = parseFloat css.getPropertyValue 'width'
-    width += parseFloat css.getPropertyValue style for style in styles
+    width = parseFloat css 'width'
+    width += parseFloat css style for style in styles
     width
 
 
@@ -546,6 +547,10 @@ hasClass = (element, className, selector) ->
   target = getTarget element, selector
   if target.hasOwnProperty 'classList'
     target.classList.contains className
+
+getStyle = (element) ->
+  style = getComputedStyle element
+  return (property) -> style.getPropertyValue.call style, property
 
 
 toInt = (string) -> parseInt string, 10
