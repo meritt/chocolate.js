@@ -6,41 +6,6 @@ isHistory = not not (window.history and history.pushState)
 isStorage = 'localStorage' of window and window['localStorage']?
 isIE8     = document.documentMode? and document.documentMode is 8
 
-getTarget = (element, selector) ->
-  if selector?
-    target = element.querySelector selector
-  else
-    target = element
-  target
-
-addHandler = (element, event, listener, selector) ->
-  target = getTarget element, selector
-  if target?
-    unless event instanceof Array
-      event = [event]
-    for ev in event
-      target.addEventListener ev, listener, false
-
-addClass = (element, className, selector) ->
-  target = getTarget element, selector
-  if target.hasOwnProperty 'classList'
-    target.classList.add className
-
-removeClass = (element, className, selector) ->
-  target = getTarget element, selector
-  if target.hasOwnProperty 'classList'
-    target.classList.remove className
-
-toggleClass = (element, className, selector) ->
-  target = getTarget element, selector
-  if target.hasOwnProperty 'classList'
-    target.classList.toggle className
-
-hasClass = (element, className, selector) ->
-  target = getTarget element, selector
-  if target.hasOwnProperty 'classList'
-    target.classList.contains className
-
 class Chocolate
   images: {}
   length: 0
@@ -68,9 +33,8 @@ class Chocolate
     template = template.replace '{{spinner}}', templates['spinner']
     template = template.replace '{{thumbnails}}', if @options.thumbnails then templates['thumbnails'] else ''
 
-    # jQuery
-    @overlay = $(template).appendTo 'body'
-    @overlay = @overlay[0]
+    document.body.insertAdjacentHTML 'beforeend', template
+    @overlay = document.body.lastChild
 
     ###
      Получаем необходимые контейнеры
@@ -144,7 +108,6 @@ class Chocolate
       isElement = if typeof HTMLElement is 'object' then object instanceof HTMLElement else typeof object is 'object' and object.nodeType is 1 and typeof object.nodeName is 'string'
 
       if isElement
-        #jquery
         image  = object
         object =
           source:    image.getAttribute('data-src') or image.parentNode.getAttribute('href')
@@ -180,7 +143,7 @@ class Chocolate
       history.pushState null, null, '#' if isHistory
 
       if @options.thumbnails
-        @thumbnails.html ''
+        @thumbnails.innerHTML = ''
         $(@overlay.querySelector('.choco-thumbnails-toggle')).off 'click'
 
       $(window).off 'resize'
@@ -239,11 +202,11 @@ class Chocolate
 
       @updateDimensions image.width, image.height
 
-      @container.css
+      $(@container).css
         'background-image': 'url(' + image.source + ')'
         '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "',sizingMethod='scale')\""
 
-      $(@header).html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
+      @header.innerHTML = if image.title then templates['image-title'].replace '{{title}}', image.title else ''
     @
 
   ###
@@ -259,7 +222,7 @@ class Chocolate
 
       element = new Image()
 
-      element.onload = =>
+      addHandler element, 'load', =>
         if cid is @current
           @images[cid].width  = element.width
           @images[cid].height = element.height
@@ -268,12 +231,12 @@ class Chocolate
 
           fn()
 
-      element.onerror = =>
+      addHandler element, 'error', =>
         if cid is @current
           addClass @spinner, 'choco-hide'
           addClass @container, 'choco-show'
           addClass @container, 'choco-error'
-          @updateDimensions $(@container).width(), $(@container).height()
+          @updateDimensions @container.offsetWidth, @container.offsetHeight
 
       element.src = image.source
 
@@ -289,7 +252,7 @@ class Chocolate
     thumbnails = headerHeight = 0
 
     if @dimensions.thumbnails isnt false and not hasClass @thumbnails, 'choco-hide'
-      @dimensions.thumbnails = $(@thumbnails).height() if @dimensions.thumbnails is 0
+      @dimensions.thumbnails = @thumbnails.offsetHeight if @dimensions.thumbnails is 0
       thumbnails = @dimensions.thumbnails
 
     headerHeight = @dimensions.header if title
@@ -321,7 +284,8 @@ class Chocolate
     $(@rightside).css style
 
     if title
-      @header.addClass('choco-show').css
+      addClass @header, 'choco-show'
+      $(@header).css
         'width':       toInt width
         'margin-left': '-' + toInt(left) + 'px'
         'margin-top':  '-' + toInt(top + headerHeight) + 'px'
@@ -366,20 +330,23 @@ class Chocolate
     addHandler @overlay, 'click', ->
       current = _this.images[_this.current]
       status  = hasClass _this.thumbnails, 'choco-hide'
-      method  = if status then 'removeClass' else 'addClass'
 
       if isStorage
         localStorage.setItem 'choco-thumbnails', if status then 1 else 0
 
-      _this.thumbnails[method] 'choco-hide'
-      $(@)[method] 'choco-hide'
+      if status
+        removeClass _this.thumbnails, 'choco-hide'
+        removeClass this, 'choco-hide'
+      else
+        addClass _this.thumbnails, 'choco-hide'
+        addClass this, 'choco-hide'
 
       _this.updateDimensions current.width, current.height if current
     , '.choco-thumbnails-toggle'
 
     if isStorage and not hasClass @thumbnails, 'choco-hide'
       status = localStorage.getItem('choco-thumbnails') or 1
-      $(@overlay).find('.choco-thumbnails-toggle').trigger 'click' if toInt(status) is 0
+      @overlay.querySelector('.choco-thumbnails-toggle').click() if toInt(status) is 0
 
     @
 
@@ -456,9 +423,9 @@ class Chocolate
         $(image).after templates['image-hover'].replace '{{cid}}', cid
 
         popover = $('[data-pid="' + cid + '"]').css
-          'width':      $(image).width()
-          'height':     $(image).height()
-          'margin-top': '-' + $(image).height() + 'px'
+          'width':      image.offsetWidth
+          'height':     image.offsetHeight
+          'margin-top': -1 * image.offsetHeight + 'px'
 
         addHandler image, ['mouseenter', 'mouseleave'], ->
           toggleClass popover[0], 'choco-hover'
@@ -475,7 +442,7 @@ class Chocolate
     method = @options.actions[container] if @options.actions[container] in existActions
 
     if method
-      verify = @[container].getAttribute 'class'
+      verify = @[container].classList[0]
 
       addHandler @[container], 'click', (event) =>
         @[method]() if hasClass event.target, verify
@@ -543,6 +510,42 @@ class Chocolate
     width = parseFloat css.getPropertyValue 'width'
     width += parseFloat css.getPropertyValue style for style in styles
     width
+
+
+getTarget = (element, selector) ->
+  if selector?
+    target = element.querySelector selector
+  else
+    target = element
+  target
+
+addHandler = (element, event, listener, selector) ->
+  target = getTarget element, selector
+  if target?
+    unless event instanceof Array
+      event = [event]
+    for ev in event
+      target.addEventListener ev, listener, false
+
+addClass = (element, className, selector) ->
+  target = getTarget element, selector
+  if target.hasOwnProperty 'classList'
+    target.classList.add className
+
+removeClass = (element, className, selector) ->
+  target = getTarget element, selector
+  if target.hasOwnProperty 'classList'
+    target.classList.remove className
+
+toggleClass = (element, className, selector) ->
+  target = getTarget element, selector
+  if target.hasOwnProperty 'classList'
+    target.classList.toggle className
+
+hasClass = (element, className, selector) ->
+  target = getTarget element, selector
+  if target.hasOwnProperty 'classList'
+    target.classList.contains className
 
 
 toInt = (string) -> parseInt string, 10
