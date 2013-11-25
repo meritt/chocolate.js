@@ -24,6 +24,7 @@ class Chocolate
       throw "You don't have defaultOptions or templates variables"
       return false
 
+    # jQuery
     @options = $.extend defaultOptions, options
 
     ###
@@ -146,6 +147,7 @@ class Chocolate
         @thumbnails.innerHTML = ''
         $(@overlay.querySelector('.choco-thumbnails-toggle')).off 'click'
 
+      # jQuery
       $(window).off 'resize'
 
       @current = null
@@ -202,9 +204,7 @@ class Chocolate
 
       @updateDimensions image.width, image.height
 
-      $(@container).css
-        'background-image': 'url(' + image.source + ')'
-        '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "',sizingMethod='scale')\""
+      setStyle @container, "background-image": "url(#{image.source})"
 
       @header.innerHTML = if image.title then templates['image-title'].replace '{{title}}', image.title else ''
     @
@@ -277,27 +277,27 @@ class Chocolate
     top -= headerHeight / 2 if headerHeight > 0
 
     style =
-      'width':  toInt(innerWidth / 2 - left) + 'px'
-      'height': toInt(innerHeight) + 'px'
+      'width':  "#{toInt(innerWidth / 2 - left)}px"
+      'height': "#{toInt(innerHeight)}px"
 
-    $(@leftside).css  style
-    $(@rightside).css style
+    setStyle @leftside,  style
+    setStyle @rightside, style
 
     if title
       addClass @header, 'choco-show'
-      $(@header).css
-        'width':       toInt width
-        'margin-left': '-' + toInt(left) + 'px'
-        'margin-top':  '-' + toInt(top + headerHeight) + 'px'
+      setStyle @header,
+        'width':       "#{toInt width}px"
+        'margin-left': "-#{toInt left}px"
+        'margin-top':  "-#{toInt(top + headerHeight)}px"
 
     style =
-      'width':       toInt width
-      'height':      toInt height
-      'margin-left': '-' + toInt(left) + 'px'
-      'margin-top':  '-' + toInt(top) + 'px'
+      'width':       "#{toInt width}px"
+      'height':      "#{toInt height}px"
+      'margin-left': "-#{toInt left}px"
+      'margin-top':  "-#{toInt top}px"
 
-    $(@container).css style
-    $(@spinner).css   style
+    setStyle @container, style
+    setStyle @spinner, style
     @
 
   ###
@@ -317,15 +317,14 @@ class Chocolate
       content += template.replace('{{selected}}', selected)
                          .replace('{{cid}}', cid)
                          .replace('{{image}}', image.thumbnail)
-                         .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
+                         .replace('{{title}}', if image.title then " title=\"#{image.title}\"" else '')
 
     $(@thumbnails).html(content).find('.choco-thumbnail').each ->
       thumbnail = $ @
-      image = thumbnail.attr 'data-image'
+      image = @getAttribute 'data-image'
 
       thumbnail.on 'click', -> _this.open toInt thumbnail.attr 'data-cid'
-      thumbnail.css 'background-image': 'url(' + image + ')'
-      thumbnail.get(0).style['-ms-filter'] = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image + "',sizingMethod='scale')"
+      setStyle @, "background-image": "url(#{image})"
 
     addHandler @overlay, 'click', ->
       current = _this.images[_this.current]
@@ -470,7 +469,7 @@ class Chocolate
    Private method
   ###
   _getInitialParams: ->
-    thumbnails = if not @options.thumbnails then false else $(@thumbnails).height()
+    thumbnails = if not @options.thumbnails then false else @thumbnails.offsetHeight
 
     css = getStyle @overlay
     horizontal = toInt(css 'padding-left') + toInt(css 'padding-right')
@@ -479,7 +478,7 @@ class Chocolate
     header = toInt getStyle(@header)('height')
     if header is 0
       header = 40
-      $(@header).css 'height', header
+      setStyle @header, "height": "#{header}px"
 
     {horizontal, vertical, thumbnails, header}
 
@@ -528,29 +527,39 @@ addHandler = (element, event, listener, selector) ->
     for ev in event
       target.addEventListener ev, listener, false
 
-addClass = (element, className, selector) ->
+hasClassList = (element, selector) ->
   target = getTarget element, selector
-  if target.hasOwnProperty 'classList'
-    target.classList.add className
+  if target? and target.hasOwnProperty 'classList'
+    return target.classList
+  else
+    return false
+
+addClass = (element, className, selector) ->
+  list = hasClassList element, selector
+  list.add className if list
 
 removeClass = (element, className, selector) ->
-  target = getTarget element, selector
-  if target.hasOwnProperty 'classList'
-    target.classList.remove className
+  list = hasClassList element, selector
+  list.remove className if list
 
 toggleClass = (element, className, selector) ->
-  target = getTarget element, selector
-  if target.hasOwnProperty 'classList'
-    target.classList.toggle className
+  list = hasClassList element, selector
+  list.toggle className if list
 
 hasClass = (element, className, selector) ->
-  target = getTarget element, selector
-  if target.hasOwnProperty 'classList'
-    target.classList.contains className
+  list = hasClassList element, selector
+  list.contains className if list
 
 getStyle = (element) ->
   style = getComputedStyle element
   return (property) -> style.getPropertyValue.call style, property
+
+setStyle = (element, styles) ->
+  properties = Object.keys styles
+  properties.forEach (property) ->
+    prop = property.replace /-([a-z])/g, (g) -> g[1].toUpperCase()
+    element.style[prop] = styles[property]
+
 
 
 toInt = (string) -> parseInt string, 10
