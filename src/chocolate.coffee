@@ -421,7 +421,8 @@ class Chocolate
       preload.onload = ->
         $(image).after templates['image-hover'].replace '{{cid}}', cid
 
-        popover = $('[data-pid="' + cid + '"]').css
+        popover = document.querySelector "[data-pid=\"#{cid}\"]"
+        setStyle popover,
           'width':      image.offsetWidth
           'height':     image.offsetHeight
           'margin-top': -1 * image.offsetHeight + 'px'
