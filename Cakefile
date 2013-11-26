@@ -48,24 +48,23 @@ task 'build', 'Build chocolate.js', (options) ->
 
 compileTemplate = (src, basedir, fn) ->
   html = fs.readFileSync "#{src}/templates.html", 'utf8'
-  jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'], (error, window) ->
+  jsdom.env html, [], (error, window) ->
     templates = {}
 
-    $ = window.$
-    $('script').each ->
-      key = $(@).attr('id')
+    [].forEach.call window.document.querySelectorAll('script'), (script) ->
+      key = script.getAttribute 'id'
 
       if key
-        html = $(@).html()
+        html = script.innerHTML
         html = html.replace /\{\{basedir\}\}/gi, basedir
 
         lines = html.split "\n"
         html  = ''
         for line in lines
-          line = $.trim line
-          html += line if line isnt ''
+          line = line.trim()
+          html += line
 
-        templates[key] = $.trim html
+        templates[key] = html.trim()
 
     window.close()
     fn templates
