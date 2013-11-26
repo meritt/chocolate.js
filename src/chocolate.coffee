@@ -24,8 +24,7 @@ class Chocolate
       throw "You don't have defaultOptions or templates variables"
       return false
 
-    # jQuery
-    @options = $.extend defaultOptions, options
+    @options = merge defaultOptions, options
 
     ###
      Подготовка шаблонов
@@ -132,9 +131,7 @@ class Chocolate
 
     @_hideLess() if @length is 1
 
-    addHandler window, 'resize', =>
-      image = @images[@current]
-      @updateDimensions image.width, image.height
+    addHandler window, 'resize', @_onResize
 
     @open cid
     @
@@ -145,9 +142,9 @@ class Chocolate
 
       if @options.thumbnails
         @thumbnails.innerHTML = ''
-        removeHandler @overlay, 'click', '.choc-thumbnails-toggle'
+        removeHandler @overlay, 'click', @_toggleThumbnails, '.choco-thumbnails-toggle'
 
-      removeHandler window, 'resize'
+      removeHandler window, 'resize', @_onResize
 
       @current = null
 
@@ -325,22 +322,7 @@ class Chocolate
       addHandler thumbnail, 'click', -> _this.open toInt @getAttribute 'data-cid'
       setStyle thumbnail, "background-image": "url(#{image})"
 
-    addHandler @overlay, 'click', ->
-      current = _this.images[_this.current]
-      status  = hasClass _this.thumbnails, 'choco-hide'
-
-      if isStorage
-        localStorage.setItem 'choco-thumbnails', if status then 1 else 0
-
-      if status
-        removeClass _this.thumbnails, 'choco-hide'
-        removeClass this, 'choco-hide'
-      else
-        addClass _this.thumbnails, 'choco-hide'
-        addClass this, 'choco-hide'
-
-      _this.updateDimensions current.width, current.height if current
-    , '.choco-thumbnails-toggle'
+    addHandler @overlay, 'click', @_toggleThumbnails, '.choco-thumbnails-toggle'
 
     if isStorage and not hasClass @thumbnails, 'choco-hide'
       status = localStorage.getItem('choco-thumbnails') or 1
@@ -493,6 +475,27 @@ class Chocolate
     addClass @overlay, 'choco-hideless'
     @
 
+  _onResize: (event) =>
+    image = @images[@current]
+    @updateDimensions image.width, image.height
+
+  _toggleThumbnails: (event) =>
+    current = @images[@current]
+    status  = hasClass @thumbnails, 'choco-hide'
+
+    if isStorage
+      localStorage.setItem 'choco-thumbnails', if status then 1 else 0
+
+    if status
+      removeClass @thumbnails, 'choco-hide'
+      removeClass event.target, 'choco-hide'
+    else
+      addClass @thumbnails, 'choco-hide'
+      addClass event.target, 'choco-hide'
+
+    @updateDimensions current.width, current.height if current
+
+
   ###
    Private method
   ###
@@ -514,6 +517,13 @@ class Chocolate
     width += parseFloat css style for style in styles
     width
 
+merge = (o1, o2) ->
+  for own key, value of o2
+    if value instanceof Object
+      o1[key] = merge o1[key], value
+    else
+      o1[key] = value
+  o1
 
 getTarget = (element, selector) ->
   if selector?
@@ -530,17 +540,13 @@ addHandler = (element, event, listener, selector) ->
     for ev in event
       target.addEventListener ev, listener, false
 
-removeHandler = (element, event, selector) ->
+removeHandler = (element, event, listener, selector) ->
   target = getTarget element, selector
-  ###
   if target?
-    listeners = getEventListeners target
     unless event instanceof Array
       event = [event]
     for ev in event
-      for listener in listeners[ev]
-        target.removeEventListener ev, listener, false
-  ###
+      target.removeEventListener ev, listener, false
 
 hasClassList = (element, selector) ->
   target = getTarget element, selector
