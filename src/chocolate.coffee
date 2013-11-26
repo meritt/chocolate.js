@@ -145,10 +145,9 @@ class Chocolate
 
       if @options.thumbnails
         @thumbnails.innerHTML = ''
-        $(@overlay.querySelector('.choco-thumbnails-toggle')).off 'click'
+        removeHandler @overlay, 'click', '.choc-thumbnails-toggle'
 
-      # jQuery
-      $(window).off 'resize'
+      removeHandler window, 'resize'
 
       @current = null
 
@@ -319,12 +318,12 @@ class Chocolate
                          .replace('{{image}}', image.thumbnail)
                          .replace('{{title}}', if image.title then " title=\"#{image.title}\"" else '')
 
-    $(@thumbnails).html(content).find('.choco-thumbnail').each ->
-      thumbnail = $ @
-      image = @getAttribute 'data-image'
+    @thumbnails.innerHTML = content
+    [].forEach.call @thumbnails.querySelectorAll('.choco-thumbnail'), (thumbnail) ->
+      image = thumbnail.getAttribute 'data-image'
 
-      thumbnail.on 'click', -> _this.open toInt thumbnail.attr 'data-cid'
-      setStyle @, "background-image": "url(#{image})"
+      addHandler thumbnail, 'click', -> _this.open toInt @getAttribute 'data-cid'
+      setStyle thumbnail, "background-image": "url(#{image})"
 
     addHandler @overlay, 'click', ->
       current = _this.images[_this.current]
@@ -355,17 +354,20 @@ class Chocolate
   updateThumbnails: ->
     return @ if not @options.thumbnails or @length <= 1
 
-    before = $(@thumbnails).find('.selected').removeClass('selected').attr 'data-cid'
+    before = @thumbnails.querySelector '.selected'
+    if before?
+      removeClass before, 'selected'
+      before = before.getAttribute 'data-cid'
     after  = @thumbnails.querySelector "[data-cid='#{@current}']"
     addClass after, 'selected'
 
     if not @dimensions.thumbnail
       @dimensions.thumbnail = toInt @_outerWidth after
 
-    width     = $(@thumbnails).width()
-    element   = $(after).get(0).offsetLeft
+    width     = @thumbnails.offsetWidth
+    element   = after.offsetLeft
     thumbnail = @dimensions.thumbnail
-    container = $(@thumbnails).get(0).scrollLeft or 0
+    container = @thumbnails.scrollLeft or 0
 
     if before
       offset = if @current > before then container + thumbnail else container - thumbnail
@@ -381,7 +383,7 @@ class Chocolate
       else if offset > element
         offset = 1
 
-    $(@thumbnails).get(0).scrollLeft = offset
+    @thumbnails.scrollLeft = offset
     @
 
 
@@ -419,7 +421,7 @@ class Chocolate
 
       preload = new Image()
       preload.onload = ->
-        $(image).after templates['image-hover'].replace '{{cid}}', cid
+        image.insertAdjacentHTML 'afterend', templates['image-hover'].replace '{{cid}}', cid
 
         popover = document.querySelector "[data-pid=\"#{cid}\"]"
         setStyle popover,
@@ -428,9 +430,9 @@ class Chocolate
           'margin-top': "#{-1 * image.offsetHeight}px"
 
         addHandler image, ['mouseenter', 'mouseleave'], ->
-          toggleClass popover[0], 'choco-hover'
+          toggleClass popover, 'choco-hover'
 
-        addHandler popover[0], 'click', (event) ->
+        addHandler popover, 'click', (event) ->
           showFirstImage event, cid
 
       preload.src = data.thumbnail
@@ -527,6 +529,18 @@ addHandler = (element, event, listener, selector) ->
       event = [event]
     for ev in event
       target.addEventListener ev, listener, false
+
+removeHandler = (element, event, selector) ->
+  target = getTarget element, selector
+  ###
+  if target?
+    listeners = getEventListeners target
+    unless event instanceof Array
+      event = [event]
+    for ev in event
+      for listener in listeners[ev]
+        target.removeEventListener ev, listener, false
+  ###
 
 hasClassList = (element, selector) ->
   target = getTarget element, selector
