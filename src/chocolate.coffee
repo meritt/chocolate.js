@@ -346,26 +346,16 @@ class Chocolate
     if not @dimensions.thumbnail
       @dimensions.thumbnail = toInt @_outerWidth after
 
-    width     = @thumbnails.offsetWidth
-    element   = after.offsetLeft
-    thumbnail = @dimensions.thumbnail
-    container = @thumbnails.scrollLeft or 0
+    offset = after.offsetLeft + after.offsetWidth / 2
+    width = window.innerWidth / 2
+    offset = width - offset
+    if offset > 0
+      offset = 0
+    if offset < width * -1
+      offset = width * -1
+    console.log offset
 
-    if before
-      offset = if @current > before then container + thumbnail else container - thumbnail
-    else
-      offset = element - (width / 2) + (thumbnail / 2)
-      offset = 1 if offset <= 0
-
-    if @options.repeat
-      right = offset + width
-
-      if right < element
-        offset = thumbnail + element
-      else if offset > element
-        offset = 1
-
-    @thumbnails.scrollLeft = offset
+    translate @thumbnails, offset
     @
 
 
@@ -580,6 +570,12 @@ setStyle = (element, styles) ->
   properties.forEach (property) ->
     prop = property.replace /-([a-z])/g, (g) -> g[1].toUpperCase()
     element.style[prop] = styles[property]
+
+translate = (element, s) ->
+  s = "translate3d(#{s}px, 0, 0)"
+  element.style.transform = s
+  element.style.WebkitTransform = s
+  element.style.msTransform = s
 
 
 

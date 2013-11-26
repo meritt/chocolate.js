@@ -220,7 +220,6 @@
   position: fixed;
   left: 0;
   bottom: 0;
-  right: 53px;
   height: @thumbnails-height + 7px;
   margin: 0;
   padding: 11px 0 0 53px;
@@ -229,6 +228,9 @@
   white-space: nowrap;
   overflow: hidden;
   z-index: 130;
+  -webkit-transition: -webkit-transform 0.2s;
+  -webkit-transition: transform 0.2s;
+  transition: transform 0.2s;
   #mlf > .animation(thumbnails 1.6s ease-in-out);
 
   &.choco-hide {
