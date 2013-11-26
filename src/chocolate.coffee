@@ -353,7 +353,6 @@ class Chocolate
       offset = 0
     if offset < width * -1
       offset = width * -1
-    console.log offset
 
     translate @thumbnails, offset
     @
