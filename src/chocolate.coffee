@@ -618,11 +618,4 @@ cssAnimationsSupport = ->
   addClass document.querySelector('html'), 'cssanimations' if support is true
   support
 
-# Экспорт в глобальное пространство
 window.chocolate = Chocolate
-
-# Подключение к jQuery Plugins / Ender Plugins / Zepto Plugins
-frameworks = ['jQuery', 'ender', 'Zepto']
-for framework in frameworks
-  if window[framework]?.fn
-    window[framework].fn.chocolate = -> new Chocolate @, arguments[0]
