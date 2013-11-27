@@ -5,6 +5,7 @@ less      = require 'less'
 uglify    = require 'uglify-js'
 {cssmin}  = require 'cssmin'
 jsdom     = require 'jsdom'
+autoprefixer = require 'autoprefixer'
 
 option '-t', '--themes [NAME]', 'theme for compiled chocolate code'
 option '-b', '--basedir [DIR]', 'directory with css, js, image folders'
@@ -104,6 +105,8 @@ compileCssContent = (dist, src, basedir) ->
 
   parser.parse css, (error, tree) ->
     css = tree.toCSS()
+
+    css = autoprefixer.compile css
 
     fs.writeFileSync path.normalize("#{dist}/css/chocolate.css"), css
     fs.writeFileSync path.normalize("#{dist}/css/chocolate.min.css"), cssmin css
