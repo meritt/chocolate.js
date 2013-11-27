@@ -227,7 +227,7 @@
   padding: @y @x;
   min-width: 100%;
   height: @thumbnails-offset-height;
-  border-top: @border solid rgba(255,255,255,0.3);
+  border-top: @border solid rgba(255,255,255,0.8);
   text-align: center;
   white-space: nowrap;
   font-size: 0;
@@ -267,36 +267,24 @@
 }
 
 .choco-thumbnails-toggle {
-  position: fixed;
+  position: absolute;
   right: 0;
   bottom: 0;
   z-index: 120;
-  width: 53px;
-  height: @thumbnails-height + 20px;
-  background: url("@{basedir}/images/arrow-b.svg") 5px 0 no-repeat;
+  width: 40px;
+  height: @thumbnails-offset-height;
+  background: url("@{basedir}/images/arrow-b.svg") 50% -5px no-repeat;
   cursor: pointer;
   animation: thumbnails 1.6s ease-in-out;
 
-  &:after {
-    position: absolute;
-    right: 0;
-    bottom: @thumbnails-height + 18px;
-    display: block;
-    width: 26px;
-    height: 2px;
-    background-color: #fff;
-    content: '';
-    opacity: 1;
-    cursor: default;
-  }
 }
 
 .choco-thumbnails-toggle.choco-hide {
-  right: 13px;
+  right: 0;
   bottom: -9px;
-  width: 54px;
-  height: 28px;
-  background: url("@{basedir}/images/arrow-t.svg") 50% 50% no-repeat;
+  width: 40px;
+  height: 40px;
+  background: url("@{basedir}/images/arrow-t.svg") 50% 15px no-repeat;
 
   &:after {
     position: absolute;
@@ -306,35 +294,6 @@
     width: 26px;
     height: 2px;
     content: '';
-  }
-}
-
-.choco-ie8 {
-  &.choco-overlay {
-    background: transparent url("@{basedir}/images/black80.png") 0 0 repeat;
-  }
-
-  .choco-item-hover {
-    &:hover, &.choco-hover {
-      background-color: #000;
-    }
-  }
-
-  .choco-thumbnails-toggle {
-    position: absolute;
-    background: none;
-
-    &:after {
-      display: none;
-    }
-  }
-
-  .choco-thumbnails-toggle.choco-hide {
-    display: none;
-  }
-
-  .choco-thumbnails {
-    right: 0;
   }
 }
 

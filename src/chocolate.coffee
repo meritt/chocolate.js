@@ -4,7 +4,6 @@ existActions = ['next', 'prev', 'close']
 
 isHistory = not not (window.history and history.pushState)
 isStorage = 'localStorage' of window and window['localStorage']?
-isIE8     = document.documentMode? and document.documentMode is 8
 
 class Chocolate
   images: {}
@@ -45,7 +44,6 @@ class Chocolate
 
     for container in containers
       @[container] = @overlay.querySelector ".choco-#{container}"
-    addClass @overlay, 'choco-ie8' if isIE8
 
     ###
      Добавляем события по-умолчанию для контейнеров
