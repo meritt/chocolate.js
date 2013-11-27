@@ -11,6 +11,7 @@ class Chocolate
   length: 0
 
   current: null
+  env = {}
 
   ###
    Конструктор
@@ -253,10 +254,8 @@ class Chocolate
 
     headerHeight = @dimensions.header if title
 
-    innerWidth   = window.innerWidth or document.documentElement.clientWidth
-    windowWidth  = innerWidth - @dimensions.horizontal
-    innerHeight  = window.innerHeight or document.documentElement.clientHeight
-    windowHeight = innerHeight - @dimensions.vertical - thumbnails - headerHeight
+    windowWidth  = env.w - @dimensions.horizontal
+    windowHeight = env.h - @dimensions.vertical - thumbnails - headerHeight
 
     if width > windowWidth
       height = windowWidth * height / width
@@ -274,7 +273,6 @@ class Chocolate
 
     style =
       'width':  "#{toInt(innerWidth / 2 - left)}px"
-      'height': "#{toInt(innerHeight)}px"
 
     setStyle @leftside,  style
     setStyle @rightside, style
@@ -347,12 +345,13 @@ class Chocolate
       @dimensions.thumbnail = toInt @_outerWidth after
 
     offset = after.offsetLeft + after.offsetWidth / 2
-    width = window.innerWidth / 2
-    offset = width - offset
+    thumb = @thumbnails.offsetWidth
+    offset = env.w / 2 - offset
     if offset > 0
       offset = 0
-    if offset < width * -1
-      offset = width * -1
+    if thumb + offset < env.w
+      offset = env.w - thumb
+    console.log offset
 
     translate @thumbnails, offset
     @
@@ -388,6 +387,7 @@ class Chocolate
 
       addClass image, 'choco-item'
       addHandler image, 'click', (event) ->
+        console.log 'click'
         showFirstImage event, cid
 
       preload = new Image()
@@ -443,6 +443,7 @@ class Chocolate
    Private method
   ###
   _getInitialParams: ->
+    getWindowSize()
     thumbnails = if not @options.thumbnails then false else @thumbnails.offsetHeight
 
     css = getStyle @overlay
@@ -465,6 +466,7 @@ class Chocolate
     @
 
   _onResize: (event) =>
+    getWindowSize()
     image = @images[@current]
     @updateDimensions image.width, image.height
 
@@ -505,6 +507,10 @@ class Chocolate
     width = parseFloat css 'width'
     width += parseFloat css style for style in styles
     width
+
+  getWindowSize = () ->
+    env.w = window.innerWidth or document.documentElement.clientWidth
+    env.h = window.innerHeight or document.documentElement.clientHeight
 
 merge = (o1, o2) ->
   for own key, value of o2
@@ -583,16 +589,13 @@ translate = do ->
     for prefix in prefixes when element.style["#{prefix}Transform"] isnt undefined
       property = "#{prefix}Transform"
 
-  has3d = true if property is 'WebkitTransform'
+  has3d = true if prefix is 'Webkit'
   if property isnt false
     (element, s) ->
-      console.log property
-      console.log has3d
       if has3d
         s = "translate3d(#{s}px, 0, 0)"
       else
         s = "translateX(#{s}px)"
-      console.log s
       element.style[property] = s
 
 
