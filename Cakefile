@@ -3,7 +3,7 @@ path      = require 'path'
 {compile} = require 'coffee-script'
 less      = require 'less'
 uglify    = require 'uglify-js'
-{cssmin}  = require 'cssmin'
+cssmin  = require 'cssmin'
 jsdom     = require 'jsdom'
 autoprefixer = require 'autoprefixer'
 
