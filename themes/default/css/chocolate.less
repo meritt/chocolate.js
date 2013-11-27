@@ -1,5 +1,13 @@
 @basedir: "{{basedir}}";
-@thumbnails-height: 116px;
+
+@overlay-background: rgba(0,0,0,0.8);
+
+@thumbnails-height: 120px;
+@thumbnails-aspect-ratio: 4/3;
+@thumbnails-padding-x: 20px;
+@thumbnails-padding-y: 10px;
+@thumbnails-border-size: 2px;
+@thumbnails-offset-height: @thumbnails-height + @thumbnails-padding-y * 2 + @thumbnails-border-size;
 
 .choco-body {
   overflow: hidden;
@@ -16,27 +24,27 @@
 .choco-item-hover {
   position: relative;
   display: block;
-  cursor: pointer;
   filter: ~`'alpha(opacity=40)'`;
+  cursor: pointer;
 
   &:hover, &.choco-hover {
-    background-image: url("@{basedir}/images/lupa.png");
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
     background-color: rgba(0, 0, 0, .4);
+    background-image: url("@{basedir}/images/lupa.png");
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
   }
 }
 
 .choco-overlay {
   position: fixed;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
-  display: none;
-  width: 100%;
-  height: 100%;
-  padding: 50px 70px;
-  background: rgba(0, 0, 0, .8);
   z-index: 105;
+  display: none;
+  padding: 50px 70px @thumbnails-offset-height;
+  background: @overlay-background;
 
   &.choco-show {
     display: block;
@@ -54,17 +62,16 @@
   }
 }
 
-
 .choco-close {
   position: fixed;
-  right: 27px;
   top: 54px;
+  right: 27px;
+  z-index: 125;
   width: 17px;
   height: 17px;
   background: url("@{basedir}/images/close.png") 0 0 no-repeat;
   opacity: 0.5;
   cursor: pointer;
-  z-index: 125;
   animation: close 0.8s;
 
   &:hover, &.choco-hover {
@@ -76,28 +83,26 @@
 .sidecolumn() {
   position: fixed;
   top: 0;
-  bottom: 0;
+  bottom: @thumbnails-offset-height;
   width: 50px;
-  height: 50px;
-  z-index: 120;
   animation: smooth 0.8s;
+  cursor: pointer;
 }
 
 .choco-leftside {
   .sidecolumn();
   left: 0;
   color: #666;
-  cursor: pointer;
 
   &:before {
-    content: '';
-    display: block;
     position: relative;
-    left: 34px;
     top: 54px;
+    left: 34px;
+    display: block;
     width: 17px;
     height: 17px;
     background: url("@{basedir}/images/arrow-l.png") 0 0 no-repeat;
+    content: '';
     opacity: 0.5;
   }
 
@@ -134,8 +139,8 @@
   img {
     @size: 30px;
     .container();
-    margin-left: round(-(@size / 2));
     margin-top: round(-(@size / 2) - (@thumbnails-height / 2));
+    margin-left: round(-(@size / 2));
     animation: spin 0.8s linear infinite;
 
     &.choco-spinner-cssanimation {
@@ -159,18 +164,17 @@
   .container();
   background-color: #000;
   background-position: 0 0;
-  background-repeat: no-repeat;
   background-size: 100% 100%;
+  background-repeat: no-repeat;
   box-shadow: 0 0 0 #111;
   opacity: 0;
   cursor: pointer;
-  z-index: 115;
-  zoom: 1;
   animation: shower 200ms ease-in-out;
+  zoom: 1;
 
   &.choco-show {
-    opacity: 1;
     box-shadow: 1px 1px 10px #111;
+    opacity: 1;
   }
 
   &.choco-error {
@@ -196,72 +200,68 @@
   }
 
   h1 {
+    overflow: hidden;
     margin: 0;
     padding: 0 0 2px 0;
     color: #fff;
-    font-size: 1.4em;
-    font-weight: normal;
-    line-height: 1.1em;
-    overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: normal;
+    font-size: 1.4em;
+    line-height: 1.1em;
   }
 }
 
 
 .choco-thumbnails {
+  @height: @thumbnails-height;
+  @x: @thumbnails-padding-x;
+  @y: @thumbnails-padding-y;
+  @border: @thumbnails-border-size;
   position: fixed;
-  left: 0;
   bottom: 0;
-  height: @thumbnails-height + 7px;
+  left: 0;
+  overflow: hidden;
+  box-sizing: border-box;
   margin: 0;
-  padding: 11px 0 0 53px;
-  border-top: 2px solid #fff;
+  padding: @y @x;
+  min-width: 100%;
+  height: @thumbnails-offset-height;
+  border-top: @border solid rgba(255,255,255,0.3);
   text-align: center;
   white-space: nowrap;
-  overflow: hidden;
-  z-index: 130;
-  -webkit-transition: -webkit-transform 0.2s;
-  -webkit-transition: transform 0.2s;
+  font-size: 0;
   transition: transform 0.2s;
-  animation: thumbnails 1.6s ease-in-out;
+  animation: thumbnails 1s ease-in-out;
 
   &.choco-hide {
     margin-bottom: -@thumbnails-height - 18px;
   }
 
   .choco-thumbnail {
-    @height: @thumbnails-height - 10px;
+    @height: @thumbnails-height;
+    @width: round(@height * @thumbnails-aspect-ratio);
     display: inline-block;
-    width: round(@height + (@height / 3));
-    height: @height;
-    margin: 3px 25px 3px 3px;
+    margin: 0 20px;
     padding: 0;
+    width: @width;
+    height: @height;
+    border-radius: 2px;
     background-color: #000;
     background-position: 50% 50%;
+    background-size: cover;
     background-repeat: no-repeat;
-    background-size: auto (@thumbnails-height - 4px);
-    border-radius: 7px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.7), inset 0 0 15px round(@height / 2) rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    vertical-align: middle;
     transition: box-shadow 0.1s ease-in-out;
 
-    &:last-child {
-      margin-right: 3px;
-    }
-
-    &:hover, &.selected, &.selected:hover {
+    &:hover {
       box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
     }
 
     &.selected, &.selected:hover {
-      margin: 0 22px 0 0;
-      border: 3px solid #fff;
-
-      &:last-child {
-        margin-right: 0;
-      }
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0,
+      0.1), 0 0 0 2px rgba(255,255,255,0.7);
     }
   }
 }
@@ -270,15 +270,14 @@
   position: fixed;
   right: 0;
   bottom: 0;
+  z-index: 120;
   width: 53px;
   height: @thumbnails-height + 20px;
   background: url("@{basedir}/images/arrow-b.png") 5px 0 no-repeat;
   cursor: pointer;
-  z-index: 120;
   animation: thumbnails 1.6s ease-in-out;
 
   &:after {
-    content: '';
     position: absolute;
     right: 0;
     bottom: @thumbnails-height + 18px;
@@ -286,26 +285,27 @@
     width: 26px;
     height: 2px;
     background-color: #fff;
+    content: '';
     opacity: 1;
     cursor: default;
   }
 }
 
 .choco-thumbnails-toggle.choco-hide {
-  bottom: -9px;
   right: 13px;
+  bottom: -9px;
   width: 54px;
   height: 28px;
   background: url("@{basedir}/images/arrow-t.png") 50% 50% no-repeat;
 
   &:after {
-    content: '';
     position: absolute;
-    display: block;
-    bottom: 9px;
     right: -13px;
+    bottom: 9px;
+    display: block;
     width: 26px;
     height: 2px;
+    content: '';
   }
 }
 
@@ -321,8 +321,8 @@
   }
 
   .choco-thumbnails-toggle {
-    background: none;
     position: absolute;
+    background: none;
 
     &:after {
       display: none;
@@ -345,8 +345,8 @@
 }
 
 @keyframes shower {
-  0%   { -o-transform: scale(0.9); }
-  100% { -o-transform: scale(1); }
+  0%   { transform: scale(0.9); }
+  100% { transform: scale(1); }
 }
 
 @keyframes smooth {
@@ -356,8 +356,8 @@
 }
 
 @keyframes spin {
-  0%   { -o-transform: rotate(0deg); }
-  100% { -o-transform: rotate(360deg); }
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes thumbnails {
