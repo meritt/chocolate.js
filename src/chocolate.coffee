@@ -570,11 +570,30 @@ setStyle = (element, styles) ->
     prop = property.replace /-([a-z])/g, (g) -> g[1].toUpperCase()
     element.style[prop] = styles[property]
 
-translate = (element, s) ->
-  s = "translate3d(#{s}px, 0, 0)"
-  element.style.transform = s
-  element.style.WebkitTransform = s
-  element.style.msTransform = s
+translate = do ->
+  property = false
+  has3d = false
+
+  element = document.createElement 'div'
+  property = 'transform' if element.style.transform
+
+  prefixes = ['Webkit', 'Moz', 'O', 'ms']
+
+  if property is false
+    for prefix in prefixes when element.style["#{prefix}Transform"] isnt undefined
+      property = "#{prefix}Transform"
+
+  has3d = true if property is 'WebkitTransform'
+  if property isnt false
+    (element, s) ->
+      console.log property
+      console.log has3d
+      if has3d
+        s = "translate3d(#{s}px, 0, 0)"
+      else
+        s = "translateX(#{s}px)"
+      console.log s
+      element.style[property] = s
 
 
 
