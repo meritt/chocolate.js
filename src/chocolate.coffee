@@ -349,7 +349,6 @@ class Chocolate
       offset = 0
     if thumb + offset < env.w
       offset = env.w - thumb
-    console.log offset
 
     translate @thumbnails, offset
     @
@@ -543,7 +542,7 @@ removeHandler = (element, event, listener, selector) ->
 
 hasClassList = (element, selector) ->
   target = getTarget element, selector
-  if target? and target.hasOwnProperty 'classList'
+  if target? and target.classList?
     return target.classList
   else
     return false
