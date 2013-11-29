@@ -18,8 +18,7 @@ class Chocolate
 
     @options = merge defaultOptions, options
 
-    #@storage = new ChocolateStorage @options.repeat
-    @storage = new ChocolateStorage false
+    @storage = new ChocolateStorage @options.repeat
 
     template = templates['overlay']
     template = template.replace '{{spinner}}', templates['spinner']
@@ -83,7 +82,7 @@ class Chocolate
   open: (cid, updateHistory) ->
     addClass @overlay, 'choco-show'
     addClass document.body, 'choco-body'
-    getEnv() if not env.shift < 1
+    getEnv() if env.shift is 0
     @updateDimensions()
     @select cid, updateHistory
     @
@@ -92,6 +91,7 @@ class Chocolate
 
 
   select: (item, updateHistory = true) ->
+
     if typeof item is 'number'
       item = @storage.get item
 
@@ -155,12 +155,6 @@ class Chocolate
 
       addImage @, object, image
 
-    list = @thumbnails.children
-    n = list.length
-    that = @
-    handleClick = (n) -> addHandler list[n], 'click', -> that.select n
-
-    handleClick i for i in [0..n-1]
     @
 
 
@@ -179,6 +173,10 @@ class Chocolate
 
     data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
     data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
+
+
+    addHandler data.thumbnail, 'click', -> chocolate.select data
+
 
     if image
 
