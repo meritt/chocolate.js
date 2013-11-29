@@ -1,58 +1,68 @@
-"use strict"
-
-merge = (o1, o2) ->
-    return o1 if o1 == null or o2 == null
-    for key of o2
-        o1[key] = o2[key] if o2.hasOwnProperty key
-    o1
-
-_elements = {}
-counter = 0
 
 class ChocolateStorage
 
-    add: (options) ->
-        _elements[counter] = merge {
-                'cid': counter, # ID
-                'name': '',    # title
-                'thumb': '',   # preview
-                'file': '',    # filename
-                'orig': '',    # original
-                'w': null,     # width
-                'h': null      # height
-            }, options
-        merge {}, _elements[counter++]
+  counter = 0
 
-    get: (key, fn) ->
-        item = _elements[key]
-        if item.h isnt null and item.w isnt null or item.origin is ''
-            fn merge {},item
-        image = new Image()
-        image.src = item.orig
-        image.addEventListener "error", () ->
-            item.orig = ''
-            fn merge {},item
-        , false
-        image.addEventListener "load", () ->
-            item.w = image.naturalWidth
-            item.h = image.naturalHeight
-            fn merge {},item
-        , false
 
-    next: (key, fn) ->
-        len = @length()
-        while not _elements[++key]? and key < len then
-        @get key, fn if _elements[key]?
+  constructor: (repeat) ->
+    @repeat = not not repeat
+    @images = {}
 
-    prev: (key, fn) ->
-        while not _elements[--key]? and key > -1 then
-        @get key, fn if _elements[key]?
 
-    length: () ->
-        return Object.keys(_elements).length if Object.keys?
-        i = 0
-        for key of _elements
-            i++ if _elements.hasOwnProperty key
-        i
 
-window.ChocolateStorage = ChocolateStorage
+
+  add: (options) ->
+    return false unless options.orig
+    cid = counter++
+    fragments    = options.orig.split '/'
+    options.hashbang = fragments[fragments.length-1]
+    options.thumb = options.orig unless options.thumb
+    options = merge {
+        cid: cid, # ID
+        name: '',    # title
+        thumb: '',   # preview
+        hashbang: '',    # filename
+        orig: '',    # original
+        w: null,     # width
+        h: null      # height
+      }, options
+    @images[cid] = options
+    @images[cid]
+
+
+
+
+  get: (key) ->
+    @images[key]
+
+
+
+
+  next: (key) ->
+    key = key.cid
+    len = @length()
+    while not @images[++key]? and key < len then
+    if key >= len
+      key = if @repeat then 0 else len - 1
+    @get key
+
+
+
+
+  prev: (key) ->
+    key = key.cid
+    len = @length()
+    while not @images[--key]? and key > -1 then
+    if key < 0
+      key = if @repeat then len - 1 else 0
+    @get key
+
+
+
+
+  length: () ->
+    return Object.keys(@images).length if Object.keys?
+    i = 0
+    for key of @images
+        i++ if @images.hasOwnProperty key
+    i

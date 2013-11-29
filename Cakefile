@@ -72,14 +72,21 @@ compileTemplate = (src, basedir, fn) ->
 
 compileJsContent = (dist, src, basedir) ->
   current = path.dirname __filename
-  source  = path.normalize "#{current}/src/chocolate.coffee"
+  sources = [
+    path.normalize "#{current}/src/utils.coffee"
+    path.normalize "#{current}/src/storage.coffee"
+    path.normalize "#{current}/src/chocolate.coffee"
+  ]
 
   options = "defaultOptions = `" + fs.readFileSync("#{src}/options.json", 'utf8') + "`"
 
   compileTemplate src, basedir, (templates) ->
     templates = "templates = `" + JSON.stringify(templates) + "`"
 
-    chocolate = fs.readFileSync source, 'utf8'
+    chocolate = ''
+    for source in sources
+      chocolate += fs.readFileSync source, 'utf8'
+      chocolate += '\n'
 
     js = compile "#{options}\n\n#{templates}\n\n#{chocolate}", bare: true
     js = "(function(window, document) {\n\n#{js}\n\n})(window, document);"

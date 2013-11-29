@@ -34,6 +34,23 @@
     background-repeat: no-repeat;
   }
 }
+.choco-slider {
+  display: block;
+  font-size: 0;
+  white-space: nowrap;
+  transition: transform 0.2s;
+}
+.choco-slide {
+  display: inline-block;
+  width: 100%;
+  vertical-align: middle;
+}
+.choco-slide-image {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 100%;
+}
 
 .choco-overlay {
   position: fixed;
@@ -41,7 +58,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 105;
+  z-index: 100;
   display: none;
   padding: 50px 70px @thumbnails-offset-height;
   background: @overlay-background;
@@ -72,7 +89,7 @@
   background: url("@{basedir}/images/close.png") 0 0 no-repeat;
   opacity: 0.5;
   cursor: pointer;
-  animation: close 0.8s;
+  //animation: close 0.8s;
 
   &:hover, &.choco-hover {
     opacity: 1;
@@ -85,8 +102,8 @@
   top: 0;
   bottom: @thumbnails-offset-height;
   width: 50px;
-  animation: smooth 0.8s;
   cursor: pointer;
+  animation: smooth 0.8s;
 }
 
 .choco-leftside {
@@ -232,7 +249,7 @@
   white-space: nowrap;
   font-size: 0;
   transition: transform 0.2s;
-  animation: thumbnails 1s ease-in-out;
+  //animation: thumbnails 1s ease-in-out;
 
   &.choco-hide {
     margin-bottom: -@thumbnails-height - 18px;
@@ -250,7 +267,7 @@
   background: url("@{basedir}/images/arrow-b.svg") 50% -5px no-repeat;
   box-shadow: inset -40px 0 40px -40px #000;
   cursor: pointer;
-  animation: thumbnails 1.6s ease-in-out;
+  //animation: thumbnails 1.6s ease-in-out;
 
 }
 

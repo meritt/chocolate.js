@@ -14,10 +14,10 @@
 <!-- Шаблон блока перекрывающего весь сайт и добавляющий основную структуру шоколада -->
 <script id="overlay" type="text/x-template">
   <div class="choco-overlay">
+    <div class="choco-slider"></div>
     <div class="choco-leftside choco-unselect"></div>
     {{spinner}}
     <div class="choco-container choco-unselect"></div>
-    <div class="choco-header"></div>
     <div class="choco-rightside choco-unselect"></div>
     {{thumbnails}}
     <div class="choco-close choco-unselect"></div>
@@ -32,9 +32,12 @@
   </div>
 </script>
 
-<!-- Шаблон описания изображения -->
-<script id="image-title" type="text/x-template">
-  <h1>{{title}}</h1>
+<!-- Шаблон слайда изображения -->
+<script id="slide" type="text/x-template">
+  <div class="choco-slide">
+    <h1>{{title}}</h1>
+    <img class="choco-slide-image" src="{{orig}}" width="{{w}}" height="{{px}}" alt="title">
+  </div>
 </script>
 
 <!-- Шаблон блока со списком тумбнейлов -->
@@ -45,7 +48,7 @@
 
 <!-- Шаблон тумбнейла -->
 <script id="thumbnails-item" type="text/x-template">
-  <li class="choco-thumbnail{{selected}}" data-cid="{{cid}}" data-image="{{image}}"{{title}}></li>
+  <li class="choco-thumbnail" data-cid="{{cid}}" style="background-image:url('{{thumb}}')"></li>
 </script>
 
 </body>
