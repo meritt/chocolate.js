@@ -93,7 +93,6 @@ class Chocolate
     isOpen = true
     addClass @overlay, 'choco-show'
     addClass document.body, 'choco-body'
-    getEnv() if env.shift is 0
     @updateDimensions()
     @select cid, updateHistory
     @
@@ -114,9 +113,10 @@ class Chocolate
     thumb = item.thumbnail
     addClass thumb, 'selected'
 
+    getEnv() if env.shift is 0
+
     offset = thumb.offsetLeft + thumb.offsetWidth / 2
     offset = env.w / 2 - offset
-
 
     if offset > 0
       offset = 0
@@ -161,7 +161,7 @@ class Chocolate
         image  = object
         object =
           orig:  image.getAttribute('data-src') or image.parentNode.getAttribute('href')
-          title: image.getAttribute('data-title') or image.getAttribute('title')
+          title: image.getAttribute('data-title') or image.getAttribute('title') or ''
           thumb: image.getAttribute 'src'
 
       addImage @, object, image
@@ -240,7 +240,8 @@ class Chocolate
   getEnv = () ->
     env.w = window.innerWidth or document.documentElement.clientWidth
     env.h = window.innerHeight or document.documentElement.clientHeight
-    env.shift = document.querySelector('.choco-slider > *').offsetWidth * -1
+    #env.shift = document.querySelector('.choco-slider > *').offsetWidth * -1
+    env.shift = env.w * -1
     env
 
 
