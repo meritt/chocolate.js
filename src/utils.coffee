@@ -1,3 +1,6 @@
+isStorage = 'localStorage' of window and window['localStorage']?
+isHistory = not not (window.history and history.pushState)
+
 addHandler = (element, event, listener, selector) ->
   target = getTarget element, selector
   if target?
@@ -127,9 +130,11 @@ translate = do ->
 
 
 
+
 getStyle = (element) ->
   style = getComputedStyle element
   return (property) -> style.getPropertyValue.call style, property
+
 
 
 
@@ -142,9 +147,7 @@ setStyle = (element, styles) ->
 
 
 
-
 pushState = do ->
-  isHistory = not not (window.history and history.pushState)
   if isHistory
     return (title, hash) ->
       title = title or ''

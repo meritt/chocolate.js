@@ -60,6 +60,17 @@ class ChocolateStorage
 
 
 
+  search: (hash) ->
+    cid = false
+    for own key, image of @images
+      if "##{image.hashbang}" is hash
+        cid = key
+        break
+    @images[cid] if cid
+
+
+
+
   length: () ->
     return Object.keys(@images).length if Object.keys?
     i = 0

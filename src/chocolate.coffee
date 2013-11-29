@@ -1,7 +1,5 @@
 existActions = ['next', 'prev', 'close']
 
-isStorage = 'localStorage' of window and window['localStorage']?
-
 class Chocolate
 
   env = {}
@@ -56,6 +54,21 @@ class Chocolate
       @close()
     , '.choco-close'
 
+    if isHistory
+      onHistory = =>
+        data = getImageFromUri @
+
+        if data and data.cid > -1 and data isnt @current
+          if @current is null
+            @select data
+          else
+            @open data.cid, false
+
+      if 'onhashchange' of window
+        addHandler window, 'hashchange', -> onHistory()
+
+    addHandler window, 'load', -> onHistory()
+
     for container in ['overlay', 'container', 'leftside', 'rightside']
       prepareActionFor @, container
 
@@ -108,6 +121,7 @@ class Chocolate
     offset = thumb.offsetLeft + thumb.offsetWidth / 2
     offset = env.w / 2 - offset
 
+
     if offset > 0
       offset = 0
     if offset < env.w - @dimensions.thumbWidth
@@ -117,7 +131,7 @@ class Chocolate
     translate @thumbnails, offset
 
     @current = item
-    if updateHistory
+    if isHistory and updateHistory
       title = if item.title then item.title else item.hashbang
       pushState title, item.hashbang
 
@@ -225,6 +239,13 @@ class Chocolate
       if chocolate.options.actions[container] is 'close'
         addHandler chocolate[container], ['mouseenter', 'mouseleave'], ->
           toggleClass chocolate.overlay, 'choco-hover', '.choco-close'
+
+
+
+
+  getImageFromUri = (chocolate) ->
+    hash = window.location.hash
+    chocolate.storage.search hash if hash?
 
 
 
