@@ -1,19 +1,17 @@
 
 class ChocolateStorage
 
-  counter = 0
-
-
   constructor: (repeat) ->
     @repeat = not not repeat
     @images = {}
+    @counter = 0
 
 
 
 
   add: (options) ->
     return false unless options.orig
-    cid = counter++
+    cid = @counter++
     fragments    = options.orig.split '/'
     options.hashbang = fragments[fragments.length-1]
     options.thumb = options.orig unless options.thumb

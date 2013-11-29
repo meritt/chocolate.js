@@ -3,6 +3,9 @@ existActions = ['next', 'prev', 'close']
 class Chocolate
 
   env = {}
+  isOpen = false
+  instances = []
+  opened = null
 
   constructor: (images, options = {}) ->
 
@@ -54,27 +57,17 @@ class Chocolate
       @close()
     , '.choco-close'
 
-    if isHistory
-      onHistory = =>
-        data = getImageFromUri @
-
-        if data and data.cid > -1 and data isnt @current
-          if @current is null
-            @select data
-          else
-            @open data.cid, false
-
-      if 'onhashchange' of window
-        addHandler window, 'hashchange', -> onHistory()
-
-    addHandler window, 'load', -> onHistory()
 
     for container in ['overlay', 'container', 'leftside', 'rightside']
       prepareActionFor @, container
 
+    instances.push @
+
 
 
   close: ->
+    isOpen = false
+    opened = null
     if hasClass @overlay, 'choco-show'
 
       removeClass document.body, 'choco-body'
@@ -95,6 +88,9 @@ class Chocolate
 
 
   open: (cid, updateHistory) ->
+    return if isOpen
+    opened = @
+    isOpen = true
     addClass @overlay, 'choco-show'
     addClass document.body, 'choco-body'
     getEnv() if env.shift is 0
@@ -189,9 +185,7 @@ class Chocolate
     data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
     data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
 
-
     addHandler data.thumbnail, 'click', -> chocolate.select data
-
 
     if image
 
@@ -243,18 +237,42 @@ class Chocolate
 
 
 
-  getImageFromUri = (chocolate) ->
-    hash = window.location.hash
-    chocolate.storage.search hash if hash?
-
-
-
-
   getEnv = () ->
     env.w = window.innerWidth or document.documentElement.clientWidth
     env.h = window.innerHeight or document.documentElement.clientHeight
     env.shift = document.querySelector('.choco-slider > *').offsetWidth * -1
     env
+
+
+
+
+  getImageFromUri = () ->
+    hash = window.location.hash
+    return unless hash
+
+    if isOpen
+      item = opened.storage.search hash
+      return opened.select item if item?
+
+    for chocolate in instances
+      item = chocolate.storage.search hash
+      break if item?
+
+    if item?
+      opened.close() if isOpen
+      chocolate.open item
+
+
+
+
+  if isHistory
+    onHistory = =>
+      data = getImageFromUri()
+
+    if 'onhashchange' of window
+      addHandler window, 'hashchange', -> onHistory()
+
+  addHandler window, 'load', -> onHistory()
 
 
 
