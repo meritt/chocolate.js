@@ -72,6 +72,8 @@ class Chocolate
 
       pushState()
 
+      removeClass @current.thumbnail, 'selected'
+
       @current = null
 
     @
@@ -120,7 +122,6 @@ class Chocolate
       pushState title, item.hashbang
 
     true
-
 
 
 
