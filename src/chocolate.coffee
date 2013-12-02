@@ -58,6 +58,8 @@ class Chocolate
         event.stopPropagation()
       ###
       that = @
+      addHandler @slider, 'transitionend', () ->
+        that.slider.classList.remove 'animated'
       t = new Touch @overlay,
         start: (t) ->
           false
@@ -66,8 +68,10 @@ class Chocolate
           translate that.slider, s + t.dx
           true
         end: (t) ->
+          that.slider.classList.add 'animated'
           s = getOffset that.slider
           s = round t, s / env.w
+          s = 0 if s > 0
           that.select Math.abs s
           false
 
