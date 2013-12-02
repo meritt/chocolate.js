@@ -21,9 +21,9 @@ class Chocolate
 
     @storage = new ChocolateStorage @options.repeat
 
-    template = templates['overlay']
-    template = template.replace '{{spinner}}', templates['spinner']
-    template = template.replace '{{thumbnails}}', if @options.thumbnails then templates['thumbnails'] else ''
+    template = templates.overlay
+    template = template.replace '{{spinner}}', templates.spinner
+    template = template.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
 
     @overlay = beforeend(document.body, template)[0]
 
@@ -127,6 +127,13 @@ class Chocolate
     translate @thumbnails, offset
 
     @current = item
+
+    unless item.size
+      item.size = item.slide.querySelector('.choco-slide-container').offsetWidth
+
+    @leftside.style.width = (env.w - item.size) / 2 + 'px'
+    @rightside.style.width = (env.w - item.size) / 2 + 'px'
+
     if isHistory and updateHistory
       title = if item.title then item.title else item.hashbang
       pushState title, item.hashbang
@@ -200,6 +207,8 @@ class Chocolate
 
       preload = new Image()
       preload.onload = ->
+        data.w = preload.width
+        data.h = preload.height
         image.insertAdjacentHTML 'afterend', mustache templates['image-hover'], data
 
         popover = document.querySelector "[data-pid=\"#{data.cid}\"]"
