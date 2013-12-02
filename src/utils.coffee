@@ -1,5 +1,5 @@
-isStorage = 'localStorage' of window and window['localStorage']?
 isHistory = not not (window.history and history.pushState)
+isTouch = !!('ontouchstart' in document.documentElement)
 
 addHandler = (element, event, listener, selector) ->
   target = getTarget element, selector
@@ -84,7 +84,7 @@ merge = (o1, o2) ->
 
 mustache = (a, b) ->
   a.replace /\{\{([^{}]+)\}\}/g, (c, d) ->
-    if b.hasOwnProperty d
+    if b.hasOwnProperty(d) && b[d]?
       return "#{b[d]}"
     else
       return ""
@@ -101,7 +101,7 @@ beforeend = (element, string) ->
 
 
 
-toInt = (string) -> parseInt string, 10
+toInt = (string) -> parseInt(string, 10) || 0
 
 
 
@@ -119,7 +119,7 @@ translate = do ->
     for prefix in prefixes when element.style["#{prefix}Transform"] isnt undefined
       property = "#{prefix}Transform"
 
-  has3d = true if prefix is 'Webkit'
+  has3d = true if property is 'WebkitTransform'
   if property isnt false
     (element, s) ->
       if has3d
@@ -143,6 +143,26 @@ setStyle = (element, styles) ->
   properties.forEach (property) ->
     prop = property.replace /-([a-z])/g, (g) -> g[1].toUpperCase()
     element.style[prop] = styles[property]
+
+
+
+
+getOffset = (element) ->
+  style = getComputedStyle element
+  reg = /matrix\(([0-9-\.,\s]*)\)/
+  tr = style.getPropertyValue('transform') || style.getPropertyValue('-webkit-transform') || style.getPropertyValue('-ms-transform') || ''
+  if reg.test tr
+    tr = reg.exec(tr)[1].split(',')[4].trim() || 0
+  else
+    tr = 0
+  return toInt tr
+
+round = do ->
+  length = window.innerHeight * 0.25
+  (t, offset) ->
+    if (t.x0 - t.x > length) or (t.x - t.x0 < length)
+      return Math.floor offset
+    return Math.ceil offset
 
 
 

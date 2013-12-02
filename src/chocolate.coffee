@@ -37,22 +37,6 @@ class Chocolate
 
     @length = @thumbnails.children.length
 
-    getEnv()
-
-    addHandler window, 'resize', =>
-      getEnv()
-      @select @current
-
-    addHandler window, 'keyup', (event) =>
-      if hasClass @overlay, 'choco-show'
-        switch event.keyCode
-          when 27    # ESC
-            @close()
-          when 37    # Left arrow
-            @prev()
-          when 39    # Right arrow
-            @next()
-
     addHandler @overlay, 'click', =>
       @close()
     , '.choco-close'
@@ -63,25 +47,42 @@ class Chocolate
 
     instances.push @
 
+    if isTouch
+      @overlay.classList.add 'touch'
+      ###
+      addHandler @slider, 'click', (event) ->
+        event.preventDefault()
+        event.stopPropagation()
+      addHandler @slider, 'hover', (event) ->
+        event.preventDefault()
+        event.stopPropagation()
+      ###
+      that = @
+      t = new Touch @overlay,
+        start: (t) ->
+          false
+        move: (t) ->
+          s = getOffset that.slider
+          translate that.slider, s + t.dx
+          true
+        end: (t) ->
+          s = getOffset that.slider
+          s = round t, s / env.w
+          that.select Math.abs s
+          false
+
+
 
 
   close: ->
     isOpen = false
     opened = null
     if hasClass @overlay, 'choco-show'
-
-      removeClass document.body, 'choco-body'
       removeClass @overlay, 'choco-show'
-
-      # Repaint bug could be fixed with
-      @overlay.offsetHeight
-
-      pushState()
-
+      removeClass document.body, 'choco-body'
       removeClass @current.thumbnail, 'selected'
-
       @current = null
-
+      pushState()
     @
 
 
@@ -106,14 +107,13 @@ class Chocolate
       item = @storage.get item
 
     return false unless item
-    return true if @current and @current.cid is item.cid
 
     @current.thumbnail.classList.remove 'selected' if @current?
 
     thumb = item.thumbnail
     addClass thumb, 'selected'
 
-    getEnv() if env.shift is 0
+    getEnv() if not env.w > 0 or not env.shift > 0
 
     offset = thumb.offsetLeft + thumb.offsetWidth / 2
     offset = env.w / 2 - offset
@@ -129,7 +129,7 @@ class Chocolate
     @current = item
 
     unless item.size
-      item.size = item.slide.querySelector('.choco-slide-container').offsetWidth
+      item.size = item.slide.querySelector('.choco-slide-container img').offsetWidth
 
     @leftside.style.width = (env.w - item.size) / 2 + 'px'
     @rightside.style.width = (env.w - item.size) / 2 + 'px'
@@ -191,6 +191,7 @@ class Chocolate
 
     data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
     data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
+    data.img = data.slide.querySelector '.choco-slide-image'
 
     addHandler data.thumbnail, 'click', -> chocolate.select data
 
@@ -282,7 +283,25 @@ class Chocolate
     if 'onhashchange' of window
       addHandler window, 'hashchange', -> onHistory()
 
-  addHandler window, 'load', -> onHistory()
+
+  addHandler window, 'load', ->
+    onHistory()
+    getEnv()
+
+  addHandler window, 'resize', ->
+    getEnv()
+    if isOpen
+      opened.select opened.current
+
+  addHandler window, 'keyup', (event) =>
+    if isOpen && hasClass opened.overlay, 'choco-show'
+      switch event.keyCode
+        when 27 # ESC
+          opened.close()
+        when 37 # Left arrow
+          opened.prev()
+        when 39 # Right arrow
+          opened.next()
 
 
 

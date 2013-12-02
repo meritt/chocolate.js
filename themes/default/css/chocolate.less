@@ -1,4 +1,4 @@
-@basedir: "{{basedir}}";
+@basedir: "{{basedir;}}";
 
 @overlay-background: rgba(0,0,0,0.8);
 
@@ -36,19 +36,32 @@
 }
 .choco-slider {
   display: block;
-  font-size: 0;
-  white-space: nowrap;
-  transition: transform 0.2s;
+  height: 100%;
   text-align: center;
+  white-space: nowrap;
+  font-size: 0;
+  transition: transform 0.4s;
 }
 .choco-slide {
   display: inline-block;
   width: 100%;
-  vertical-align: middle;
+  height: 100%;
 }
 .choco-slide-container {
-  font-size: 100%;
   display: inline-block;
+  overflow: hidden;
+  color: #fff;
+  vertical-align: middle;
+  font-size: 16px;
+  max-height: 100%;
+}
+.choco-slide-title {
+  position: relative;
+  margin: 0 0 10px;
+  padding: 0;
+  width: 100%;
+  height: 20px;
+  font-size: 20px;
 }
 .choco-slide-image {
   display: block;
@@ -70,6 +83,20 @@
 
   &.choco-show {
     display: block;
+  }
+
+  &.touch {
+    padding: 0;
+    background: #2d3032;
+    .choco-thumbnails,
+    .choco-thumbnails-toggle,
+    .choco-leftside,
+    .choco-rightside {
+      display: none;
+    }
+    .choco-slider {
+      transition: none;
+    }
   }
 
   &.choco-hideless {
@@ -107,6 +134,8 @@
   top: 0;
   bottom: @thumbnails-offset-height;
   width: 50px;
+  margin: 0;
+  padding: 0;
   cursor: pointer;
   animation: smooth 0.8s;
 }
@@ -114,8 +143,11 @@
 .choco-leftside {
   .sidecolumn();
   left: 0;
+
+  background: url("@{basedir}/images/arrow-l.svg") 20 20 no-repeat;
   color: #666;
 
+  /*
   &:before {
     position: relative;
     top: 54px;
@@ -123,10 +155,11 @@
     display: block;
     width: 17px;
     height: 17px;
-    background: url("@{basedir}/images/arrow-l.svg") 0 0 no-repeat;
+    background: url("interpolation0__/images/arrow-l.svg") 0 0 no-repeat;
     content: '';
     opacity: 0.5;
   }
+  */
 
   &:hover {
     color: #fff;
@@ -253,7 +286,7 @@
   text-align: center;
   white-space: nowrap;
   font-size: 0;
-  transition: transform 0.2s;
+  transition: transform 0.4s;
   //animation: thumbnails 1s ease-in-out;
 
   &.choco-hide {
