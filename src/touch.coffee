@@ -25,9 +25,10 @@ getOffset = (element) ->
 round = do ->
   length = window.innerHeight * 0.25
   (t, offset) ->
+    offset = Math.abs offset
     if (t.x0 - t.x > length) or (t.x - t.x0 < length)
-      return Math.floor offset
-    return Math.ceil offset
+      return Math.ceil offset
+    return Math.floor offset
 
 
 
@@ -126,23 +127,29 @@ Chocolate::initTouch = (env) ->
   addHandler @slider, 'click', (event) ->
     event.preventDefault()
     event.stopPropagation()
+
   addHandler @slider, 'hover', (event) ->
     event.preventDefault()
     event.stopPropagation()
-  that = @
-  addHandler @slider, 'transitionend', () ->
-    that.slider.classList.remove 'animated'
+
+  addHandler @slider, 'transitionend', =>
+    @slider.classList.remove 'animated'
+
   t = new Touch @overlay,
     start: (t) ->
       false
-    move: (t) ->
-      s = getOffset that.slider
-      translate that.slider, s + t.dx
+
+    move: (t) =>
+      s = getOffset @slider
+      translate @slider, s + t.dx
       true
-    end: (t) ->
-      that.slider.classList.add 'animated'
-      s = getOffset that.slider
-      s = round t, s / env.w
-      s = 0 if s > 0
-      that.select Math.abs s
+
+    end: (t) =>
+      max = @slider.children.length - 1
+      @slider.classList.add 'animated'
+      s = getOffset @slider
+      s = round t, (s / env.w)
+      s = 0 if s < 0
+      s = max if s > max
+      @select Math.abs s
       false

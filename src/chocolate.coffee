@@ -7,11 +7,13 @@ class_loading  = "#{choco}-loading"
 class_selected = "#{choco}-selected"
 class_show     = "#{choco}-show"
 
+
 class Chocolate
 
   existActions = ['next', 'prev', 'close']
 
   env = {}
+
   isOpen = false
   instances = []
   opened = null
@@ -55,6 +57,8 @@ class Chocolate
       prepareActionFor @, container
 
     instances.push @
+
+    getEnv()
 
     @initTouch env
 
@@ -285,6 +289,9 @@ class Chocolate
 
   getEnv = ->
     return env unless needResize
+    env =
+      w: window.innerWidth or document.documentElement.clientWidth
+      h: window.innerHeight or document.documentElement.clientHeight
     if isOpen
       slide = opened.slider.querySelector ".#{choco}-slide"
       return unless slide
@@ -295,13 +302,10 @@ class Chocolate
       w = toInt(style 'width') -
           toInt(style 'padding-left') -
           toInt(style 'padding-right')
-      env =
-        w: window.innerWidth or document.documentElement.clientWidth
-        h: window.innerHeight or document.documentElement.clientHeight
-        shift: toInt(style 'width') * -1
-        s:
-          w: w
-          h: h
+      env.shift = toInt(style 'width') * -1
+      env.s =
+        w: w
+        h: h
       needResize = false
     env
 
