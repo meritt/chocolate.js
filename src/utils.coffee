@@ -1,5 +1,4 @@
 isHistory = not not (window.history and history.pushState)
-isTouch = !!('ontouchstart' in document.documentElement)
 
 addHandler = (element, event, listener, selector) ->
   target = getTarget element, selector
@@ -147,26 +146,6 @@ setStyle = (element, styles) ->
 
 
 
-getOffset = (element) ->
-  style = getComputedStyle element
-  reg = /matrix\(([0-9-\.,\s]*)\)/
-  tr = style.getPropertyValue('transform') || style.getPropertyValue('-webkit-transform') || style.getPropertyValue('-ms-transform') || ''
-  if reg.test tr
-    tr = reg.exec(tr)[1].split(',')[4].trim() || 0
-  else
-    tr = 0
-  return toInt tr
-
-round = do ->
-  length = window.innerHeight * 0.25
-  (t, offset) ->
-    if (t.x0 - t.x > length) or (t.x - t.x0 < length)
-      return Math.floor offset
-    return Math.ceil offset
-
-
-
-
 pushState = do ->
   if isHistory
     return (title, hash) ->
@@ -175,4 +154,3 @@ pushState = do ->
       history.pushState null, title, "##{hash}"
   else
     return () ->
-

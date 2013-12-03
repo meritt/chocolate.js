@@ -74,9 +74,9 @@ compileJsContent = (dist, src, basedir) ->
   current = path.dirname __filename
   sources = [
     path.normalize "#{current}/src/utils.coffee"
-    path.normalize "#{current}/src/touch.coffee"
     path.normalize "#{current}/src/storage.coffee"
     path.normalize "#{current}/src/chocolate.coffee"
+    path.normalize "#{current}/src/touch.coffee"
   ]
 
   options = "defaultOptions = `" + fs.readFileSync("#{src}/options.json", 'utf8') + "`"

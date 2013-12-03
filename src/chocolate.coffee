@@ -47,33 +47,8 @@ class Chocolate
 
     instances.push @
 
-    if isTouch
-      @overlay.classList.add 'touch'
-      ###
-      addHandler @slider, 'click', (event) ->
-        event.preventDefault()
-        event.stopPropagation()
-      addHandler @slider, 'hover', (event) ->
-        event.preventDefault()
-        event.stopPropagation()
-      ###
-      that = @
-      addHandler @slider, 'transitionend', () ->
-        that.slider.classList.remove 'animated'
-      t = new Touch @overlay,
-        start: (t) ->
-          false
-        move: (t) ->
-          s = getOffset that.slider
-          translate that.slider, s + t.dx
-          true
-        end: (t) ->
-          that.slider.classList.add 'animated'
-          s = getOffset that.slider
-          s = round t, s / env.w
-          s = 0 if s > 0
-          that.select Math.abs s
-          false
+    @initTouch()
+
 
 
 
@@ -185,6 +160,11 @@ class Chocolate
   updateDimensions: ->
     @dimensions =
       thumbWidth: @thumbnails.offsetWidth
+
+
+
+
+  initTouch: -> true
 
 
 
