@@ -1,71 +1,50 @@
 isHistory = not not (window.history and history.pushState)
 
-addHandler = (element, event, listener, selector) ->
-  target = getTarget element, selector
-  if target?
-    unless event instanceof Array
-      event = [event]
-    for ev in event
-      target.addEventListener ev, listener, false
-
-
-
-
-removeHandler = (element, event, listener, selector) ->
-  target = getTarget element, selector
-  if target?
-    unless event instanceof Array
-      event = [event]
-    for ev in event
-      target.removeEventListener ev, listener, false
-
-
-
-
-hasClassList = (element, selector) ->
-  target = getTarget element, selector
-  if target? and target.classList?
-    return target.classList
-  else
-    return false
-
-
-
-
-addClass = (element, className, selector) ->
-  list = hasClassList element, selector
-  list.add className if list
-
-
-
-
-removeClass = (element, className, selector) ->
-  list = hasClassList element, selector
-  list.remove className if list
-
-
-
-
-toggleClass = (element, className, selector) ->
-  list = hasClassList element, selector
-  list.toggle className if list
-
-
-
-
-hasClass = (element, className, selector) ->
-  list = hasClassList element, selector
-  list.contains className if list
-
-
-
-
 getTarget = (element, selector) ->
   if selector?
     target = element.querySelector selector
   else
     target = element
   target
+
+
+
+
+changeHandler = (element, event, listener, selector, method) ->
+  target = getTarget element, selector
+  if target?
+    unless event instanceof Array
+      event = [event]
+    for ev in event
+      target["#{method}EventListener"] ev, listener, false
+
+addHandler = (element, event, listener, selector) ->
+  changeHandler element, event, listener, selector, 'add'
+
+removeHandler = (element, event, listener, selector) ->
+  changeHandler element, event, listener, selector, 'remove'
+
+
+
+
+changeClass = (element, className, selector, method) ->
+  target = getTarget element, selector
+  if target? and target.classList?
+    return target.classList[method] className
+  else
+    return false
+
+addClass = (element, className, selector) ->
+  changeClass element, className, selector, 'add'
+
+removeClass = (element, className, selector) ->
+  changeClass element, className, selector, 'remove'
+
+toggleClass = (element, className, selector) ->
+  changeClass element, className, selector, 'toggle'
+
+hasClass = (element, className, selector) ->
+  changeClass element, className, selector, 'contains'
 
 
 
@@ -101,6 +80,16 @@ beforeend = (element, string) ->
 
 
 toInt = (string) -> parseInt(string, 10) || 0
+
+
+
+
+squeeze = (n, min, max) ->
+  if n < min
+    n = min
+  if n > max
+    n = max
+  n
 
 
 

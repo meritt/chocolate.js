@@ -149,7 +149,5 @@ Chocolate::initTouch = (env) ->
       addClass @slider, 'animated'
       s = getOffset @slider
       s = round t, (s / env.w)
-      s = 0 if s < 0
-      s = max if s > max
-      @select Math.abs s
+      @select squeeze s, 0, max
       false
