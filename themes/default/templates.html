@@ -22,19 +22,12 @@
   </div>
 </script>
 
-<!-- Шаблон загрузчика при переключении изображений -->
-<script id="spinner" type="text/x-template">
-  <div class="choco-spinner">
-    <img src="{{basedir}}/images/loader.svg" width="100" height="100" alt="" class="choco-spinner-cssanimation">
-    <img src="{{basedir}}/images/loader.gif" width="32" height="32" alt="" class="choco-spinner-gifanimation">
-  </div>
-</script>
-
 <!-- Шаблон слайда изображения -->
 <script id="slide" type="text/x-template">
   <div class="choco-slide">
     <div class="choco-slide-container">
-      <img class="choco-slide-image" src="" alt="title">
+      <img src="{{basedir}}/images/loader.svg" width="60" height="60" alt="" class="choco-spinner">
+      <img class="choco-slide-image" src="" alt="{{title}}">
     </div>
   </div>
 </script>

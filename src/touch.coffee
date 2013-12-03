@@ -123,7 +123,7 @@ class Touch
 
 Chocolate::initTouch = (env) ->
   return if isTouch is 0
-  @overlay.classList.add 'touch'
+  addClass @overlay, 'touch'
   addHandler @slider, 'click', (event) ->
     event.preventDefault()
     event.stopPropagation()
@@ -146,7 +146,7 @@ Chocolate::initTouch = (env) ->
 
     end: (t) =>
       max = @slider.children.length - 1
-      @slider.classList.add 'animated'
+      addClass @slider, 'animated'
       s = getOffset @slider
       s = round t, (s / env.w)
       s = 0 if s < 0
