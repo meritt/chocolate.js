@@ -229,7 +229,7 @@ class Chocolate
         setStyle popover,
           'width':      "#{offsetWidth image}px"
           'height':     "#{offsetHeight image}px"
-          'margin-top': "#{-1 * offsetHeight image}px"
+          'margin-top': "-#{offsetHeight image}px"
 
         addHandler image, ['mouseenter', 'mouseleave'], ->
           toggleClass popover, class_hover
@@ -293,13 +293,15 @@ class Chocolate
       slide = opened.slider.querySelector ".#{choco}-slide"
       return unless slide
       style = getStyle slide
+      w = toInt style 'width'
+      env.shift = w * -1
+
       h = toInt(style 'height') -
           toInt(style 'padding-top') -
           toInt(style 'padding-bottom')
-      w = toInt(style 'width') -
+      w = w -
           toInt(style 'padding-left') -
           toInt(style 'padding-right')
-      env.shift = toInt(style 'width') * -1
       env.s =
         w: w
         h: h
