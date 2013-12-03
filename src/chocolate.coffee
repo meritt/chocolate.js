@@ -310,19 +310,11 @@ class Chocolate
   setSize = (item) ->
     return if not (item.w > 0 and item.h > 0)
     getEnv()
-    height = item.h
-    width = item.w
 
-    if item.w > env.s.w
-      height = env.s.w * item.h / item.w
-      width  = env.s.w
+    s = scale item.w, item.h, env.s.w, env.s.h
 
-    if item.h > env.s.h
-      width  = env.s.h * item.w / item.h
-      height = env.s.h
-
-    item.img.width = width
-    item.img.height = height
+    item.img.width = s[0]
+    item.img.height = s[1]
 
 
 

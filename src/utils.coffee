@@ -146,6 +146,22 @@ setStyle = (element, styles) ->
 
 
 
+scale = (w1, h1, w2, h2) ->
+  ratio = w1 / h1
+
+  if w1 > w2
+    w1 = w2
+    h1 = w2 / ratio
+
+  if h1 > h2
+    w1 = h2 * ratio
+    h1 = h2
+
+  return [w1, h1]
+
+
+
+
 pushState = do ->
   if isHistory
     return (title, hash) ->
