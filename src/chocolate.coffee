@@ -106,7 +106,7 @@ class Chocolate
     thumb = item.thumbnail
     addClass thumb, class_selected
 
-    offset = env.w / 2 - thumb.offsetLeft - thumb.offsetWidth / 2
+    offset = env.w / 2 - thumb.offsetLeft - offsetWidth(thumb) / 2
 
     offset = squeeze offset, 0, env.w - @dimensions.thumbWidth
 
@@ -168,7 +168,7 @@ class Chocolate
 
   updateDimensions: ->
     @dimensions =
-      thumbWidth: @thumbnails.offsetWidth
+      thumbWidth: offsetWidth @thumbnails
     for i of @storage.images
       setSize @storage.images[i]
 
@@ -177,7 +177,7 @@ class Chocolate
 
   updateSides: (item) ->
     if not item.size
-      item.size = item.slide.querySelector(".#{choco}-slide-container").offsetWidth
+      item.size = offsetWidth item.slide.querySelector ".#{choco}-slide-container"
     s = "#{(env.w - item.size) / 2}px"
     setStyle @leftside, width: s
     setStyle @rightside, width: s
@@ -227,9 +227,9 @@ class Chocolate
 
         popover = document.querySelector "[data-pid=\"#{data.cid}\"]"
         setStyle popover,
-          'width':      "#{image.offsetWidth}px"
-          'height':     "#{image.offsetHeight}px"
-          'margin-top': "#{-1 * image.offsetHeight}px"
+          'width':      "#{offsetWidth image}px"
+          'height':     "#{offsetHeight image}px"
+          'margin-top': "#{-1 * offsetHeight image}px"
 
         addHandler image, ['mouseenter', 'mouseleave'], ->
           toggleClass popover, class_hover

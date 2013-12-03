@@ -154,6 +154,12 @@ scale = (w1, h1, w2, h2) ->
 
 
 
+offsetWidth = (element) -> element.offsetWidth
+offsetHeight = (element) -> element.offsetHeight
+
+
+
+
 pushState = do ->
   if isHistory
     return (title, hash) ->
