@@ -132,7 +132,8 @@ translate = do ->
 
 getStyle = (element) ->
   style = getComputedStyle element
-  return (property) -> style.getPropertyValue.call style, property
+  return (property) ->
+    style.getPropertyValue.call style, property
 
 
 
@@ -147,6 +148,7 @@ setStyle = (element, styles) ->
 
 
 scale = (w1, h1, w2, h2) ->
+
   ratio = w1 / h1
 
   if w1 > w2
@@ -157,7 +159,8 @@ scale = (w1, h1, w2, h2) ->
     w1 = h2 * ratio
     h1 = h2
 
-  return [w1, h1]
+
+  return [toInt(w1), toInt(h1)]
 
 
 

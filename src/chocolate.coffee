@@ -1,6 +1,13 @@
-existActions = ['next', 'prev', 'close']
+class_body     = 'choco-body'
+class_error    = 'choco-error'
+class_hover    = 'choco-hover'
+class_item     = 'choco-item'
+class_loading  = 'choco-loading'
+class_selected = 'choco-selected'
+class_show     = 'choco-show'
 
 class Chocolate
+  existActions = ['next', 'prev', 'close']
 
   env = {}
   isOpen = false
@@ -43,7 +50,7 @@ class Chocolate
     , '.choco-close'
 
 
-    for container in ['overlay', 'container', 'leftside', 'rightside']
+    for container in ['overlay', 'leftside', 'rightside']
       prepareActionFor @, container
 
     instances.push @
@@ -56,10 +63,10 @@ class Chocolate
   close: ->
     isOpen = false
     opened = null
-    if hasClass @overlay, 'choco-show'
-      removeClass @overlay, 'choco-show'
-      removeClass document.body, 'choco-body'
-      removeClass @current.thumbnail, 'selected'
+    if hasClass @overlay, class_show
+      removeClass @overlay, class_show
+      removeClass document.body, class_body
+      removeClass @current.thumbnail, class_selected
       @current = null
       pushState()
     @
@@ -71,8 +78,8 @@ class Chocolate
     return if isOpen
     opened = @
     isOpen = true
-    addClass @overlay, 'choco-show'
-    addClass document.body, 'choco-body'
+    addClass @overlay, class_show
+    addClass document.body, class_body
     @updateDimensions()
     @select cid, updateHistory
     @
@@ -89,10 +96,10 @@ class Chocolate
 
     getEnv()
 
-    @current.thumbnail.classList.remove 'selected' if @current?
+    removeClass @current.thumbnail, class_selected if @current?
 
     thumb = item.thumbnail
-    addClass thumb, 'selected'
+    addClass thumb, class_selected
 
     offset = thumb.offsetLeft + thumb.offsetWidth / 2
     offset = env.w / 2 - offset
@@ -107,15 +114,17 @@ class Chocolate
 
     @current = item
 
-    unless item.size
-      item.size = item.slide.querySelector('.choco-slide-container img').offsetWidth
-
-    @leftside.style.width = (env.w - item.size) / 2 + 'px'
-    @rightside.style.width = (env.w - item.size) / 2 + 'px'
-
     if isHistory and updateHistory
       title = if item.title then item.title else item.hashbang
       pushState title, item.hashbang
+
+    loading = hasClass item.slide, class_loading
+    if loading
+      loadImage item, (success) =>
+        item.size = item.slide.querySelector('.choco-slide-container').offsetWidth
+        console.log item.size
+        @leftside.style.width = (env.w - item.size) / 2 + 'px'
+        @rightside.style.width = (env.w - item.size) / 2 + 'px'
 
     true
 
@@ -176,6 +185,7 @@ class Chocolate
     return unless data
 
     data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
+    data.slide.classList.add class_loading
     data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
     data.img = data.slide.querySelector '.choco-slide-image'
 
@@ -188,14 +198,12 @@ class Chocolate
         event.preventDefault()
         chocolate.open cid
 
-      addClass image, 'choco-item'
+      addClass image, class_item
       addHandler image, 'click', (event) ->
         showFirstImage event, data.cid
 
       preload = new Image()
       addHandler preload, 'load', ->
-        data.w = preload.width
-        data.h = preload.height
         image.insertAdjacentHTML 'afterend', mustache templates['image-hover'], data
 
         popover = document.querySelector "[data-pid=\"#{data.cid}\"]"
@@ -205,18 +213,38 @@ class Chocolate
           'margin-top': "#{-1 * image.offsetHeight}px"
 
         addHandler image, ['mouseenter', 'mouseleave'], ->
-          toggleClass popover, 'choco-hover'
+          toggleClass popover, class_hover
 
         addHandler popover, 'click', (event) ->
           showFirstImage event, data.cid
 
-      addHandler preload, 'error', ->
-        data.slide.classList.add 'choco-error'
-        data.thumbnail.classList.add 'choco-error'
-
       preload.src = data.thumb
 
     data
+
+
+
+
+  loadImage = (item, callback) ->
+    img = new Image()
+
+    addHandler img, 'load', ->
+      item.img.src = @src
+      removeClass item.slide, class_loading
+      item.w = img.width
+      item.h = img.height
+      setSize item
+
+      callback true
+
+    addHandler img, 'error', ->
+      removeClass item.slide, class_loading
+      addClass item.slide, class_error
+      addClass item.thumbnail, class_error
+
+      callback false
+
+    img.src = item.orig
 
 
 
@@ -232,22 +260,30 @@ class Chocolate
 
       if chocolate.options.actions[container] is 'close'
         addHandler chocolate[container], ['mouseenter', 'mouseleave'], ->
-          toggleClass chocolate.overlay, 'choco-hover', '.choco-close'
+          toggleClass chocolate.overlay, class_hover, '.choco-close'
 
 
 
 
-  getEnv = () ->
+  getEnv = ->
     return env unless needResize
     if isOpen
       slide = opened.slider.querySelector '.choco-slide'
+      return unless slide
+      style = getStyle slide
+      h = toInt(style 'height') -
+          toInt(style 'padding-top') -
+          toInt(style 'padding-bottom')
+      w = toInt(style 'width') -
+          toInt(style 'padding-left') -
+          toInt(style 'padding-right')
       env =
         w: window.innerWidth or document.documentElement.clientWidth
         h: window.innerHeight or document.documentElement.clientHeight
+        shift: toInt(style 'width') * -1
         s:
-          w: slide.clientWidth
-          h: slide.clientHeight
-      env.shift = env.s.w * -1
+          w: w
+          h: h
       needResize = false
     env
 
@@ -299,7 +335,7 @@ class Chocolate
 
 
   addHandler window, 'keyup', (event) =>
-    if isOpen && hasClass opened.overlay, 'choco-show'
+    if isOpen && hasClass opened.overlay, class_show
       switch event.keyCode
         when 27 # ESC
           opened.close()
