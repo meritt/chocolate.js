@@ -1,12 +1,14 @@
-class_body     = 'choco-body'
-class_error    = 'choco-error'
-class_hover    = 'choco-hover'
-class_item     = 'choco-item'
-class_loading  = 'choco-loading'
-class_selected = 'choco-selected'
-class_show     = 'choco-show'
+choco = 'choco'
+class_body     = "#{choco}-body"
+class_error    = "#{choco}-error"
+class_hover    = "#{choco}-hover"
+class_item     = "#{choco}-item"
+class_loading  = "#{choco}-loading"
+class_selected = "#{choco}-selected"
+class_show     = "#{choco}-show"
 
 class Chocolate
+
   existActions = ['next', 'prev', 'close']
 
   env = {}
@@ -30,16 +32,15 @@ class Chocolate
     @storage = new ChocolateStorage @options.repeat
 
     template = templates.overlay
-    template = template.replace '{{spinner}}', templates.spinner
     template = template.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
 
     @overlay = beforeend(document.body, template)[0]
 
-    containers = ['container', 'leftside', 'rightside', 'slider']
+    containers = ['leftside', 'rightside', 'slider']
     containers.push 'thumbnails' if @options.thumbnails
 
     for container in containers
-      @[container] = @overlay.querySelector ".choco-#{container}"
+      @[container] = @overlay.querySelector ".#{choco}-#{container}"
 
     @add images if images
 
@@ -47,7 +48,7 @@ class Chocolate
 
     addHandler @overlay, 'click', =>
       @close()
-    , '.choco-close'
+    , ".#{choco}-close"
 
 
     for container in ['overlay', 'leftside', 'rightside']
@@ -121,10 +122,9 @@ class Chocolate
     loading = hasClass item.slide, class_loading
     if loading
       loadImage item, (success) =>
-        item.size = item.slide.querySelector('.choco-slide-container').offsetWidth
-        console.log item.size
-        @leftside.style.width = (env.w - item.size) / 2 + 'px'
-        @rightside.style.width = (env.w - item.size) / 2 + 'px'
+        @updateSides item
+    else
+      @updateSides item
 
     true
 
@@ -175,6 +175,15 @@ class Chocolate
 
 
 
+  updateSides: (item) ->
+    if not item.size
+      item.size = item.slide.querySelector(".#{choco}-slide-container").offsetWidth
+    @leftside.style.width = (env.w - item.size) / 2 + 'px'
+    @rightside.style.width = (env.w - item.size) / 2 + 'px'
+
+
+
+
   initTouch: -> true
 
 
@@ -184,12 +193,21 @@ class Chocolate
     data = chocolate.storage.add data
     return unless data
 
+    data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
+    addHandler data.thumbnail, 'click', -> chocolate.select data
+
     data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
     data.slide.classList.add class_loading
-    data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
-    data.img = data.slide.querySelector '.choco-slide-image'
 
-    addHandler data.thumbnail, 'click', -> chocolate.select data
+    data.img = data.slide.querySelector ".#{choco}-slide-image"
+
+    method = chocolate.options.actions.container if chocolate.options.actions.container in existActions
+
+    if method
+      addHandler data.slide, 'click', ->
+        chocolate[method]()
+      , ".#{choco}-slide-container"
+
 
     if image
 
@@ -260,7 +278,7 @@ class Chocolate
 
       if chocolate.options.actions[container] is 'close'
         addHandler chocolate[container], ['mouseenter', 'mouseleave'], ->
-          toggleClass chocolate.overlay, class_hover, '.choco-close'
+          toggleClass chocolate.overlay, class_hover, ".#{choco}-close"
 
 
 
@@ -268,7 +286,7 @@ class Chocolate
   getEnv = ->
     return env unless needResize
     if isOpen
-      slide = opened.slider.querySelector '.choco-slide'
+      slide = opened.slider.querySelector ".#{choco}-slide"
       return unless slide
       style = getStyle slide
       h = toInt(style 'height') -
