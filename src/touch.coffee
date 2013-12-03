@@ -1,4 +1,13 @@
-isTouch = !!('ontouchstart' in document.documentElement)
+isTouch = do ->
+  el = document.createElement 'div'
+  el.setAttribute 'ongesturestart', 'return;'
+  el.setAttribute 'ontouchstart', 'return;'
+  return 1 if typeof el.ontouchstart is "function"
+  return 2 if typeof el.ongesturestart is "function"
+  return 0
+
+
+
 
 getOffset = (element) ->
   style = getComputedStyle element
@@ -19,7 +28,6 @@ round = do ->
     if (t.x0 - t.x > length) or (t.x - t.x0 < length)
       return Math.floor offset
     return Math.ceil offset
-
 
 
 
@@ -110,31 +118,31 @@ class Touch
     y: touch.pageY
 
 
-  Chocolate::initTouch = () ->
-    if isTouch
-      @overlay.classList.add 'touch'
-      ###
-      addHandler @slider, 'click', (event) ->
-        event.preventDefault()
-        event.stopPropagation()
-      addHandler @slider, 'hover', (event) ->
-        event.preventDefault()
-        event.stopPropagation()
-      ###
-      that = @
-      addHandler @slider, 'transitionend', () ->
-        that.slider.classList.remove 'animated'
-      t = new Touch @overlay,
-        start: (t) ->
-          false
-        move: (t) ->
-          s = getOffset that.slider
-          translate that.slider, s + t.dx
-          true
-        end: (t) ->
-          that.slider.classList.add 'animated'
-          s = getOffset that.slider
-          s = round t, s / env.w
-          s = 0 if s > 0
-          that.select Math.abs s
-          false
+
+
+Chocolate::initTouch = (env) ->
+  return if isTouch is 0
+  @overlay.classList.add 'touch'
+  addHandler @slider, 'click', (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+  addHandler @slider, 'hover', (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+  that = @
+  addHandler @slider, 'transitionend', () ->
+    that.slider.classList.remove 'animated'
+  t = new Touch @overlay,
+    start: (t) ->
+      false
+    move: (t) ->
+      s = getOffset that.slider
+      translate that.slider, s + t.dx
+      true
+    end: (t) ->
+      that.slider.classList.add 'animated'
+      s = getOffset that.slider
+      s = round t, s / env.w
+      s = 0 if s > 0
+      that.select Math.abs s
+      false

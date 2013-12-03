@@ -6,6 +6,7 @@ class Chocolate
   isOpen = false
   instances = []
   opened = null
+  needResize = true
 
   constructor: (images, options = {}) ->
 
@@ -47,8 +48,7 @@ class Chocolate
 
     instances.push @
 
-    @initTouch()
-
+    @initTouch env
 
 
 
@@ -87,12 +87,12 @@ class Chocolate
 
     return false unless item
 
+    getEnv()
+
     @current.thumbnail.classList.remove 'selected' if @current?
 
     thumb = item.thumbnail
     addClass thumb, 'selected'
-
-    getEnv() if not env.w > 0 or not env.shift > 0
 
     offset = thumb.offsetLeft + thumb.offsetWidth / 2
     offset = env.w / 2 - offset
@@ -160,6 +160,8 @@ class Chocolate
   updateDimensions: ->
     @dimensions =
       thumbWidth: @thumbnails.offsetWidth
+    for i of @storage.images
+      setSize @storage.images[i]
 
 
 
@@ -232,10 +234,17 @@ class Chocolate
 
 
   getEnv = () ->
-    env.w = window.innerWidth or document.documentElement.clientWidth
-    env.h = window.innerHeight or document.documentElement.clientHeight
-    #env.shift = document.querySelector('.choco-slider > *').offsetWidth * -1
-    env.shift = env.w * -1
+    return env unless needResize
+    if isOpen
+      slide = opened.slider.querySelector '.choco-slide'
+      env =
+        w: window.innerWidth or document.documentElement.clientWidth
+        h: window.innerHeight or document.documentElement.clientHeight
+        s:
+          w: slide.clientWidth
+          h: slide.clientHeight
+      env.shift = env.s.w * -1
+      needResize = false
     env
 
 
@@ -268,14 +277,22 @@ class Chocolate
       addHandler window, 'hashchange', -> onHistory()
 
 
+
+
   addHandler window, 'load', ->
     onHistory()
-    getEnv()
+
+
+
 
   addHandler window, 'resize', ->
-    getEnv()
+    needResize = true
     if isOpen
+      opened.updateDimensions()
       opened.select opened.current
+
+
+
 
   addHandler window, 'keyup', (event) =>
     if isOpen && hasClass opened.overlay, 'choco-show'
@@ -287,6 +304,25 @@ class Chocolate
         when 39 # Right arrow
           opened.next()
 
+
+
+
+  setSize = (item) ->
+    return if not (item.w > 0 and item.h > 0)
+    getEnv()
+    height = item.h
+    width = item.w
+
+    if item.w > env.s.w
+      height = env.s.w * item.h / item.w
+      width  = env.s.w
+
+    if item.h > env.s.h
+      width  = env.s.h * item.w / item.h
+      height = env.s.h
+
+    item.img.width = width
+    item.img.height = height
 
 
 

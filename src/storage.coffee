@@ -30,8 +30,7 @@ class ChocolateStorage
 
 
 
-  get: (key) ->
-    @images[key]
+  get: (key) -> @images[key]
 
 
 
