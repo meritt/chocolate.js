@@ -106,8 +106,7 @@ class Chocolate
     thumb = item.thumbnail
     addClass thumb, class_selected
 
-    offset = thumb.offsetLeft + thumb.offsetWidth / 2
-    offset = env.w / 2 - offset
+    offset = env.w / 2 - thumb.offsetLeft - thumb.offsetWidth / 2
 
     offset = squeeze offset, 0, env.w - @dimensions.thumbWidth
 
@@ -179,8 +178,9 @@ class Chocolate
   updateSides: (item) ->
     if not item.size
       item.size = item.slide.querySelector(".#{choco}-slide-container").offsetWidth
-    @leftside.style.width = (env.w - item.size) / 2 + 'px'
-    @rightside.style.width = (env.w - item.size) / 2 + 'px'
+    s = "#{(env.w - item.size) / 2}px"
+    setStyle @leftside, width: s
+    setStyle @rightside, width: s
 
 
 
