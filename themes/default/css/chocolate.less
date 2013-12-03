@@ -129,55 +129,41 @@
   }
 }
 
-.choco-close {
-  position: fixed;
-  top: 54px;
-  right: 27px;
-  z-index: 125;
-  width: 17px;
-  height: 17px;
-  background: url("@{basedir}/images/close.png") 0 0 no-repeat;
-  opacity: 0.5;
-  cursor: pointer;
-  //animation: close 0.8s;
-
-  &:hover, &.choco-hover {
-    opacity: 1;
-  }
-}
-
-
 .sidecolumn() {
   position: fixed;
   top: 0;
   bottom: @thumbnails-offset-height;
   margin: 0;
   padding: 0;
-  width: 50px;
+  width: 20px;
   cursor: pointer;
   animation: smooth 0.8s;
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
 }
 
 .choco-leftside {
   .sidecolumn();
   left: 0;
-
-  background: url("@{basedir}/images/arrow-l.svg") 20 20 no-repeat;
-  color: #666;
-
-  &:hover {
-    color: #fff;
-
-    &:before {
-      opacity: 1;
-    }
-  }
+  background: url("@{basedir}/images/arrow-l.svg") 20px 20px no-repeat;
 }
 
 .choco-rightside {
   .sidecolumn();
   right: 0;
-  cursor: pointer;
+  &:after {
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 20px;
+    right: 20px;
+    background: url("@{basedir}/images/close.png") no-repeat;
+    content: '';
+  }
 }
 
 .container() {
