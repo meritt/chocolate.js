@@ -193,7 +193,7 @@ class Chocolate
         showFirstImage event, data.cid
 
       preload = new Image()
-      preload.onload = ->
+      addHandler preload, 'load', ->
         data.w = preload.width
         data.h = preload.height
         image.insertAdjacentHTML 'afterend', mustache templates['image-hover'], data
@@ -209,6 +209,10 @@ class Chocolate
 
         addHandler popover, 'click', (event) ->
           showFirstImage event, data.cid
+
+      addHandler preload, 'error', ->
+        data.slide.classList.add 'choco-error'
+        data.thumbnail.classList.add 'choco-error'
 
       preload.src = data.thumb
 
@@ -315,6 +319,7 @@ class Chocolate
 
     item.img.width = s[0]
     item.img.height = s[1]
+
 
 
 
