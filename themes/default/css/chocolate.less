@@ -70,6 +70,7 @@
   color: #fff;
   vertical-align: middle;
   font-size: 16px;
+  cursor: pointer;
 }
 .choco-slide-title {
   position: relative;
@@ -105,6 +106,8 @@
   &.touch {
     padding: 0;
     background: #2d3032;
+    pointer-events: none;
+    user-select: none;
     .choco-thumbnails,
     .choco-thumbnails-toggle,
     .choco-leftside,
@@ -166,20 +169,6 @@
 
   background: url("@{basedir}/images/arrow-l.svg") 20 20 no-repeat;
   color: #666;
-
-  /*
-  &:before {
-    position: relative;
-    top: 54px;
-    left: 34px;
-    display: block;
-    width: 17px;
-    height: 17px;
-    background: url("interpolation0__/images/arrow-l.svg") 0 0 no-repeat;
-    content: '';
-    opacity: 0.5;
-  }
-  */
 
   &:hover {
     color: #fff;
@@ -358,7 +347,7 @@
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
   }
 
-  &.selected, &.selected:hover {
+  &.choco-selected, &.choco-selected:hover {
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0,
     0.1), 0 0 0 2px rgba(255,255,255,0.7);
   }
