@@ -246,7 +246,12 @@
   box-shadow: inset -40px 0 40px -40px #000;
   cursor: pointer;
   transition: height 0.2s;
+  opacity: 0.5;
   //animation: thumbnails 1.6s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
 
   &.choco-no-thumbnails {
     height: 11px;
