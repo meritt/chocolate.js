@@ -85,6 +85,10 @@ toInt = (string) -> parseInt(string, 10) || 0
 
 
 squeeze = (n, min, max) ->
+  if min > max
+    t = min
+    min = max
+    max = t
   if n < min
     n = min
   if n > max

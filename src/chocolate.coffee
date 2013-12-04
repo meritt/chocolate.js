@@ -110,9 +110,9 @@ class Chocolate
     offset = env.w / 2 - thumb.offsetLeft - offsetWidth(thumb) / 2
 
     offset = squeeze offset, 0, env.w - @dimensions.thumbWidth
+    translate @thumbnails, offset
 
     translate @slider, env.shift * item.cid
-    translate @thumbnails, offset
 
     @current = item
 
