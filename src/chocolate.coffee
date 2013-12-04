@@ -17,6 +17,7 @@ class Chocolate
   env = {}
 
   isOpen = false
+  isTouch = null
   instances = []
   opened = null
   needResize = true
@@ -39,29 +40,32 @@ class Chocolate
     template = template.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
 
     @overlay = beforeend(document.body, template)[0]
-
-    containers = ['leftside', 'rightside', 'slider']
-    containers.push 'thumbnails' if @options.thumbnails
-
-    for container in containers
-      @[container] = @overlay.querySelector ".#{choco}-#{container}"
-
-    @add images if images
-
-    if @options.thumbnails
-      @thumbnailsToggle = getTarget @overlay, ".#{choco}-thumbnails-toggle"
-      addHandler @thumbnailsToggle, 'click', =>
-        @toggleThumbnails()
-
-
-    for container in ['overlay', 'leftside', 'rightside']
-      prepareActionFor @, container
-
-    instances.push @
+    @slider = getTarget @overlay, ".#{choco}-slider"
 
     getEnv()
 
-    @initTouch env
+    isTouch = @initTouch env
+    @options.thumbnails = false if isTouch
+
+    unless isTouch
+
+      containers = ['leftside', 'rightside']
+      containers.push 'thumbnails' if @options.thumbnails
+
+      for container in containers
+        @[container] = getTarget @overlay, ".#{choco}-#{container}"
+
+      if @options.thumbnails
+        @thumbnailsToggle = getTarget @overlay, ".#{choco}-thumbnails-toggle"
+        addHandler @thumbnailsToggle, 'click', =>
+          @toggleThumbnails()
+
+      for container in ['overlay', 'leftside', 'rightside']
+        prepareActionFor @, container
+
+    @add images if images
+
+    instances.push @
 
 
 
@@ -180,6 +184,7 @@ class Chocolate
 
 
   updateSides: (item) ->
+    return if isTouch
     if not item.size
       item.size = offsetWidth item.slide.querySelector ".#{choco}-slide-container"
     s = "#{(env.w - item.size) / 2}px"
@@ -190,6 +195,7 @@ class Chocolate
 
 
   toggleThumbnails: ->
+    return if isTouch
     if hasClass @thumbnails, class_hide
       removeClass @thumbnails, class_hide
       removeClass @leftside, class_no_thumbnails
@@ -206,7 +212,7 @@ class Chocolate
 
 
 
-  initTouch: -> true
+  initTouch: -> false
 
 
 

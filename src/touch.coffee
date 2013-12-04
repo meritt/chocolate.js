@@ -122,7 +122,7 @@ class Touch
 
 
 Chocolate::initTouch = (env) ->
-  return if isTouch is 0
+  return false if isTouch is 0
   addClass @overlay, 'touch'
   addHandler @slider, 'click', (event) ->
     event.preventDefault()
@@ -151,3 +151,5 @@ Chocolate::initTouch = (env) ->
       s = round t, (s / env.w)
       @select squeeze s, 0, max
       false
+
+  true

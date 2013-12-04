@@ -1,6 +1,6 @@
 {
     "thumbnails": true
-  , "history":    true
+  , "history":    false
   , "repeat":     false
 
   , "actions": {
