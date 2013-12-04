@@ -18,7 +18,6 @@
     <div class="choco-leftside choco-unselect"></div>
     <div class="choco-rightside choco-unselect"></div>
     {{thumbnails}}
-    <div class="choco-close choco-unselect"></div>
   </div>
 </script>
 
@@ -26,7 +25,9 @@
 <script id="slide" type="text/x-template">
   <div class="choco-slide">
     <div class="choco-slide-container">
-      <img src="{{basedir}}/images/loader.svg" width="60" height="60" alt="" class="choco-spinner">
+      <div class="choco-spinner">
+        <img src="{{basedir}}/images/loader.svg" width="60" height="60" alt="">
+      </div>
       <img class="choco-slide-image" src="" alt="{{title}}">
     </div>
   </div>

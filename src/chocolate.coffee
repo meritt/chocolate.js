@@ -1,9 +1,11 @@
 choco = 'choco'
 class_body     = "#{choco}-body"
 class_error    = "#{choco}-error"
+class_hide     = "#{choco}-hide"
 class_hover    = "#{choco}-hover"
 class_item     = "#{choco}-item"
 class_loading  = "#{choco}-loading"
+class_no_thumbnails = "#{choco}-no-thumbnails"
 class_selected = "#{choco}-selected"
 class_show     = "#{choco}-show"
 
@@ -46,11 +48,10 @@ class Chocolate
 
     @add images if images
 
-    @length = @thumbnails.children.length
-
-    addHandler @overlay, 'click', =>
-      @close()
-    , ".#{choco}-close"
+    if @options.thumbnails
+      @thumbnailsToggle = getTarget @overlay, ".#{choco}-thumbnails-toggle"
+      addHandler @thumbnailsToggle, 'click', =>
+        @toggleThumbnails()
 
 
     for container in ['overlay', 'leftside', 'rightside']
@@ -181,6 +182,23 @@ class Chocolate
     s = "#{(env.w - item.size) / 2}px"
     setStyle @leftside, width: s
     setStyle @rightside, width: s
+
+
+
+
+  toggleThumbnails: ->
+    if hasClass @thumbnails, class_hide
+      removeClass @thumbnails, class_hide
+      removeClass @leftside, class_no_thumbnails
+      removeClass @rightside, class_no_thumbnails
+      removeClass @overlay, class_no_thumbnails
+      removeClass @thumbnailsToggle, class_no_thumbnails
+    else
+      addClass @thumbnails, class_hide
+      addClass @leftside, class_no_thumbnails
+      addClass @rightside, class_no_thumbnails
+      addClass @overlay, class_no_thumbnails
+      addClass @thumbnailsToggle, class_no_thumbnails
 
 
 
