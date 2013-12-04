@@ -102,19 +102,20 @@ class Chocolate
 
     getEnv()
 
-    removeClass @current.thumbnail, class_selected if @current?
-
-    thumb = item.thumbnail
-    addClass thumb, class_selected
-
-    offset = env.w / 2 - thumb.offsetLeft - offsetWidth(thumb) / 2
-
-    offset = squeeze offset, 0, env.w - @dimensions.thumbWidth
-    translate @thumbnails, offset
-
     translate @slider, env.shift * item.cid
-
     @current = item
+
+    if @options.thumbnails
+
+      removeClass @current.thumbnail, class_selected if @current?
+
+      thumb = item.thumbnail
+      addClass thumb, class_selected
+
+      offset = env.w / 2 - thumb.offsetLeft - offsetWidth(thumb) / 2
+
+      offset = squeeze offset, 0, env.w - @dimensions.thumbWidth
+      translate @thumbnails, offset
 
     if isHistory and updateHistory
       title = if item.title then item.title else item.hashbang
@@ -168,8 +169,9 @@ class Chocolate
 
 
   updateDimensions: ->
-    @dimensions =
-      thumbWidth: offsetWidth @thumbnails
+    if @options.thumbnails
+      @dimensions =
+        thumbWidth: offsetWidth @thumbnails
     for i of @storage.images
       setSize @storage.images[i]
 
@@ -212,8 +214,9 @@ class Chocolate
     data = chocolate.storage.add data
     return unless data
 
-    data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
-    addHandler data.thumbnail, 'click', -> chocolate.select data
+    if chocolate.options.thumbnails
+      data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
+      addHandler data.thumbnail, 'click', -> chocolate.select data
 
     data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
     data.slide.classList.add class_loading

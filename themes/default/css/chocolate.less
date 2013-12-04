@@ -1,4 +1,4 @@
-@basedir: "{{basedir}}";
+@basedir: "{{basedir;}}";
 
 @overlay-background: rgba(0,0,0,0.8);
 
@@ -115,6 +115,14 @@
     }
   }
 }
+.choco-inline-hack {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+}
 .choco-slide-container {
   display: inline-block;
   overflow: hidden;
@@ -149,9 +157,9 @@
   margin: 0;
   padding: 0;
   width: 20px;
+  opacity: 0.5;
   cursor: pointer;
   animation: smooth 0.8s;
-  opacity: 0.5;
   &:hover {
     opacity: 1;
     transition: opacity 0.2s;
@@ -171,12 +179,12 @@
   .sidecolumn();
   right: 0;
   &:after {
-    display: block;
     position: absolute;
-    width: 20px;
-    height: 20px;
     top: 20px;
     right: 20px;
+    display: block;
+    width: 20px;
+    height: 20px;
     background: url("@{basedir}/images/close.png") no-repeat;
     content: '';
   }
@@ -241,9 +249,9 @@
   //animation: thumbnails 1.6s ease-in-out;
 
   &.choco-no-thumbnails {
+    height: 11px;
     background-image: url("@{basedir}/images/arrow-t.svg");
     box-shadow: none;
-    height: 11px;
   }
 }
 
