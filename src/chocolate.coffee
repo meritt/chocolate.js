@@ -59,6 +59,9 @@ class Chocolate
         @thumbnailsToggle = getTarget @overlay, ".#{choco}-thumbnails-toggle"
         addHandler @thumbnailsToggle, 'click', =>
           @toggleThumbnails()
+      else
+        for container in ['overlay', 'leftside', 'rightside']
+          addClass @[container], class_no_thumbnails
 
       for container in ['overlay', 'leftside', 'rightside']
         prepareActionFor @, container
