@@ -72,7 +72,7 @@ class Chocolate
     if hasClass @overlay, class_show
       removeClass @overlay, class_show
       removeClass document.body, class_body
-      removeClass @current.thumbnail, class_selected
+      removeClass @current.thumbnail, class_selected if @options.thumbnails
       @current = null
       pushState()
     @
@@ -103,7 +103,6 @@ class Chocolate
     getEnv()
 
     translate @slider, env.shift * item.cid
-    @current = item
 
     if @options.thumbnails
 
@@ -127,6 +126,8 @@ class Chocolate
         @updateSides item
     else
       @updateSides item
+
+    @current = item
 
     true
 
