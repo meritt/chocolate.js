@@ -9,6 +9,7 @@ autoprefixer = require 'autoprefixer'
 
 option '-t', '--themes [NAME]', 'theme for compiled chocolate code'
 option '-b', '--basedir [DIR]', 'directory with css, js, image folders'
+option '', '--no-touch', 'exclude interface for touch devices'
 
 task 'build', 'Build chocolate.js', (options) ->
   theme   = options.themes  or 'default'
@@ -17,6 +18,15 @@ task 'build', 'Build chocolate.js', (options) ->
 
   dist = path.normalize "#{current}/dist/#{theme}"
   src  = path.normalize "#{current}/themes/#{theme}"
+
+  sources = [
+    "utils.coffee"
+    "storage.coffee"
+    "chocolate.coffee"
+  ]
+
+  sources.push "touch.coffee" unless options['no-touch']
+
 
   fs.stat dist, (error, stat) ->
     if stat
@@ -45,7 +55,7 @@ task 'build', 'Build chocolate.js', (options) ->
         from.pipe to
 
     compileCssContent dist, src, basedir
-    compileJsContent dist, src, basedir
+    compileJsContent dist, src, basedir, sources
 
 compileTemplate = (src, basedir, fn) ->
   html = fs.readFileSync "#{src}/templates.html", 'utf8'
@@ -70,14 +80,10 @@ compileTemplate = (src, basedir, fn) ->
     window.close()
     fn templates
 
-compileJsContent = (dist, src, basedir) ->
+compileJsContent = (dist, src, basedir, files) ->
   current = path.dirname __filename
-  sources = [
-    path.normalize "#{current}/src/utils.coffee"
-    path.normalize "#{current}/src/storage.coffee"
-    path.normalize "#{current}/src/chocolate.coffee"
-    path.normalize "#{current}/src/touch.coffee"
-  ]
+  sources = files.map (file) ->
+    path.normalize "#{current}/src/#{file}"
 
   options = "defaultOptions = `" + fs.readFileSync("#{src}/options.json", 'utf8') + "`"
 
