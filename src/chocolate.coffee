@@ -225,7 +225,7 @@ class Chocolate
       addHandler data.thumbnail, 'click', -> chocolate.select data
 
     data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
-    data.slide.classList.add class_loading
+    addClass data.slide, class_loading
 
     data.img = getTarget data.slide, ".#{choco}-slide-image"
 
