@@ -130,7 +130,15 @@ Chocolate::initTouch = (env) ->
   isClosing = false
   max = -1
 
-  addClass @overlay, 'touch'
+  opacity = 1
+
+  overlay = @overlay
+
+  transparent = (n) ->
+    opacity = n
+    setStyle overlay, opacity: n
+
+  addClass overlay, 'touch'
   addHandler @slider, 'click', (event) ->
     event.preventDefault()
     event.stopPropagation()
@@ -139,16 +147,16 @@ Chocolate::initTouch = (env) ->
     event.preventDefault()
     event.stopPropagation()
 
-  addHandler @slider, 'transitionend', =>
-    if isClosing
-      console.log 'end'
-      @close()
-      setStyle @overlay, opacity: 1
-    @slider.classList.remove 'animated'
-    isClosing = false
-    isThumbing = false
+  addHandler @slider, ['transitionend', 'webkitTransitionEnd'], =>
+    removeClass @slider, 'animated'
 
-  t = new Touch @overlay,
+  addHandler overlay, ['transitionend', 'webkitTransitionEnd'], =>
+    removeClass overlay, 'animated'
+    return unless isClosing
+    @close()
+    transparent 1
+
+  t = new Touch overlay,
     start: (t) ->
       false
 
@@ -156,24 +164,31 @@ Chocolate::initTouch = (env) ->
       s = getOffset @slider
       dx = Math.abs(t.x0 - t.x)
       dy = Math.abs(t.y0 - t.y)
-      opacity = Math.round((1 - dy / env.h)*100)/100
       if dx > dy
         isThumbing = true
+        isClosing = false
+        transparent 1
         translate @slider, s + t.dx
       else
         isClosing = true
-        setStyle @overlay, opacity: opacity
+        isThumbing = false
+        transparent Math.round((1 - dy / env.h)*100)/100
       true
 
     end: (t) =>
-      addClass @slider, 'animated'
       if isThumbing
+        addClass @slider, 'animated'
         max = @storage.length() - 1 if max is -1
         s = getOffset @slider
         s = round t, (s / env.w)
         @select squeeze s, 0, max
       if isClosing
-        setStyle @overlay, opacity: 0
+        addClass overlay, 'animated'
+        if opacity < 0.7
+          transparent 0
+        else
+          transparent 1
+          isClosing = false
       false
 
   true

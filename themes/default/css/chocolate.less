@@ -50,6 +50,10 @@
     display: block;
   }
 
+  &.animated {
+    transition: opacity 0.2s;
+  }
+
   &.touch {
     padding: 0;
     background: #2d3032;
@@ -63,7 +67,7 @@
     .choco-slider {
       transition: none;
       &.animated {
-        transition: transform 0.2s, opacity 2s;
+        transition: transform 0.2s;
       }
     }
   }
