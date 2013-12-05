@@ -10,9 +10,9 @@ isTouch = do ->
 
 
 getOffset = (element) ->
-  style = getComputedStyle element
+  style = getStyle element
   reg = /matrix\(([0-9-\.,\s]*)\)/
-  tr = style.getPropertyValue('transform') || style.getPropertyValue('-webkit-transform') || style.getPropertyValue('-ms-transform') || ''
+  tr = style('transform') || style('-webkit-transform') || style('-ms-transform') || ''
   if reg.test tr
     tr = reg.exec(tr)[1].split(',')[4].trim() || 0
   else
@@ -78,6 +78,8 @@ class Touch
         t.dy = (t.y - finger.y) || 0
         finger.x = t.x
         finger.y = t.y
+        t.x0 = finger.x0
+        t.y0 = finger.y0
         event.preventDefault() if callback t
 
 
@@ -123,6 +125,11 @@ class Touch
 
 Chocolate::initTouch = (env) ->
   return false if isTouch is 0
+
+  isThumbing = false
+  isClosing = false
+  max = -1
+
   addClass @overlay, 'touch'
   addHandler @slider, 'click', (event) ->
     event.preventDefault()
@@ -133,7 +140,13 @@ Chocolate::initTouch = (env) ->
     event.stopPropagation()
 
   addHandler @slider, 'transitionend', =>
+    if isClosing
+      console.log 'end'
+      @close()
+      setStyle @overlay, opacity: 1
     @slider.classList.remove 'animated'
+    isClosing = false
+    isThumbing = false
 
   t = new Touch @overlay,
     start: (t) ->
@@ -141,15 +154,26 @@ Chocolate::initTouch = (env) ->
 
     move: (t) =>
       s = getOffset @slider
-      translate @slider, s + t.dx
+      dx = Math.abs(t.x0 - t.x)
+      dy = Math.abs(t.y0 - t.y)
+      opacity = Math.round((1 - dy / env.h)*100)/100
+      if dx > dy
+        isThumbing = true
+        translate @slider, s + t.dx
+      else
+        isClosing = true
+        setStyle @overlay, opacity: opacity
       true
 
     end: (t) =>
-      max = @slider.children.length - 1
       addClass @slider, 'animated'
-      s = getOffset @slider
-      s = round t, (s / env.w)
-      @select squeeze s, 0, max
+      if isThumbing
+        max = @storage.length() - 1 if max is -1
+        s = getOffset @slider
+        s = round t, (s / env.w)
+        @select squeeze s, 0, max
+      if isClosing
+        setStyle @overlay, opacity: 0
       false
 
   true

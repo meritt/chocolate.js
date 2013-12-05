@@ -28,7 +28,7 @@ class Chocolate
       # throw "Please upgrade your browser to view chocolate"
       return false
 
-    if not defaultOptions or not templates
+    unless defaultOptions and templates
       throw "You don't have defaultOptions or templates variables"
       return false
 
@@ -41,9 +41,7 @@ class Chocolate
     @overlay = beforeend(document.body, template)[0]
     @slider = getTarget @overlay, ".#{choco}-slider"
 
-    getEnv()
-
-    isTouch = @initTouch env
+    isTouch = @initTouch getEnv()
     @options.thumbnails = false if isTouch
 
     unless isTouch
@@ -248,23 +246,24 @@ class Chocolate
       addHandler image, 'click', (event) ->
         showFirstImage event, data.cid
 
-      preload = new Image()
-      addHandler preload, 'load', ->
-        image.insertAdjacentHTML 'afterend', mustache templates['image-hover'], data
+      unless isTouch
+        preload = new Image()
+        addHandler preload, 'load', ->
+          image.insertAdjacentHTML 'afterend', mustache templates['image-hover'], data
 
-        popover = getTarget document, "[data-pid=\"#{data.cid}\"]"
-        setStyle popover,
-          'width':      "#{offsetWidth image}px"
-          'height':     "#{offsetHeight image}px"
-          'margin-top': "-#{offsetHeight image}px"
+          popover = getTarget document, "[data-pid=\"#{data.cid}\"]"
+          setStyle popover,
+            'width':      "#{offsetWidth image}px"
+            'height':     "#{offsetHeight image}px"
+            'margin-top': "-#{offsetHeight image}px"
 
-        addHandler image, ['mouseenter', 'mouseleave'], ->
-          toggleClass popover, class_hover
+          addHandler image, ['mouseenter', 'mouseleave'], ->
+            toggleClass popover, class_hover
 
-        addHandler popover, 'click', (event) ->
-          showFirstImage event, data.cid
+          addHandler popover, 'click', (event) ->
+            showFirstImage event, data.cid
 
-      preload.src = data.thumb
+        preload.src = data.thumb
 
     data
 
@@ -312,30 +311,34 @@ class Chocolate
 
 
   getEnv = ->
-    return env unless needResize and isOpen
-
-    slide = getTarget opened.slider, ".#{choco}-slide"
-    return unless slide
-
-    needResize = false
-
-    style = getStyle slide
-    shift = toInt style 'width'
-
-    h = toInt(style 'height') -
-        toInt(style 'padding-top') -
-        toInt(style 'padding-bottom')
-    w = shift -
-        toInt(style 'padding-left') -
-        toInt(style 'padding-right')
+    return env unless needResize
 
     env =
       w: window.innerWidth or document.documentElement.clientWidth
       h: window.innerHeight or document.documentElement.clientHeight
-      shift: shift * -1
-      s:
+
+    if isOpen
+      slide = getTarget opened.slider, ".#{choco}-slide"
+      return unless slide
+
+      needResize = false
+
+      style = getStyle slide
+      shift = toInt style 'width'
+
+      h = toInt(style 'height') -
+          toInt(style 'padding-top') -
+          toInt(style 'padding-bottom')
+      w = shift -
+          toInt(style 'padding-left') -
+          toInt(style 'padding-right')
+
+      env.shift = shift * -1
+      env.s =
         w: w
         h: h
+
+    env
 
 
 
