@@ -48,6 +48,11 @@ hasClass = (element, className, selector) ->
 
 
 
+getAttribute = (element, attribute) ->
+  element.getAttribute attribute
+
+
+
 
 merge = (o1, o2) ->
   for own key, value of o2

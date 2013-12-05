@@ -36,8 +36,7 @@ class Chocolate
 
     @storage = new ChocolateStorage @options.repeat
 
-    template = templates.overlay
-    template = template.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
+    template = templates.overlay.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
 
     @overlay = beforeend(document.body, template)[0]
     @slider = getTarget @overlay, ".#{choco}-slider"
@@ -165,9 +164,9 @@ class Chocolate
       if isElement
         image  = object
         object =
-          orig:  image.getAttribute('data-src') or image.parentNode.getAttribute('href')
-          title: image.getAttribute('data-title') or image.getAttribute('title') or ''
-          thumb: image.getAttribute 'src'
+          orig:  getAttribute(image, 'data-src') or getAttribute(image.parentNode, 'href')
+          title: getAttribute(image, 'data-title') or getAttribute(image, 'title') or ''
+          thumb: getAttribute(image, 'src')
 
       addImage @, object, image
 
@@ -199,18 +198,15 @@ class Chocolate
 
   toggleThumbnails: ->
     return if isTouch
+    containers = ['leftside', 'rightside', 'overlay', 'thumbnailsToggle']
     if hasClass @thumbnails, class_hide
       removeClass @thumbnails, class_hide
-      removeClass @leftside, class_no_thumbnails
-      removeClass @rightside, class_no_thumbnails
-      removeClass @overlay, class_no_thumbnails
-      removeClass @thumbnailsToggle, class_no_thumbnails
+      for container in containers
+        removeClass @[container], class_no_thumbnails
     else
       addClass @thumbnails, class_hide
-      addClass @leftside, class_no_thumbnails
-      addClass @rightside, class_no_thumbnails
-      addClass @overlay, class_no_thumbnails
-      addClass @thumbnailsToggle, class_no_thumbnails
+      for container in containers
+        addClass @[container], class_no_thumbnails
 
 
 
@@ -316,28 +312,30 @@ class Chocolate
 
 
   getEnv = ->
-    return env unless needResize
+    return env unless needResize and isOpen
+
+    slide = getTarget opened.slider, ".#{choco}-slide"
+    return unless slide
+
+    needResize = false
+
+    style = getStyle slide
+    shift = toInt style 'width'
+
+    h = toInt(style 'height') -
+        toInt(style 'padding-top') -
+        toInt(style 'padding-bottom')
+    w = shift -
+        toInt(style 'padding-left') -
+        toInt(style 'padding-right')
+
     env =
       w: window.innerWidth or document.documentElement.clientWidth
       h: window.innerHeight or document.documentElement.clientHeight
-    if isOpen
-      slide = opened.slider.querySelector ".#{choco}-slide"
-      return unless slide
-      style = getStyle slide
-      w = toInt style 'width'
-      env.shift = w * -1
-
-      h = toInt(style 'height') -
-          toInt(style 'padding-top') -
-          toInt(style 'padding-bottom')
-      w = w -
-          toInt(style 'padding-left') -
-          toInt(style 'padding-right')
-      env.s =
+      shift: shift * -1
+      s:
         w: w
         h: h
-      needResize = false
-    env
 
 
 
