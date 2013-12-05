@@ -188,7 +188,7 @@ class Chocolate
   updateSides: (item) ->
     return if isTouch
     if not item.size
-      item.size = offsetWidth item.slide.querySelector ".#{choco}-slide-container"
+      item.size = offsetWidth getTarget item.slide, ".#{choco}-slide-container"
     s = "#{(env.w - item.size) / 2}px"
     setStyle @leftside, width: s
     setStyle @rightside, width: s
@@ -227,7 +227,7 @@ class Chocolate
     data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
     data.slide.classList.add class_loading
 
-    data.img = data.slide.querySelector ".#{choco}-slide-image"
+    data.img = getTarget data.slide, ".#{choco}-slide-image"
 
     method = chocolate.options.actions.container if chocolate.options.actions.container in existActions
 
@@ -252,7 +252,7 @@ class Chocolate
       addHandler preload, 'load', ->
         image.insertAdjacentHTML 'afterend', mustache templates['image-hover'], data
 
-        popover = document.querySelector "[data-pid=\"#{data.cid}\"]"
+        popover = getTarget document, "[data-pid=\"#{data.cid}\"]"
         setStyle popover,
           'width':      "#{offsetWidth image}px"
           'height':     "#{offsetHeight image}px"
