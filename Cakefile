@@ -3,7 +3,7 @@ path      = require 'path'
 {compile} = require 'coffee-script'
 less      = require 'less'
 uglify    = require 'uglify-js'
-cssmin  = require 'cssmin'
+cssmin    = require 'cssmin'
 jsdom     = require 'jsdom'
 autoprefixer = require 'autoprefixer'
 
@@ -13,7 +13,7 @@ option '', '--no-touch', 'exclude interface for touch devices'
 
 task 'build', 'Build chocolate.js', (options) ->
   theme   = options.themes  or 'default'
-  basedir = options.basedir or "/dist/#{theme}"
+  basedir = options.basedir or "/dist/#{theme}/images"
   current = path.dirname __filename
 
   dist = path.normalize "#{current}/dist/#{theme}"
