@@ -163,7 +163,7 @@ class Chocolate
         image  = object
         object =
           orig:  getAttribute(image, 'data-src') or getAttribute(image.parentNode, 'href')
-          title: getAttribute(image, 'data-title') or getAttribute(image, 'title') or ''
+          title: getAttribute(image, 'data-title') or getAttribute(image, 'title') or getAttribute(image, 'alt') or getAttribute(image.parentNode, 'title')
           thumb: getAttribute(image, 'src')
 
       addImage @, object, image
@@ -408,6 +408,8 @@ class Chocolate
 
     item.img.width = s[0]
     item.img.height = s[1]
+
+    setStyle item.slide, 'padding-top': "#{(env.s.h - s[1]) / 2}px"
 
 
 
