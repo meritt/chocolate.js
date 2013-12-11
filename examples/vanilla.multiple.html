@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiple calling Chocolate.js demo</title>
+  <link href="/dist/white/css/chocolate.css" rel="stylesheet">
+</head>
+<body>
+  <h1>Multiple Calling Chocolate.js demo</h1>
+  <a href="img/1.jpg" target="_blank" title="Image 1 long long long long long
+    title long long long long long long long long long long long long long long
+    long long2 long looooong looonfasd fas ;jaskd flaksj dfl asdflakj sdlfkj
+    sdlf aljsdf lasdfja sdklfha hfakwjer qlwh alsdf ashdfalshalsd">
+    <img class="call1" src="img/1.jpg" alt="" >
+  </a>
+  <a href="img/2.jpg" target="_blank">
+    <img class="call1" src="img/2.jpg" alt="" title="Image 2">
+  </a>
+  <a href="img/3.jpg" target="_blank">
+    <img class="call2" src="img/3.jpg" alt="" title="Image 3">
+  </a>
+  <a href="img/4.jpg" target="_blank">
+    <img class="call2" src="img/4.jpg" alt="" title="Image 4">
+  </a>
+  <a href="img/5.jpg" target="_blank">
+    <img class="call2" src="img/5.jpg" alt="" title="Image 5">
+  </a>
+  <a href="img/1.jpg" target="_blank">
+    <img class="call3" src="img/1.jpg" alt="" title="Image 6">
+  </a>
+  <a href="img/2.jpg" target="_blank">
+    <img class="call3" src="img/2.jpg" alt="" title="Image 7"></a>
+  </a>
+  <a href="img/3.jpg" target="_blank"><img class="call3" src="img/3.jpg" alt=""></a>
+  <a href="img/4.jpg" target="_blank"><img class="call3" src="img/4.jpg" alt=""></a>
+  <a href="img/5.jpg" target="_blank"><img class="call3" src="img/5.jpg" alt=""></a>
+  <a href="img/1.jpg" target="_blank"><img class="call3" src="img/1.jpg" alt=""></a>
+  <a href="img/2.jpg" target="_blank"><img class="call3" src="img/2.jpg" alt=""></a>
+  <a href="img/3.jpg" target="_blank"><img class="call3" src="img/3.jpg" alt=""></a>
+  <a href="img/4.jpg" target="_blank"><img class="call3" src="img/4.jpg" alt=""></a>
+  <a href="img/15.jpg" target="_blank"><img class="call3" src="img/5.jpg" alt=""></a>
+  <script src="/dist/white/js/chocolate.js"></script>
+  <script>
+    new chocolate(document.querySelectorAll('.call1'));
+    new chocolate(document.querySelectorAll('.call2'));
+    new chocolate(document.querySelectorAll('.call3'));
+  </script>
+</body>
+</html>
