@@ -24,12 +24,11 @@
 .choco-item-hover {
   position: relative;
   display: block;
-  filter: ~`'alpha(opacity=40)'`;
   cursor: pointer;
 
   &:hover, &.choco-hover {
     background-color: rgba(0, 0, 0, .4);
-    background-image: url("@{basedir}/lupa.svg");
+    background-image: url("@{basedir}lupa.svg");
     background-position: 50% 50%;
     background-repeat: no-repeat;
   }
@@ -58,14 +57,17 @@
     padding: 0;
     background: #2d3032;
     user-select: none;
+
     .choco-thumbnails,
     .choco-thumbnails-toggle,
     .choco-leftside,
     .choco-rightside {
       display: none;
     }
+
     .choco-slider {
       transition: none;
+
       &.animated {
         transition: transform 0.2s;
       }
@@ -77,11 +79,13 @@
   }
 
   &.choco-hideless {
-    .choco-leftside, .choco-rightside, .choco-thumbnails, .choco-thumbnails-toggle {
+    .choco-leftside,
+    .choco-rightside,
+    .choco-thumbnails,
+    .choco-thumbnails-toggle {
       display: none;
       cursor: default;
     }
-
   }
 }
 
@@ -101,25 +105,29 @@
   padding: 20px 0;
   width: 100%;
   height: 100%;
+
   &.choco-error {
     .choco-slide-container {
       width: 60px;
       height: 60px;
       background-color: transparent;
-      background-image: url("@{basedir}/notfound.svg");
+      background-image: url("@{basedir}notfound.svg");
       background-position: 50% 50%;
       background-size: 100% 100%;
     }
+
     .choco-slide-image {
       display: none;
     }
   }
+
   &.choco-loading {
     .choco-slide-image {
       display: none;
     }
   }
 }
+
 .choco-inline-hack {
   display: inline-block;
   margin: 0;
@@ -128,6 +136,7 @@
   height: 100%;
   vertical-align: middle;
 }
+
 .choco-slide-container {
   display: inline-block;
   overflow: hidden;
@@ -167,10 +176,12 @@
   opacity: 0.5;
   cursor: pointer;
   animation: smooth 0.8s;
+
   &:hover {
     opacity: 1;
     transition: opacity 0.2s;
   }
+
   &.choco-no-thumbnails {
     bottom: 0;
   }
@@ -179,12 +190,13 @@
 .choco-leftside {
   .sidecolumn();
   left: 0;
-  background: url("@{basedir}/arrow-l.svg") 20px 20px no-repeat;
+  background: url("@{basedir}arrow-l.svg") 20px 20px no-repeat;
 }
 
 .choco-rightside {
   .sidecolumn();
   right: 0;
+
   &:after {
     position: absolute;
     top: 20px;
@@ -192,7 +204,7 @@
     display: block;
     width: 20px;
     height: 20px;
-    background: url("@{basedir}/close.png") no-repeat;
+    background: url("@{basedir}close.png") no-repeat;
     content: '';
   }
 }
@@ -236,7 +248,6 @@
   &.choco-hide {
     margin-bottom: -@height - @y * 2 + @border;
   }
-
 }
 
 .choco-thumbnails-toggle {
@@ -246,7 +257,7 @@
   z-index: 120;
   width: 40px;
   height: @thumbnails-offset-height;
-  background: url("@{basedir}/arrow-b.svg") 50% -5px no-repeat;
+  background: url("@{basedir}arrow-b.svg") 50% -5px no-repeat;
   box-shadow: inset -40px 0 40px -40px #000;
   opacity: 0.5;
   cursor: pointer;
@@ -259,7 +270,7 @@
 
   &.choco-no-thumbnails {
     height: 11px;
-    background-image: url("@{basedir}/arrow-t.svg");
+    background-image: url("@{basedir}arrow-t.svg");
     box-shadow: none;
   }
 }
@@ -277,17 +288,20 @@
   background-position: 50% 50%;
   background-size: cover;
   background-repeat: no-repeat;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7), inset 0 0 15px round(@height / 2) rgba(0, 0, 0, 0.3);
-  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7),
+              inset 0 0 15px round(@height / 2) rgba(0, 0, 0, 0.3);
   transition: box-shadow 0.1s ease-in-out;
+  cursor: pointer;
 
   &:hover {
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5),
+                inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
   }
 
   &.choco-selected, &.choco-selected:hover {
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0,
-    0.1), 0 0 0 2px rgba(255,255,255,0.7);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5),
+                inset 0 0 15px 0 rgba(0, 0, 0, 0.1),
+                0 0 0 2px rgba(255,255,255,0.7);
   }
 }
 
