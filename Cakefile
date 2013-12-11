@@ -15,7 +15,7 @@ option '', '--no-touch', 'exclude interface for touch devices'
 
 task 'build', 'Build chocolate.js', (options) ->
   theme   = options.themes or 'default'
-  basedir = options.basedir or "/dist/#{theme}/images"
+  basedir = options.basedir or "/dist/#{theme}/images/"
   current = path.dirname __filename
 
   dist = path.normalize "#{current}/dist/#{theme}"
