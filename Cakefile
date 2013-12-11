@@ -1,18 +1,20 @@
-fs        = require 'fs'
-path      = require 'path'
+fs    = require 'fs'
+path  = require 'path'
+jsdom = require 'jsdom'
+
 {compile} = require 'coffee-script'
-less      = require 'less'
 uglify    = require 'uglify-js'
-cssmin    = require 'cssmin'
-jsdom     = require 'jsdom'
+
+less         = require 'less'
+cssmin       = require 'cssmin'
 autoprefixer = require 'autoprefixer'
 
-option '-t', '--themes [NAME]', 'theme for compiled chocolate code'
-option '-b', '--basedir [DIR]', 'directory with css, js, image folders'
+option '-t', '--themes [NAME]', 'theme for chocolate'
+option '-b', '--basedir [DIR]', 'directory with image folder'
 option '', '--no-touch', 'exclude interface for touch devices'
 
 task 'build', 'Build chocolate.js', (options) ->
-  theme   = options.themes  or 'default'
+  theme   = options.themes or 'default'
   basedir = options.basedir or "/dist/#{theme}/images"
   current = path.dirname __filename
 
@@ -20,13 +22,12 @@ task 'build', 'Build chocolate.js', (options) ->
   src  = path.normalize "#{current}/themes/#{theme}"
 
   sources = [
-    "utils.coffee"
-    "storage.coffee"
-    "chocolate.coffee"
+    'utils.coffee'
+    'storage.coffee'
+    'chocolate.coffee'
   ]
 
-  sources.push "touch.coffee" unless options['no-touch']
-
+  sources.push 'touch.coffee' unless options['no-touch']
 
   fs.stat dist, (error, stat) ->
     if stat
@@ -34,9 +35,12 @@ task 'build', 'Build chocolate.js', (options) ->
 
       for folder in results
         folder = path.normalize "#{dist}/#{folder}"
-        files  = fs.readdirSync folder
+        files = fs.readdirSync folder
+
         if files and files.length > 0
-          fs.unlinkSync path.normalize "#{folder}/#{file}" for file in files
+          for file in files
+            fs.unlinkSync path.normalize "#{folder}/#{file}"
+
         fs.rmdirSync folder
 
       fs.rmdirSync path.normalize dist
@@ -47,10 +51,11 @@ task 'build', 'Build chocolate.js', (options) ->
 
     if fs.statSync "#{src}/images"
       fs.mkdirSync "#{dist}/images"
+
       images = fs.readdirSync "#{src}/images"
       for image in images
         from = fs.createReadStream path.normalize "#{src}/images/#{image}"
-        to   = fs.createWriteStream path.normalize "#{dist}/images/#{image}"
+        to = fs.createWriteStream path.normalize "#{dist}/images/#{image}"
 
         from.pipe to
 
