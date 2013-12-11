@@ -34,11 +34,11 @@ class Chocolate
 
     @options = merge defaultOptions, options
 
-    @storage = new ChocolateStorage @options.repeat
+    @storage = new Storage @options.repeat
 
     template = templates.overlay.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
 
-    @overlay = beforeend(document.body, template)[0]
+    @overlay = beforeEnd(document.body, template)
     @slider = getTarget @overlay, ".#{choco}-slider"
 
     isTouch = @initTouch getEnv()
@@ -54,7 +54,7 @@ class Chocolate
 
       if @options.thumbnails
         @thumbnailsToggle = getTarget @overlay, ".#{choco}-thumbnails-toggle"
-        addHandler @thumbnailsToggle, 'click', =>
+        addEvent @thumbnailsToggle, 'click', =>
           @toggleThumbnails()
       else
         for container in ['overlay', 'leftside', 'rightside']
@@ -219,10 +219,10 @@ class Chocolate
     return unless data
 
     if chocolate.options.thumbnails
-      data.thumbnail = beforeend(chocolate.thumbnails, mustache templates['thumbnails-item'], data)[0]
-      addHandler data.thumbnail, 'click', -> chocolate.select data
+      data.thumbnail = beforeEnd(chocolate.thumbnails, mustache templates['thumbnails-item'], data)
+      addEvent data.thumbnail, 'click', -> chocolate.select data
 
-    data.slide = beforeend(chocolate.slider, mustache templates['slide'], data)[0]
+    data.slide = beforeEnd(chocolate.slider, mustache templates['slide'], data)
     addClass data.slide, class_loading
 
     data.img = getTarget data.slide, ".#{choco}-slide-image"
@@ -230,7 +230,7 @@ class Chocolate
     method = chocolate.options.actions.container if chocolate.options.actions.container in existActions
 
     if method
-      addHandler data.slide, 'click', ->
+      addEvent data.slide, 'click', ->
         chocolate[method]()
       , ".#{choco}-slide-container"
 
@@ -243,12 +243,12 @@ class Chocolate
         chocolate.open cid
 
       addClass image, class_item
-      addHandler image, 'click', (event) ->
+      addEvent image, 'click', (event) ->
         showFirstImage event, data.cid
 
       unless isTouch
         preload = new Image()
-        addHandler preload, 'load', ->
+        addEvent preload, 'load', ->
           image.insertAdjacentHTML 'afterend', mustache templates['image-hover'], data
 
           popover = getTarget document, "[data-pid=\"#{data.cid}\"]"
@@ -257,10 +257,10 @@ class Chocolate
             'height':     "#{offsetHeight image}px"
             'margin-top': "-#{offsetHeight image}px"
 
-          addHandler image, ['mouseenter', 'mouseleave'], ->
-            toggleClass popover, class_hover
+          addEvent image, 'mouseenter', -> toggleClass popover, class_hover
+          addEvent image, 'mouseleave', -> toggleClass popover, class_hover
 
-          addHandler popover, 'click', (event) ->
+          addEvent popover, 'click', (event) ->
             showFirstImage event, data.cid
 
         preload.src = data.thumb
@@ -273,7 +273,7 @@ class Chocolate
   loadImage = (item, callback) ->
     img = new Image()
 
-    addHandler img, 'load', ->
+    addEvent img, 'load', ->
       item.img.src = @src
       removeClass item.slide, class_loading
       item.w = img.width
@@ -282,7 +282,7 @@ class Chocolate
 
       callback true
 
-    addHandler img, 'error', ->
+    addEvent img, 'error', ->
       removeClass item.slide, class_loading
       addClass item.slide, class_error
       addClass item.thumbnail, class_error
@@ -300,11 +300,14 @@ class Chocolate
     if method
       verify = chocolate[container].classList[0]
 
-      addHandler chocolate[container], 'click', (event) ->
+      addEvent chocolate[container], 'click', (event) ->
         chocolate[method]() if hasClass event.target, verify
 
       if chocolate.options.actions[container] is 'close'
-        addHandler chocolate[container], ['mouseenter', 'mouseleave'], ->
+        addEvent chocolate[container], 'mouseenter', ->
+          toggleClass chocolate.overlay, class_hover, ".#{choco}-close"
+
+        addEvent chocolate[container], 'mouseleave', ->
           toggleClass chocolate.overlay, class_hover, ".#{choco}-close"
 
 
@@ -367,18 +370,18 @@ class Chocolate
       data = getImageFromUri()
 
     if 'onhashchange' of window
-      addHandler window, 'hashchange', -> onHistory()
+      addEvent window, 'hashchange', -> onHistory()
 
 
 
 
-  addHandler window, 'load', ->
+  addEvent window, 'load', ->
     onHistory()
 
 
 
 
-  addHandler window, 'resize', ->
+  addEvent window, 'resize', ->
     needResize = true
     if isOpen
       opened.updateDimensions()
@@ -387,7 +390,7 @@ class Chocolate
 
 
 
-  addHandler window, 'keyup', (event) =>
+  addEvent window, 'keyup', (event) =>
     if isOpen && hasClass opened.overlay, class_show
       switch event.keyCode
         when 27 # ESC

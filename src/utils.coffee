@@ -1,58 +1,4 @@
-isHistory = not not (window.history and history.pushState)
-
-getTarget = (element, selector) ->
-  if selector?
-    target = element.querySelector selector
-  else
-    target = element
-  target
-
-
-
-
-changeHandler = (element, event, listener, selector, method) ->
-  target = getTarget element, selector
-  if target?
-    unless event instanceof Array
-      event = [event]
-    for ev in event
-      target["#{method}EventListener"] ev, listener, false
-
-addHandler = (element, event, listener, selector) ->
-  changeHandler element, event, listener, selector, 'add'
-
-removeHandler = (element, event, listener, selector) ->
-  changeHandler element, event, listener, selector, 'remove'
-
-
-
-
-changeClass = (element, className, selector, method) ->
-  target = getTarget element, selector
-  if target? and target.classList?
-    return target.classList[method] className
-  else
-    return false
-
-addClass = (element, className, selector) ->
-  changeClass element, className, selector, 'add'
-
-removeClass = (element, className, selector) ->
-  changeClass element, className, selector, 'remove'
-
-toggleClass = (element, className, selector) ->
-  changeClass element, className, selector, 'toggle'
-
-hasClass = (element, className, selector) ->
-  changeClass element, className, selector, 'contains'
-
-
-
-getAttribute = (element, attribute) ->
-  element.getAttribute attribute
-
-
-
+dummy = () ->
 
 merge = (o1, o2) ->
   for own key, value of o2
@@ -60,93 +6,80 @@ merge = (o1, o2) ->
       o1[key] = merge o1[key], value
     else
       o1[key] = value
-  o1
 
-
-
+  return o1
 
 mustache = (a, b) ->
   a.replace /\{\{([^{}]+)\}\}/g, (c, d) ->
     if b.hasOwnProperty(d) && b[d]?
       return "#{b[d]}"
     else
-      return ""
+      return ''
 
+getTarget = (element, selector) ->
+  return element.querySelector selector if selector
+  return element
 
+addEvent = (element, event, listener, selector) ->
+  target = getTarget element, selector
+  return unless target
 
+  target.addEventListener event, listener, false
+  return
 
-beforeend = (element, string) ->
-  children = element.children
-  len = children.length
-  element.insertAdjacentHTML 'beforeend', string
-  [].slice.call children, len, children.length
+classList = (element, className, selector, method) ->
+  target = getTarget element, selector
+  return false if not target or not target.classList
+  return target.classList[method] className
 
+addClass = (element, className, selector) ->
+  classList element, className, selector, 'add'
 
+removeClass = (element, className, selector) ->
+  classList element, className, selector, 'remove'
 
+toggleClass = (element, className, selector) ->
+  classList element, className, selector, 'toggle'
 
-toInt = (string) -> parseInt(string, 10) || 0
+hasClass = (element, className, selector) ->
+  classList element, className, selector, 'contains'
 
-
-
-
-squeeze = (n, min, max) ->
-  if min > max
-    t = min
-    min = max
-    max = t
-  if n < min
-    n = min
-  if n > max
-    n = max
-  n
-
-
-
-
-translate = do ->
-  property = false
-  has3d = false
-
-  element = document.createElement 'div'
-  property = 'transform' if element.style.transform
-
-  prefixes = ['Webkit', 'Moz', 'O', 'ms']
-
-  if property is false
-    for prefix in prefixes when element.style["#{prefix}Transform"] isnt undefined
-      property = "#{prefix}Transform"
-
-  has3d = true if property is 'WebkitTransform'
-  if property isnt false
-    (element, s) ->
-      if has3d
-        s = "translate3d(#{s}px, 0, 0)"
-      else
-        s = "translateX(#{s}px)"
-      element.style[property] = s
-
-
-
+getAttribute = (element, attribute) ->
+  element.getAttribute attribute
 
 getStyle = (element) ->
-  style = getComputedStyle element
+  style = window.getComputedStyle element
   return (property) ->
-    style.getPropertyValue.call style, property
+    style.getPropertyValue property
 
+setStyle = (element, params) ->
+  style = window.getComputedStyle element
+  for own property, value of params
+    style.setProperty property, value
+  return
 
+offsetWidth = (element) ->
+  element.offsetWidth
 
+offsetHeight = (element) ->
+  element.offsetHeight
 
-setStyle = (element, styles) ->
-  properties = Object.keys styles
-  properties.forEach (property) ->
-    prop = property.replace /-([a-z])/g, (g) -> g[1].toUpperCase()
-    element.style[prop] = styles[property]
+beforeEnd = (element, template) ->
+  element.insertAdjacentHTML 'beforeend', template
+  element.lastElementChild
 
+toInt = (string) ->
+  parseInt(string, 10) || 0
 
+squeeze = (n, min, max) ->
+  [min, max] = [max, min] if min > max
 
+  n = min if n < min
+  n = max if n > max
+
+  return n
 
 scale = (w1, h1, w2, h2) ->
-
   ratio = w1 / h1
 
   if w1 > w2
@@ -157,23 +90,43 @@ scale = (w1, h1, w2, h2) ->
     w1 = h2 * ratio
     h1 = h2
 
-
   return [toInt(w1), toInt(h1)]
 
+translate = do ->
+  property = false
+  accelerate = false
 
+  element = document.createElement 'div'
+  property = 'transform' if element.style.transform
 
+  unless property
+    for prefix in ['Webkit', 'Moz', 'O', 'ms']
+      prop = "#{prefix}Transform"
+      if element.style[prop] isnt undefined
+        property = prop
+        break
 
-offsetWidth = (element) -> element.offsetWidth
-offsetHeight = (element) -> element.offsetHeight
-
-
-
-
-pushState = do ->
-  if isHistory
-    return (title, hash) ->
-      title = title or ''
-      hash = hash or ''
-      history.pushState null, title, "##{hash}"
+  unless property
+    dummy
   else
-    return () ->
+    element.style[property] = 'translate3d(1px,0,0)'
+    accelerate = getStyle(element)(property)
+
+    (element, shift) ->
+      if accelerate isnt undefined
+        shift = "translate3d(#{shift}px, 0, 0)"
+      else
+        shift = "translateX(#{shift}px)"
+
+      element.style[property] = shift
+
+isHistory = not not (window.history and history.pushState)
+if isHistory
+  pushState = (title, hash) ->
+    title = title or ''
+    hash = hash or ''
+
+    history.pushState null, title, "##{hash}"
+    return
+else
+  pushState = dummy

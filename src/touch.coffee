@@ -44,9 +44,9 @@ class Touch
     that = @
     keys.forEach (key) ->
       fn = that[key] opts[key], that
-      addHandler element, "touch#{key}", fn
+      addEvent element, "touch#{key}", fn
       if (key is "end" and not opts.leave)
-        addHandler element, "touchleave", fn
+        addEvent element, "touchleave", fn
 
 
 
@@ -139,18 +139,18 @@ Chocolate::initTouch = (env) ->
     setStyle overlay, opacity: n
 
   addClass overlay, 'touch'
-  addHandler @slider, 'click', (event) ->
+  addEvent @slider, 'click', (event) ->
     event.preventDefault()
     event.stopPropagation()
 
-  addHandler @slider, 'hover', (event) ->
+  addEvent @slider, 'hover', (event) ->
     event.preventDefault()
     event.stopPropagation()
 
-  addHandler @slider, ['transitionend', 'webkitTransitionEnd'], =>
+  addEvent @slider, ['transitionend', 'webkitTransitionEnd'], =>
     removeClass @slider, 'animated'
 
-  addHandler overlay, ['transitionend', 'webkitTransitionEnd'], =>
+  addEvent overlay, ['transitionend', 'webkitTransitionEnd'], =>
     removeClass overlay, 'animated'
     return unless isClosing
     @close()

@@ -1,20 +1,21 @@
+class Storage
 
-class ChocolateStorage
+  images: {}
+  counter: 0
 
   constructor: (repeat) ->
     @repeat = not not repeat
-    @images = {}
-    @counter = 0
-
-
-
 
   add: (options) ->
-    return false unless options.orig
+    unless options.orig
+      return false
+
     cid = @counter++
-    fragments    = options.orig.split '/'
+
+    fragments = options.orig.split '/'
     options.hashbang = fragments[fragments.length-1]
     options.thumb = options.orig unless options.thumb
+
     options = merge {
         cid: cid, # ID
         name: '',    # title
