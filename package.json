@@ -1,14 +1,27 @@
 {
     "name": "chocolate.js"
   , "version": "0.0.3"
-  , "homepage": "http://chocolatejs.ru"
-  , "authors": [
-      "Alexey Simonenko <alexey@simonenko.su> (https://github.com/meritt)"
-    , "Ann SaBoNim <a.sabonim@gmail.com> (https://github.com/sabonim)"
-  ]
+  , "description": ""
+  , "keywords": []
+  , "author": "Alexey Simonenko <alexey@simonenko.su>"
+  , "contributors": [
+      {
+          "name": "Ann Sabonim"
+        , "email": "a.sabonim@gmail.com"
+      }
+      , {
+          "name": "Sophia Ilinova"
+        , "email": "tavsophi@gmail.com"
+      }
+    ]
   , "private": true
+  , "homepage": "http://chocolatejs.ru"
+  , "repository": {
+        "type": "git"
+      , "url": "https://github.com/serenity/chocolate.js.git"
+    }
   , "engines": {
-      "node": ">=0.8.0 <0.11.0"
+      "node": ">=0.10.x"
     }
   , "dependencies": {
       "coffee-script": "1.6.x"
