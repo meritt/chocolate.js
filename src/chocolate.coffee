@@ -1,29 +1,29 @@
-choco = 'choco'
-class_body     = "#{choco}-body"
-class_error    = "#{choco}-error"
-class_hide     = "#{choco}-hide"
-class_hover    = "#{choco}-hover"
-class_item     = "#{choco}-item"
-class_loading  = "#{choco}-loading"
-class_no_thumbnails = "#{choco}-no-thumbnails"
-class_selected = "#{choco}-selected"
-class_show     = "#{choco}-show"
+choco = 'choco-'
 
+choco_body          = choco + 'body'
+choco_error         = choco + 'error'
+choco_hide          = choco + 'hide'
+choco_hover         = choco + 'hover'
+choco_item          = choco + 'item'
+choco_loading       = choco + 'loading'
+choco_selected      = choco + 'selected'
+choco_show          = choco + 'show'
+choco_no_thumbnails = choco + 'no-thumbnails'
+
+existActions = ['next', 'prev', 'close']
+
+env = {}
+
+isOpen = false
+isTouch = null
+
+needResize = true
+
+instances = []
+opened = null
 
 class Chocolate
-
-  existActions = ['next', 'prev', 'close']
-
-  env = {}
-
-  isOpen = false
-  isTouch = null
-  instances = []
-  opened = null
-  needResize = true
-
   constructor: (images, options = {}) ->
-
     if not document.querySelectorAll
       # throw "Please upgrade your browser to view chocolate"
       return false
@@ -39,7 +39,7 @@ class Chocolate
     template = templates.overlay.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
 
     @overlay = beforeEnd(document.body, template)
-    @slider = getTarget @overlay, ".#{choco}-slider"
+    @slider = getTarget @overlay, ".#{choco}slider"
 
     isTouch = @initTouch getEnv()
     @options.thumbnails = false if isTouch
@@ -50,15 +50,15 @@ class Chocolate
       containers.push 'thumbnails' if @options.thumbnails
 
       for container in containers
-        @[container] = getTarget @overlay, ".#{choco}-#{container}"
+        @[container] = getTarget @overlay, ".#{choco}#{container}"
 
       if @options.thumbnails
-        @thumbnailsToggle = getTarget @overlay, ".#{choco}-thumbnails-toggle"
+        @thumbnailsToggle = getTarget @overlay, ".#{choco}thumbnails-toggle"
         addEvent @thumbnailsToggle, 'click', =>
           @toggleThumbnails()
       else
         for container in ['overlay', 'leftside', 'rightside']
-          addClass @[container], class_no_thumbnails
+          addClass @[container], choco_no_thumbnails
 
       for container in ['overlay', 'leftside', 'rightside']
         prepareActionFor @, container
@@ -73,10 +73,10 @@ class Chocolate
   close: ->
     isOpen = false
     opened = null
-    if hasClass @overlay, class_show
-      removeClass @overlay, class_show
-      removeClass document.body, class_body
-      removeClass @current.thumbnail, class_selected if @options.thumbnails
+    if hasClass @overlay, choco_show
+      removeClass @overlay, choco_show
+      removeClass document.body, choco_body
+      removeClass @current.thumbnail, choco_selected if @options.thumbnails
       @current = null
       pushState()
     @
@@ -88,8 +88,8 @@ class Chocolate
     return if isOpen
     opened = @
     isOpen = true
-    addClass @overlay, class_show
-    addClass document.body, class_body
+    addClass @overlay, choco_show
+    addClass document.body, choco_body
     @updateDimensions()
     @select cid, updateHistory
     @
@@ -110,21 +110,21 @@ class Chocolate
 
     if @options.thumbnails
 
-      removeClass @current.thumbnail, class_selected if @current?
+      removeClass @current.thumbnail, choco_selected if @current?
 
       thumb = item.thumbnail
-      addClass thumb, class_selected
+      addClass thumb, choco_selected
 
       offset = env.w / 2 - thumb.offsetLeft - offsetWidth(thumb) / 2
 
       offset = squeeze offset, 0, env.w - @dimensions.thumbWidth
       translate @thumbnails, offset
 
-    if isHistory and updateHistory
+    if updateHistory
       title = if item.title then item.title else item.hashbang
       pushState title, item.hashbang
 
-    loading = hasClass item.slide, class_loading
+    loading = hasClass item.slide, choco_loading
     if loading
       loadImage item, (success) =>
         @updateSides item
@@ -140,14 +140,11 @@ class Chocolate
 
   next: ->
     @select @storage.next @current
-    @
-
-
-
+    return @
 
   prev: ->
     @select @storage.prev @current
-    @
+    return @
 
 
 
@@ -186,7 +183,7 @@ class Chocolate
   updateSides: (item) ->
     return if isTouch
     if not item.size
-      item.size = offsetWidth getTarget item.slide, ".#{choco}-slide-container"
+      item.size = offsetWidth getTarget item.slide, ".#{choco}slide-container"
     s = "#{(env.w - item.size) / 2}px"
     setStyle @leftside, width: s
     setStyle @rightside, width: s
@@ -197,22 +194,21 @@ class Chocolate
   toggleThumbnails: ->
     return if isTouch
     containers = ['leftside', 'rightside', 'overlay', 'thumbnailsToggle']
-    if hasClass @thumbnails, class_hide
-      removeClass @thumbnails, class_hide
+    if hasClass @thumbnails, choco_hide
+      removeClass @thumbnails, choco_hide
       for container in containers
-        removeClass @[container], class_no_thumbnails
+        removeClass @[container], choco_no_thumbnails
     else
-      addClass @thumbnails, class_hide
+      addClass @thumbnails, choco_hide
       for container in containers
-        addClass @[container], class_no_thumbnails
+        addClass @[container], choco_no_thumbnails
 
+  initTouch: ->
+    return false
 
-
-
-  initTouch: -> false
-
-
-
+  ###
+    Private methods
+  ### 
 
   addImage = (chocolate, data, image) ->
     data = chocolate.storage.add data
@@ -223,16 +219,16 @@ class Chocolate
       addEvent data.thumbnail, 'click', -> chocolate.select data
 
     data.slide = beforeEnd(chocolate.slider, mustache templates['slide'], data)
-    addClass data.slide, class_loading
+    addClass data.slide, choco_loading
 
-    data.img = getTarget data.slide, ".#{choco}-slide-image"
+    data.img = getTarget data.slide, ".#{choco}slide-image"
 
     method = chocolate.options.actions.container if chocolate.options.actions.container in existActions
 
     if method
       addEvent data.slide, 'click', ->
         chocolate[method]()
-      , ".#{choco}-slide-container"
+      , ".#{choco}slide-container"
 
 
     if image
@@ -242,7 +238,7 @@ class Chocolate
         event.preventDefault()
         chocolate.open cid
 
-      addClass image, class_item
+      addClass image, choco_item
       addEvent image, 'click', (event) ->
         showFirstImage event, data.cid
 
@@ -257,8 +253,8 @@ class Chocolate
             'height':     "#{offsetHeight image}px"
             'margin-top': "-#{offsetHeight image}px"
 
-          addEvent image, 'mouseenter', -> toggleClass popover, class_hover
-          addEvent image, 'mouseleave', -> toggleClass popover, class_hover
+          addEvent image, 'mouseenter', -> toggleClass popover, choco_hover
+          addEvent image, 'mouseleave', -> toggleClass popover, choco_hover
 
           addEvent popover, 'click', (event) ->
             showFirstImage event, data.cid
@@ -275,7 +271,7 @@ class Chocolate
 
     addEvent img, 'load', ->
       item.img.src = @src
-      removeClass item.slide, class_loading
+      removeClass item.slide, choco_loading
       item.w = img.width
       item.h = img.height
       setSize item
@@ -283,9 +279,9 @@ class Chocolate
       callback true
 
     addEvent img, 'error', ->
-      removeClass item.slide, class_loading
-      addClass item.slide, class_error
-      addClass item.thumbnail, class_error
+      removeClass item.slide, choco_loading
+      addClass item.slide, choco_error
+      addClass item.thumbnail, choco_error
 
       callback false
 
@@ -305,10 +301,10 @@ class Chocolate
 
       if chocolate.options.actions[container] is 'close'
         addEvent chocolate[container], 'mouseenter', ->
-          toggleClass chocolate.overlay, class_hover, ".#{choco}-close"
+          toggleClass chocolate.overlay, choco_hover, ".#{choco}close"
 
         addEvent chocolate[container], 'mouseleave', ->
-          toggleClass chocolate.overlay, class_hover, ".#{choco}-close"
+          toggleClass chocolate.overlay, choco_hover, ".#{choco}close"
 
 
 
@@ -321,7 +317,7 @@ class Chocolate
       h: window.innerHeight or document.documentElement.clientHeight
 
     if isOpen
-      slide = getTarget opened.slider, ".#{choco}-slide"
+      slide = getTarget opened.slider, ".#{choco}slide"
       return unless slide
 
       needResize = false
@@ -344,54 +340,14 @@ class Chocolate
     env
 
 
-
-
-  getImageFromUri = () ->
-    hash = window.location.hash
-    return unless hash
-
-    if isOpen
-      item = opened.storage.search hash
-      return opened.select item if item?
-
-    for chocolate in instances
-      item = chocolate.storage.search hash
-      break if item?
-
-    if item?
-      opened.close() if isOpen
-      chocolate.open item
-
-
-
-
-  if isHistory
-    onHistory = =>
-      data = getImageFromUri()
-
-    if 'onhashchange' of window
-      addEvent window, 'hashchange', -> onHistory()
-
-
-
-
-  addEvent window, 'load', ->
-    onHistory()
-
-
-
-
   addEvent window, 'resize', ->
     needResize = true
     if isOpen
       opened.updateDimensions()
       opened.select opened.current
 
-
-
-
   addEvent window, 'keyup', (event) =>
-    if isOpen && hasClass opened.overlay, class_show
+    if isOpen && hasClass opened.overlay, choco_show
       switch event.keyCode
         when 27 # ESC
           opened.close()
