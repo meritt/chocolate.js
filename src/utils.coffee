@@ -114,19 +114,8 @@ translate = do ->
 
     (element, shift) ->
       if accelerate isnt undefined
-        shift = "translate3d(#{shift}px, 0, 0)"
+        shift = "translate3d(#{shift}px,0,0)"
       else
         shift = "translateX(#{shift}px)"
 
       element.style[property] = shift
-
-isHistory = not not (window.history and history.pushState)
-if isHistory
-  pushState = (title, hash) ->
-    title = title or ''
-    hash = hash or ''
-
-    history.pushState null, title, "##{hash}"
-    return
-else
-  pushState = dummy

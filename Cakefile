@@ -12,6 +12,7 @@ autoprefixer = require 'autoprefixer'
 option '-t', '--themes [NAME]', 'theme for chocolate'
 option '-b', '--basedir [DIR]', 'directory with image folder'
 option '', '--no-touch', 'exclude interface for touch devices'
+option '', '--no-history', 'exclude interface for history api'
 
 task 'build', 'Build chocolate.js', (options) ->
   theme   = options.themes or 'default'
@@ -27,6 +28,7 @@ task 'build', 'Build chocolate.js', (options) ->
     'chocolate.coffee'
   ]
 
+  sources.push 'history.coffee' unless options['no-history']
   sources.push 'touch.coffee' unless options['no-touch']
 
   fs.stat dist, (error, stat) ->
@@ -97,8 +99,9 @@ compileJsContent = (dist, src, basedir, files) ->
 
     chocolate = ''
     for source in sources
+      chocolate += "###\n #{source} \n###\n\n"
       chocolate += fs.readFileSync source, 'utf8'
-      chocolate += '\n'
+      chocolate += '\n\n'
 
     js = compile "#{options}\n\n#{templates}\n\n#{chocolate}", bare: true
     js = "(function(window, document) {\n\n#{js}\n\n})(window, document);"

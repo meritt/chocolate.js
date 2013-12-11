@@ -1,5 +1,4 @@
 class Storage
-
   images: {}
   counter: 0
 
