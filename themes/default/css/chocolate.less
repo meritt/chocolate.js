@@ -1,3 +1,5 @@
+@import "../../mixins.less";
+
 @basedir: "{{basedir}}";
 
 @overlay-background: rgba(0,0,0,0.8);
@@ -10,7 +12,7 @@
 @thumbnails-offset-height: @thumbnails-height + @thumbnails-padding-y * 2 + @thumbnails-border-size;
 
 .choco-body {
-  overflow: hidden;
+  .choco-body;
 }
 
 .choco-unselect {
@@ -18,14 +20,11 @@
 }
 
 .choco-item {
-  display: block;
+  .choco-item;
 }
 
 .choco-item-hover {
-  position: relative;
-  display: block;
-  cursor: pointer;
-
+  .choco-item-hover;
   &:hover, &.choco-hover {
     background-color: rgba(0, 0, 0, .4);
     background-image: url("@{basedir}lupa.svg");
@@ -35,19 +34,9 @@
 }
 
 .choco-overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 100;
-  display: none;
+  .choco-overlay(100);
   padding: 50px 0 @thumbnails-offset-height;
   background: @overlay-background;
-
-  &.choco-show {
-    display: block;
-  }
 
   &.animated {
     transition: opacity 0.2s;
@@ -90,11 +79,9 @@
 }
 
 .choco-slider {
-  display: block;
+  .choco-nowrap;
   height: 100%;
   text-align: center;
-  white-space: nowrap;
-  font-size: 0;
   transition: transform 0.4s;
 }
 
@@ -229,6 +216,7 @@
   @x: @thumbnails-padding-x;
   @y: @thumbnails-padding-y;
   @border: @thumbnails-border-size;
+  .choco-nowrap;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -240,8 +228,6 @@
   height: @thumbnails-offset-height;
   border-top: @border solid rgba(255,255,255,0.8);
   text-align: center;
-  white-space: nowrap;
-  font-size: 0;
   transition: transform 0.4s, margin-bottom 0.2s;
   //animation: thumbnails 1s ease-in-out;
 

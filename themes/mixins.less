@@ -1,0 +1,42 @@
+.choco-item () {
+  display: block;
+}
+
+.choco-item-hover () {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.choco-body () {
+  overflow: hidden;
+}
+
+.choco-overlay (@z-index: 100;) {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: @z-index;
+  display: none;
+  &.choco-show {
+    display: block;
+  }
+}
+
+.choco-nowrap () {
+  display: block;
+  white-space: nowrap;
+  font-size: 0;
+}
+
+.choco-slide (@width: 100%) {
+  display: inline-block;
+  width: @width;
+}
+
+.choco-thumbnail () {
+  display: inline-block;
+  cursor: pointer;
+}
