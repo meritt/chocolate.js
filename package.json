@@ -5,14 +5,9 @@
   , "keywords": []
   , "author": "Alexey Simonenko <alexey@simonenko.su>"
   , "contributors": [
-      {
-          "name": "Ann Sabonim"
-        , "email": "a.sabonim@gmail.com"
-      }
-      , {
-          "name": "Sophia Ilinova"
-        , "email": "tavsophi@gmail.com"
-      }
+        "Alexey Simonenko <alexey@simonenko.su>"
+      , "Ann Sabonim <a.sabonim@gmail.com>"
+      , "Sophia Ilinova <tavsophi@gmail.com>"
     ]
   , "private": true
   , "homepage": "http://chocolatejs.ru"
