@@ -69,7 +69,7 @@ beforeEnd = (element, template) ->
   element.lastElementChild
 
 toInt = (string) ->
-  parseInt(string, 10) || 0
+  parseInt(string, 10) or 0
 
 squeeze = (n, min, max) ->
   [min, max] = [max, min] if min > max
