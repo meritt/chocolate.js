@@ -20,10 +20,7 @@
   .choco-item-hover;
 
   &:hover, &.choco-hover {
-    background-color: rgba(0, 0, 0, 0.4);
-    background-image: url("@{basedir}lupa.png");
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
+    background: rgba(0, 0, 0, 0.4) url("@{basedir}lupa.png") 50% 50% no-repeat;
   }
 }
 
@@ -56,11 +53,8 @@
     .choco-slide-container {
       min-width: 60px;
       min-height: 90px;
-      background-color: transparent;
-      background-image: url("@{basedir}notfound.svg");
-      background-position: 50% 30px;
+      background: transparent url("@{basedir}notfound.svg") 50% 30px no-repeat;
       background-size: 60px 60px;
-      background-repeat: no-repeat;
     }
 
     .choco-slide-image {
