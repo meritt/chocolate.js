@@ -401,7 +401,7 @@ class Chocolate
     classList chocolate.slider, choco_animated, null, method
 
   unless isTouch
-    addEvent window, 'keyup', (event) ->
+    addEvent window, 'keydown', (event) ->
       if not isOpen or not hasClass opened.overlay, choco_show
         return
 
