@@ -9,6 +9,7 @@ choco_loading       = choco + 'loading'
 choco_selected      = choco + 'selected'
 choco_show          = choco + 'show'
 choco_no_thumbnails = choco + 'no-thumbnails'
+choco_animated      = choco + 'animated'
 
 existActions = ['next', 'prev', 'close']
 
@@ -72,6 +73,8 @@ class Chocolate
     instances.push @
 
   close: ->
+    setAnimation opened, false
+
     isOpen = false
     opened = null
 
@@ -98,6 +101,10 @@ class Chocolate
 
     @updateDimensions()
     @select cid, updateHistory
+
+    setTimeout ->
+      setAnimation opened
+    , 0
 
     return @
 
@@ -377,10 +384,21 @@ class Chocolate
     needResize = true
 
     if isOpen
+
+      setAnimation opened, false
+
       opened.updateDimensions()
       opened.select opened.current
 
+      setAnimation opened
+
     return
+
+  setAnimation = (chocolate, enable = true) ->
+    method = if enable then 'add' else 'remove'
+    if chocolate.thumbnails?
+      classList chocolate.thumbnails, choco_animated, null, method
+    classList chocolate.slider, choco_animated, null, method
 
   unless isTouch
     addEvent window, 'keyup', (event) ->
