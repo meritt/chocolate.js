@@ -1,7 +1,6 @@
-pushState = do ->
-  isHistory = not not (window.history and history.pushState)
-  return dummy unless isHistory
+isHistory = not not (window.history and history.pushState)
 
+if isHistory
   getImageFromUri = ->
     hash = window.location.hash
     return unless hash
@@ -26,7 +25,7 @@ pushState = do ->
     getImageFromUri()
     return
 
-  return (title, hash) ->
+  pushState = (title, hash) ->
     title = title or ''
     hash = hash or ''
 

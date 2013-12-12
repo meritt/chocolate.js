@@ -1,4 +1,4 @@
-dummy = () ->
+dummy = pushState = () ->
 
 merge = (o1, o2) ->
   for own key, value of o2
