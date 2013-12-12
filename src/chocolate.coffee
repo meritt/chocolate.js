@@ -377,7 +377,6 @@ class Chocolate
     item.img.width = s[0]
     item.img.height = s[1]
 
-    setStyle item.slide, 'padding-top': "#{(env.s.h - s[1]) / 2}px"
     return
 
   addEvent window, 'resize', ->
