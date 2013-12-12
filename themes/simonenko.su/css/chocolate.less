@@ -1,104 +1,149 @@
-@import "../../less-framework/functions.less";
+@import "../../mixins.less";
 
 @basedir: "{{basedir}}";
 
+@overlay-background: rgba(0, 0, 0, 0.8);
+
 .choco-body {
-  overflow: hidden;
+  .choco-body;
 }
 
 .choco-unselect {
-  #mlf > .user-select(none);
+  user-select: none;
 }
 
 .choco-item {
-  display: block;
+  .choco-item;
 }
 
 .choco-item-hover {
-  position: relative;
-  display: block;
-  cursor: pointer;
+  .choco-item-hover;
 
   &:hover, &.choco-hover {
-    background-image: url("@{basedir}/images/lupa.png");
-    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-image: url("@{basedir}lupa.png");
     background-position: 50% 50%;
+    background-repeat: no-repeat;
   }
 }
 
 .choco-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: none;
-  width: 100%;
-  height: 100%;
-  padding: 50px 70px;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 105;
-
-  &.choco-show {
-    display: block;
-  }
+  .choco-overlay(100);
+  padding: 50px 0 0;
+  background: @overlay-background;
 
   &.choco-hideless {
-    .choco-leftside, .choco-rightside {
+    .choco-leftside,
+    .choco-rightside {
       display: none;
       cursor: default;
     }
+  }
+}
 
-    .choco-container {
-      cursor: default;
+.choco-slider {
+  .choco-slider;
+  &.choco-animated {
+    transition: transform 0.4s;
+  }
+}
+
+.choco-slide {
+  .choco-slide;
+  padding: 30px 50px 20px;
+
+  &.choco-error {
+    .choco-slide-container {
+      min-width: 60px;
+      min-height: 90px;
+      background-color: transparent;
+      background-image: url("@{basedir}notfound.svg");
+      background-position: 50% 30px;
+      background-size: 60px 60px;
+      background-repeat: no-repeat;
+    }
+
+    .choco-slide-image {
+      display: none;
+    }
+  }
+
+  &.choco-loading {
+    .choco-slide-image {
+      display: none;
     }
   }
 }
 
-@import "animations/smooth.less";
-
-.choco-leftside {
-  left: 0;
-
-  &:before {
-    left: 34px;
-    background-image: url("@{basedir}/images/arrow-l.png");
-  }
+.choco-inline-hack {
+  .choco-inline-hack;
 }
 
-.choco-rightside {
-  right: 0;
-
-  &:before {
-    right: 34px;
-    background-image: url("@{basedir}/images/arrow-r.png");
-  }
+.choco-slide-container {
+  display: inline-block;
+  max-width: 100%;
+  color: #fff;
+  vertical-align: middle;
+  cursor: pointer;
 }
 
-.choco-leftside, .choco-rightside {
+.choco-slide-title {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin: -30px 0 10px;
+  padding: 0;
+  max-width: 100%;
+  height: 20px;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.choco-slide-image {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0 20 5px red;
+}
+
+.sidecolumn() {
   position: fixed;
   top: 0;
   bottom: 0;
-  width: 50px;
-  height: 50px;
-  #mlf > .animation(smooth 0.8s);
-  z-index: 120;
+  margin: 0;
+  padding: 0;
+  min-width: 50px;
+  opacity: 0.5;
   cursor: pointer;
-
-  &:before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 54px;
-    width: 17px;
-    height: 17px;
-    background-repeat: no-repeat;
-    background-position: 0% 0%;
-    #mlf > .opacity(0.5);
-  }
+  animation: smooth 0.8s;
 
   &:hover {
-    &:before {
-      #mlf > .opacity(1);
-    }
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+}
+
+.choco-leftside {
+  .sidecolumn();
+  left: 0;
+  background: url("@{basedir}arrow-l.svg") 20px 20px no-repeat;
+}
+
+.choco-rightside {
+  .sidecolumn();
+  right: 0;
+
+  &:after {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("@{basedir}arrow-r.svg") no-repeat;
+    content: '';
   }
 }
 
@@ -108,98 +153,17 @@
   left: 50%;
 }
 
-@import "animations/spin.less";
-
 .choco-spinner {
-  .container();
-  z-index: 110;
-
-  &.choco-hide {
-    display: none;
-  }
-
-  img {
-    @size: 30px;
-    .container();
-    margin-left: round(-(@size / 2));
-    margin-top: round(-(@size / 2));
-    #mlf > .animation(spin 0.8s linear infinite);
-
-    &.choco-spinner-cssanimation {
-      display: none;
-    }
-  }
-}
-
-@import "animations/shower.less";
-
-.choco-container {
-  .container();
-  background-color: #000;
-  background-position: 0 0;
-  background-repeat: no-repeat;
-  #mlf > .background-size(100% 100%);
-  #mlf > .box-shadow(0 0 0 #111);
-  #mlf > .opacity(0);
-  z-index: 115;
-  zoom: 1;
-  #mlf > .animation(shower 200ms ease-in-out);
-
-  &.choco-show {
-    #mlf > .opacity(1);
-    #mlf > .box-shadow(1px 1px 10px #111);
-  }
-
-  &.choco-error {
-    width: 300px;
-    height: 300px;
-    background-color: transparent;
-    background-image: url("@{basedir}/images/notfound.png") !important;
-    background-position: 50% 50%;
-    #mlf > .background-size(auto auto);
-    #mlf > .box-shadow(none);
-  }
-}
-
-.choco-header {
-  .container();
   display: none;
-  height: 35px;
-
-  &.choco-show {
-    display: block;
-  }
-
-  span {
-    color: #fff;
-    padding: 0 0 2px 0;
-    font-size: 1.4em;
-    font-weight: normal;
-    line-height: 1.1em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
+  height: 100%;
 }
 
-.cssanimations .choco-spinner {
-  .choco-spinner-cssanimation {
-    display: inline-block;
-  }
-
-  .choco-spinner-gifanimation {
-    display: none;
-  }
+.choco-loading .choco-spinner {
+  display: inline-block;
 }
 
-.choco-ie8 {
-  &.choco-overlay {
-    background: transparent url("@{basedir}/images/black80.png") 0 0 repeat;
-  }
-
-  .choco-item-hover {
-    &:hover, &.choco-hover {
-      background-color: #000;
-    }
-  }
+@keyframes smooth {
+  0%   { opacity: 0; }
+  75%  { opacity: 0; }
+  100% { opacity: 1; }
 }
