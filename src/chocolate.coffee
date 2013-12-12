@@ -383,7 +383,7 @@ class Chocolate
     return
 
   unless isTouch
-    addEvent window, 'keyup', (event) ->
+    addEvent window, 'keydown', (event) ->
       if not isOpen or not hasClass opened.overlay, choco_show
         return
 
