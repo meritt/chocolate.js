@@ -1,7 +1,7 @@
 {
   "thumbnails": false,
   "history": true,
-  "repeat": true,
+  "repeat": false,
 
   "actions": {
     "overlay": "close",
