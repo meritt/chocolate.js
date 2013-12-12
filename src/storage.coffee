@@ -31,13 +31,13 @@ class Storage
     return @images[cid]
 
   next: (current) ->
-    cid = ++current.cid
-    cid = 0 if @repeat and not @images[cid]
+    cid = current.cid + 1
+    cid = 0 if not @images[cid] and @repeat
     return @images[cid]
 
   prev: (current) ->
-    cid = --current.cid
-    cid = @length() if @repeat and cid < 0
+    cid = current.cid - 1
+    cid = @length() if cid < 0 and @repeat
     return @images[cid]
 
   length: ->
