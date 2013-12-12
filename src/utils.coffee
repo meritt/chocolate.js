@@ -53,10 +53,10 @@ getStyle = (element) ->
     style.getPropertyValue property
 
 setStyle = (element, params) ->
-  style = window.getComputedStyle element
-  for own property, value of params
-    style.setProperty property, value
-  return
+  element.style[toCamelCase property] = value for own property, value of params
+
+toCamelCase = (str) ->
+  str.replace /-([a-z])/g, (str) -> str[1].toUpperCase()
 
 offsetWidth = (element) ->
   element.offsetWidth
