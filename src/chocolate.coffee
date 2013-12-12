@@ -218,7 +218,7 @@ class Chocolate
 
   ###
     Private methods
-  ### 
+  ###
 
   addImage = (chocolate, data, image) ->
     data = chocolate.storage.add data
