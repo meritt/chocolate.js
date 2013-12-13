@@ -13,6 +13,7 @@ option '-t', '--themes [NAME]', 'theme for chocolate'
 option '-b', '--basedir [DIR]', 'directory with image folder'
 option '', '--no-touch', 'exclude interface for touch devices'
 option '', '--no-history', 'exclude interface for history api'
+option '', '--no-session', 'exclude interface for saving option in sessionStorage'
 
 task 'build', 'Build chocolate.js', (options) ->
   theme   = options.themes or 'default'
@@ -26,9 +27,9 @@ task 'build', 'Build chocolate.js', (options) ->
     'utils.coffee'
     'storage.coffee'
     'chocolate.coffee'
-    'sessionstorage.coffee'
   ]
 
+  sources.push 'sessionstorage.coffee' unless options['no-session']
   sources.push 'history.coffee' unless options['no-history']
   sources.push 'touch.coffee' unless options['no-touch']
 
