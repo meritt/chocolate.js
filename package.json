@@ -2,19 +2,19 @@
     "name": "chocolate.js"
   , "version": "0.0.3"
   , "homepage": "http://chocolatejs.ru"
-  , "authors": [
-      "Alexey Simonenko <alexey@simonenko.su> (https://github.com/meritt)"
-    , "Ann SaBoNim <a.sabonim@gmail.com> (https://github.com/sabonim)"
-  ]
-  , "private": true
+  , "author": "Alexey Simonenko <alexey@simonenko.su>"
+  , "contributors": [
+        "Alexey Simonenko <alexey@simonenko.su>"
+      , "Ann Sabonim <a.sabonim@gmail.com>"
+    ]
   , "engines": {
-      "node": ">=0.8.0 <0.11.0"
+      "node": ">=0.8.x"
     }
   , "dependencies": {
       "coffee-script": "1.6.x"
-    , "less": "1.3.3"
-    , "uglify-js": "2.2.x"
-    , "cssmin": "0.3.x"
-    , "jsdom": "0.5.x"
+    , "less": "1.5.x"
+    , "uglify-js": "2.4.x"
+    , "cssmin": "0.4.x"
+    , "jsdom": "0.8.x"
   }
 }
