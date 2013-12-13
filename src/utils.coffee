@@ -1,4 +1,4 @@
-pushState = dummy = ->
+startTouch = pushState = dummy = ->
 session = set: dummy, get: -> true
 
 merge = (o1, o2) ->

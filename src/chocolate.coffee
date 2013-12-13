@@ -41,7 +41,7 @@ class Chocolate
     @overlay = beforeEnd document.body, template
     @slider = getTarget @overlay, ".#{choco}slider"
 
-    isTouch = @initTouch getEnv()
+    startTouch @
 
     if isTouch
       @options.thumbnails = false
