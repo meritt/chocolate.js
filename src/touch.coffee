@@ -88,22 +88,22 @@ Chocolate::initTouch = (env) ->
     t = captureFinger getTouch event.changedTouches, finger.id
     return unless t
 
-    t.dx = (t.x - finger.x) || 0
+    dx = (t.x - finger.x) || 0
     finger.x = t.x
     finger.y = t.y
 
     sliderOffset = getOffset slider
 
-    dx = Math.abs(finger.x0 - t.x)
-    dy = Math.abs(finger.y0 - t.y)
-    isThumbing = dx > dy
+    distanceX = Math.abs(finger.x0 - t.x)
+    distanceY = Math.abs(finger.y0 - t.y)
+    isThumbing = distanceX > distanceY
     isClosing = not isThumbing
 
     if isThumbing
       transparent 1
-      translate slider, sliderOffset + t.dx
+      translate slider, sliderOffset + dx
     else
-      transparent Math.round((1 - dy / env.h) * 100) / 100
+      transparent Math.round((1 - distanceY / env.h) * 100) / 100
     stop event
     return
 
