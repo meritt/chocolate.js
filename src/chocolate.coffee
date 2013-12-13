@@ -16,7 +16,7 @@ existActions = ['next', 'prev', 'close']
 env = {}
 
 isOpen = false
-isTouch = null
+isTouch = false
 
 needResize = true
 
@@ -249,8 +249,7 @@ class Chocolate
     return unless image
 
     showFirstImage = (event, cid) ->
-      event.stopPropagation()
-      event.preventDefault()
+      stop event
       chocolate.open cid
       return
 

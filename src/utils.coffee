@@ -68,6 +68,11 @@ beforeEnd = (element, template) ->
   element.insertAdjacentHTML 'beforeend', template
   element.lastElementChild
 
+stop = (event) ->
+  event.stopPropagation()
+  event.preventDefault()
+  return
+
 toInt = (string) ->
   parseInt(string, 10) or 0
 
