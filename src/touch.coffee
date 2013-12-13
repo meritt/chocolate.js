@@ -1,37 +1,26 @@
-isTouch = do ->
-  el = document.createElement 'div'
-  el.setAttribute 'ongesturestart', 'return;'
-  el.setAttribute 'ontouchstart', 'return;'
-  return 1 if typeof el.ontouchstart is "function"
-  return 2 if typeof el.ongesturestart is "function"
-  return 0
-
-
-
-
 getOffset = (element) ->
   style = getStyle element
-  reg = /matrix\(([0-9-\.,\s]*)\)/
-  tr = style('transform') || style('-webkit-transform') || style('-ms-transform') || ''
-  if reg.test tr
-    tr = reg.exec(tr)[1].split(',')[4].trim() || 0
+  regex = /matrix\(([0-9-\.,\s]*)\)/
+
+  transform = style('transform') or style('-webkit-transform') or style('-ms-transform') or ''
+
+  if regex.test transform
+    transform = reg.exec(tr)[1].split(',')[4].trim() or 0
   else
-    tr = 0
-  return toInt tr
+    transform = 0
 
+  return toInt transform
 
-
-
-round = do ->
+touchShift = do ->
   length = window.innerHeight * 0.25
-  (t, offset) ->
+
+  return (t, offset) ->
     offset = Math.abs offset
+
     if (t.x0 - t.x > length) or (t.x - t.x0 < length)
       return Math.ceil offset
+
     return Math.floor offset
-
-
-
 
 class Touch
 
@@ -124,63 +113,96 @@ class Touch
 
 
 Chocolate::initTouch = (env) ->
-  return false if isTouch is 0
+  return false if touchType is 0
 
   isThumbing = false
   isClosing = false
-  max = -1
 
+  max = -1
   opacity = 1
 
   overlay = @overlay
+  slider = @slider
 
-  transparent = (n) ->
-    opacity = n
-    setStyle overlay, opacity: n
+  transparent = (level) ->
+    opacity = level
+    setStyle overlay, opacity: level
+    return
 
   addClass overlay, 'touch'
-  addEvent @slider, 'click', (event) ->
-    event.preventDefault()
-    event.stopPropagation()
 
-  addEvent @slider, 'hover', (event) ->
-    event.preventDefault()
-    event.stopPropagation()
+  addEvent slider, 'click', (event) ->
+    stop event
+    return
 
-  addEvent @slider, ['transitionend', 'webkitTransitionEnd'], =>
-    removeClass @slider, 'animated'
+  addEvent slider, 'hover', (event) ->
+    stop event
+    return
 
-  addEvent overlay, ['transitionend', 'webkitTransitionEnd'], =>
+  addEvent slider, 'transitionend', ->
+    removeClass slider, 'animated'
+    return
+
+  addEvent slider, 'webkitTransitionEnd', ->
+    removeClass slider, 'animated'
+    return
+
+  finish =>
     removeClass overlay, 'animated'
     return unless isClosing
+
     @close()
     transparent 1
 
+    return
+
+  addEvent overlay, 'transitionend', =>
+    finish()
+    return
+
+  addEvent overlay, 'webkitTransitionEnd', =>
+    finish()
+    return
+
+  # addEvent overlay, 'touchend', (event) ->
+  #   touch.end()
+  # 
+  # addEvent overlay, 'touchcancel', (event) ->
+  #   touch.cancel()
+  # 
+  # addEvent overlay, 'touchleave', (event) ->
+  #   touch.end()
+
+
+
+
   t = new Touch overlay,
     start: (t) ->
-      false
+      return false
 
     move: (t) =>
-      s = getOffset @slider
+      s = getOffset slider
+
       dx = Math.abs(t.x0 - t.x)
       dy = Math.abs(t.y0 - t.y)
+
       if dx > dy
         isThumbing = true
         isClosing = false
         transparent 1
-        translate @slider, s + t.dx
+        translate slider, s + t.dx
       else
         isClosing = true
         isThumbing = false
-        transparent Math.round((1 - dy / env.h)*100)/100
+        transparent Math.round((1 - dy / env.h) * 100) / 100
       true
 
     end: (t) =>
       if isThumbing
-        addClass @slider, 'animated'
+        addClass slider, 'animated'
         max = @storage.length() - 1 if max is -1
-        s = getOffset @slider
-        s = round t, (s / env.w)
+        s = getOffset slider
+        s = touchShift t, (s / env.w)
         @select squeeze s, 0, max
       if isClosing
         addClass overlay, 'animated'
@@ -191,4 +213,15 @@ Chocolate::initTouch = (env) ->
           isClosing = false
       false
 
-  true
+  return true
+
+touchType = do ->
+  element = document.createElement 'div'
+
+  element.setAttribute 'ongesturestart', 'return'
+  return 2 if typeof element.ongesturestart is 'function'
+
+  element.setAttribute 'ontouchstart', 'return'
+  return 1 if typeof element.ontouchstart is 'function'
+
+  return 0
