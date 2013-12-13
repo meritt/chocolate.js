@@ -99,6 +99,10 @@ class Chocolate
     addClass @overlay, choco_show
     addClass document.body, choco_body
 
+    if @thumbnails
+      thumbnailsSettings = getThumbnailsSettings()
+      @toggleThumbnails false unless thumbnailsSettings
+
     @updateDimensions()
     @select cid, updateHistory
 
@@ -195,21 +199,25 @@ class Chocolate
 
     return
 
-  toggleThumbnails: ->
+  toggleThumbnails: (show = true) ->
+
     return if isTouch
 
     containers = ['leftside', 'rightside', 'overlay', 'thumbnailsToggle']
 
-    if hasClass @thumbnails, choco_hide
-      removeClass @thumbnails, choco_hide
-
-      for container in containers
-        removeClass @[container], choco_no_thumbnails
+    if show is false or not hasClass @thumbnails, choco_hide
+      method = 'add'
+      show = false
     else
-      addClass @thumbnails, choco_hide
+      method = 'remove'
+      show = true
 
-      for container in containers
-        addClass @[container], choco_no_thumbnails
+    setThumbnailsSettings show
+
+    classList @thumbnails, choco_hide, null, method
+
+    for container in containers
+      classList @[container], choco_no_thumbnails, null, method
 
     return
 

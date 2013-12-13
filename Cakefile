@@ -26,6 +26,7 @@ task 'build', 'Build chocolate.js', (options) ->
     'utils.coffee'
     'storage.coffee'
     'chocolate.coffee'
+    'sessionstorage.coffee'
   ]
 
   sources.push 'history.coffee' unless options['no-history']
