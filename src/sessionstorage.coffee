@@ -7,5 +7,4 @@ if not not window.sessionStorage
       return
 
     get: ->
-      option = window.sessionStorage.getItem key
-      return option and option is '0'
+      window.sessionStorage.getItem key

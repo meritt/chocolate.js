@@ -1,5 +1,5 @@
 pushState = dummy = ->
-session = set: dummy, get: -> true
+session = set: dummy, get: dummy
 
 merge = (o1, o2) ->
   for own key, value of o2
