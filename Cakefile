@@ -26,12 +26,12 @@ task 'build', 'Build chocolate.js', (options) ->
   sources = [
     'utils.coffee'
     'storage.coffee'
-    'chocolate.coffee'
   ]
 
   sources.push 'sessionstorage.coffee' unless options['no-session']
   sources.push 'history.coffee' unless options['no-history']
   sources.push 'touch.coffee' unless options['no-touch']
+  sources.push 'chocolate.coffee'
 
   fs.stat dist, (error, stat) ->
     if stat
