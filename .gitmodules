@@ -1,0 +1,3 @@
+[submodule "vendors/classlist"]
+	path = vendors/classlist
+	url = git@github.com:eligrey/classList.js.git

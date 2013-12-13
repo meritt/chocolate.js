@@ -107,8 +107,10 @@ compileJsContent = (dist, src, basedir, files) ->
       chocolate += fs.readFileSync source, 'utf8'
       chocolate += '\n\n'
 
+    vendors = fs.readFileSync "#{current}/vendors/classlist/classList.min.js", 'utf-8'
+
     js = compile "#{options}\n\n#{templates}\n\n#{chocolate}", bare: true
-    js = "(function(window, document) {\n\n#{js}\n\n})(window, document);"
+    js = vendors + "(function(window, document) {\n\n#{js}\n\n})(window, document);"
 
     fs.writeFileSync path.normalize("#{dist}/js/chocolate.js"), js
 
