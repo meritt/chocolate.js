@@ -145,7 +145,7 @@ translate = do ->
     accelerate = getStyle(element)(property)
 
     (element, shift) ->
-      if accelerate isnt undefined
+      if accelerate
         shift = "translate3d(#{shift}px,0,0)"
       else
         shift = "translateX(#{shift}px)"
