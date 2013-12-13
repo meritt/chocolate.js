@@ -1,28 +1,3 @@
-choco = 'choco-'
-
-choco_body          = choco + 'body'
-choco_error         = choco + 'error'
-choco_hide          = choco + 'hide'
-choco_hover         = choco + 'hover'
-choco_item          = choco + 'item'
-choco_loading       = choco + 'loading'
-choco_selected      = choco + 'selected'
-choco_show          = choco + 'show'
-choco_no_thumbnails = choco + 'no-thumbnails'
-choco_animated      = choco + 'animated'
-
-existActions = ['next', 'prev', 'close']
-
-env = {}
-
-isOpen = false
-isTouch = false
-
-needResize = true
-
-instances = []
-opened = null
-
 class Chocolate
   constructor: (images, options = {}) ->
     if not document.querySelectorAll
@@ -203,16 +178,12 @@ class Chocolate
 
     containers = ['leftside', 'rightside', 'overlay', 'thumbnailsToggle']
 
-    console.log show
-
     if show is '1' or hasClass @thumbnails, choco_hide
       method = 'remove'
       show = true
     else
       method = 'add'
       show = false
-
-    console.log show
 
     session.set show
 
@@ -347,34 +318,6 @@ class Chocolate
 
     return
 
-  getEnv = ->
-    return env unless needResize
-
-    env =
-      w: window.innerWidth or document.documentElement.clientWidth
-      h: window.innerHeight or document.documentElement.clientHeight
-
-    if isOpen
-      slide = getTarget opened.slider, ".#{choco}slide"
-      return env unless slide
-
-      needResize = false
-
-      style = getStyle slide
-      shift = toInt style 'width'
-
-      h = toInt(style 'height') -
-          toInt(style 'padding-top') -
-          toInt(style 'padding-bottom')
-
-      w = shift -
-          toInt(style 'padding-left') -
-          toInt(style 'padding-right')
-
-      env.shift = shift * -1
-      env.s = {w, h}
-
-    return env
 
   setSize = (item) ->
     return unless item.w > 0 and item.h > 0

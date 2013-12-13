@@ -24,6 +24,7 @@ task 'build', 'Build chocolate.js', (options) ->
   src  = path.normalize "#{current}/themes/#{theme}"
 
   sources = [
+    'init.coffee'
     'utils.coffee'
     'storage.coffee'
   ]
