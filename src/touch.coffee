@@ -65,7 +65,6 @@ Chocolate::initTouch = (env) ->
   addClass overlay, 'touch'
 
   finish = =>
-    console.log @
     removeClass overlay, choco_animated
     return unless isClosing
 
@@ -74,14 +73,13 @@ Chocolate::initTouch = (env) ->
 
     return
 
-
   finger = {}
 
   start = (event) ->
     return if event.changedTouches.length isnt 1
-
     t = captureFinger event.changedTouches.item 0
     return unless t
+
     finger[key] = value for own key, value of t
     finger.x0 = finger.x
     finger.y0 = finger.y
@@ -112,8 +110,6 @@ Chocolate::initTouch = (env) ->
   end = (event) =>
     t = captureFinger getTouch event.changedTouches, finger.id
     return unless t
-    t.dx = (t.x - finger.x) || 0
-    t.dy = (t.y - finger.y) || 0
     t.x0 = finger.x0
     t.y0 = finger.y0
     if isThumbing
