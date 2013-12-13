@@ -1,13 +1,8 @@
+@import "../../mixins.less";
+
 @basedir: "{{basedir}}";
 
 @overlay-background: rgba(255,255,255,0.8);
-
-@thumbnails-height: 120px;
-@thumbnails-aspect-ratio: 4/3;
-@thumbnails-padding-x: 0px;
-@thumbnails-padding-y: 0px;
-@thumbnails-border-size: 0px;
-@thumbnails-offset-height: @thumbnails-height + @thumbnails-padding-y * 2 + @thumbnails-border-size;
 
 .choco-body {
   overflow: hidden;
@@ -18,39 +13,24 @@
 }
 
 .choco-item {
-  display: block;
+  .choco-item;
 }
 
 .choco-item-hover {
   position: relative;
   display: block;
-  filter: ~`'alpha(opacity=40)'`;
   cursor: pointer;
 
   &:hover, &.choco-hover {
-    background-color: rgba(0, 0, 0, .4);
-    background-image: url("@{basedir}/lupa.svg");
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
+    background: rgba(0, 0, 0, .4) url("@{basedir}lupa.svg") 50% 50% no-repeat;
   }
 }
 
 .choco-overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 100;
-  display: none;
-  padding: @thumbnails-offset-height 0 0;
+  .choco-overlay(5);
   background: @overlay-background;
 
-  &.choco-show {
-    display: block;
-  }
-
-  &.animated {
+  &.choco-animated {
     transition: opacity 0.2s;
   }
 
@@ -58,49 +38,25 @@
     padding: 0;
     background: #2d3032;
     user-select: none;
-    .choco-thumbnails,
-    .choco-thumbnails-toggle,
-    .choco-leftside,
-    .choco-rightside {
-      display: none;
-    }
     .choco-slider {
       transition: none;
-      &.animated {
+      &.choco-animated {
         transition: transform 0.2s;
       }
     }
   }
 
-  &.choco-no-thumbnails {
-    padding-bottom: 0;
-  }
-
-  &.choco-hideless {
-    .choco-leftside, .choco-rightside, .choco-thumbnails, .choco-thumbnails-toggle {
-      display: none;
-      cursor: default;
-    }
-
-  }
 }
 
 .choco-slider {
-  display: block;
-  height: 100%;
-  text-align: center;
-  white-space: nowrap;
-  font-size: 0;
+  .choco-slider;
   transition: transform 0.4s;
 }
 
 .choco-slide {
-  display: inline-block;
-  overflow: hidden;
-  box-sizing: border-box;
-  padding: 20px 0;
-  width: 100%;
-  height: 100%;
+  .choco-slide;
+  padding: 0;
+  margin: 0;
   &.choco-error {
     .choco-slide-container {
       width: 60px;
@@ -121,21 +77,14 @@
   }
 }
 .choco-inline-hack {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  width: 0;
-  height: 100%;
-  vertical-align: middle;
+  .choco-inline-hack;
 }
+
 .choco-slide-container {
   display: inline-block;
-  overflow: hidden;
   max-width: 100%;
-  height: 100%;
-  color: #666;
+  color: #fff;
   vertical-align: middle;
-  font-size: 16px;
   cursor: pointer;
 }
 
@@ -152,33 +101,27 @@
 .choco-slide-image {
   display: block;
   margin: 0 auto;
-  max-width: 100%;
-  max-height: 100%;
 }
 
 .sidecolumn() {
   position: fixed;
   bottom: 0;
-  top: @thumbnails-offset-height;
+  top: 0;
   margin: 0;
   padding: 0;
   width: 20px;
   opacity: 0.5;
   cursor: pointer;
-  animation: smooth 0.8s;
   &:hover {
     opacity: 1;
     transition: opacity 0.2s;
-  }
-  &.choco-no-thumbnails {
-    bottom: 0;
   }
 }
 
 .choco-leftside {
   .sidecolumn();
   left: 0;
-  background: url("@{basedir}/close.png") 20px 50% no-repeat;
+  background: url("@{basedir}arrow-l.svg") 20px 50% no-repeat;
 }
 
 .choco-rightside {
@@ -191,7 +134,7 @@
     display: block;
     width: 20px;
     height: 20px;
-    background: url("@{basedir}/arrow-r.svg") no-repeat;
+    background: url("@{basedir}arrow-r.svg") no-repeat;
     content: '';
   }
 }
@@ -211,91 +154,3 @@
   display: inline-block;
 }
 
-.choco-thumbnails {
-  @height: @thumbnails-height;
-  @x: @thumbnails-padding-x;
-  @y: @thumbnails-padding-y;
-  @border: @thumbnails-border-size;
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  box-sizing: border-box;
-  margin: 0;
-  padding: @y @x;
-  min-width: 100%;
-  height: @thumbnails-offset-height;
-  border-top: @border solid rgba(255,255,255,0.8);
-  text-align: center;
-  white-space: nowrap;
-  font-size: 0;
-  transition: transform 0.4s, margin-bottom 0.2s;
-  //animation: thumbnails 1s ease-in-out;
-
-  &.choco-hide {
-    margin-top: -@height - @y * 2 + @border;
-  }
-
-}
-
-.choco-thumbnails-toggle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 120;
-  width: 40px;
-  height: @thumbnails-offset-height;
-  background: url("@{basedir}/arrow-t.svg") 50% 100% no-repeat;
-  box-shadow: inset -40px 0 40px -40px #000;
-  opacity: 0.5;
-  cursor: pointer;
-  transition: height 0.2s;
-  //animation: thumbnails 1.6s ease-in-out;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &.choco-no-thumbnails {
-    height: 11px;
-    background-image: url("@{basedir}/arrow-b.svg");
-    box-shadow: none;
-  }
-}
-
-.choco-thumbnail {
-  @height: @thumbnails-height;
-  @width: round(@height * @thumbnails-aspect-ratio);
-  display: inline-block;
-  margin: 0 2px;
-  padding: 0;
-  width: @width;
-  height: @height;
-  border-radius: 0;
-  background-color: #000;
-  background-position: 50% 50%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  transition: box-shadow 0.1s ease-in-out;
-
-  &:hover {
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
-  }
-
-  &.choco-selected, &.choco-selected:hover {
-    box-shadow: inset 0 0 4px #00afea;
-  }
-}
-
-@keyframes smooth {
-  0%   { opacity: 0; }
-  75%  { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-// @keyframes thumbnails {
-//   0%   { opacity: 0; }
-//   40%  { opacity: 0; }
-//   100% { opacity: 1; }
-// }
