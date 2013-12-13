@@ -99,8 +99,8 @@ class Chocolate
     addClass @overlay, choco_show
     addClass document.body, choco_body
 
-    if @thumbnails
-      @toggleThumbnails session.get()
+    showThumbnails = session.get()
+    @toggleThumbnails showThumbnails if showThumbnails?
 
     @updateDimensions()
     @select cid, updateHistory
@@ -198,17 +198,21 @@ class Chocolate
 
     return
 
-  toggleThumbnails: (show = true) ->
+  toggleThumbnails: (show) ->
     return if isTouch
 
     containers = ['leftside', 'rightside', 'overlay', 'thumbnailsToggle']
 
-    if show is false or not hasClass @thumbnails, choco_hide
-      method = 'add'
-      show = false
-    else
+    console.log show
+
+    if show is '1' or hasClass @thumbnails, choco_hide
       method = 'remove'
       show = true
+    else
+      method = 'add'
+      show = false
+
+    console.log show
 
     session.set show
 
