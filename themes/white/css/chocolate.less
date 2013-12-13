@@ -36,7 +36,6 @@
 
   &.touch {
     padding: 0;
-    background: #2d3032;
     user-select: none;
     .choco-slider {
       transition: none;
@@ -59,7 +58,6 @@
   margin: 0;
   &.choco-error {
     .choco-slide-container {
-      width: 60px;
       height: 60px;
       background-color: transparent;
       background-image: url("@{basedir}/notfound.svg");
@@ -83,7 +81,7 @@
 .choco-slide-container {
   display: inline-block;
   max-width: 100%;
-  color: #fff;
+  width: 90%;
   vertical-align: middle;
   cursor: pointer;
 }
@@ -101,6 +99,8 @@
 .choco-slide-image {
   display: block;
   margin: 0 auto;
+  max-height: 100%;
+  max-width: 100%;
 }
 
 .sidecolumn() {
