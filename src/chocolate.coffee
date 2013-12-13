@@ -223,9 +223,6 @@ class Chocolate
 
     return
 
-  initTouch: ->
-    return false
-
   ###
     Private methods
   ###
