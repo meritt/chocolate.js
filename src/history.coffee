@@ -1,4 +1,4 @@
-if not not (window.history and history.pushState)
+if not not (window.history and window.history.pushState)
   getImageFromUri = ->
     hash = window.location.hash
     return unless hash

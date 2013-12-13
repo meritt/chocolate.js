@@ -2,8 +2,8 @@ if not not window.sessionStorage
   session = do ->
     key = choco + 'thumbnails'
 
-    set: (show = true) ->
-      window.sessionStorage.setItem key, +show
+    set: (value) ->
+      window.sessionStorage.setItem key, +value
       return
 
     get: ->
