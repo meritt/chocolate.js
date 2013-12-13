@@ -43,14 +43,16 @@ $ cake build
 Options:
 
 ```
--t "название"  название темы
--b "путь"      относительный путь к статическим файлам
---no-touch
---no-history
+  -t theme      name of theme [default]
+  -b path       basedir for theme images [/dist/default/images]
+
+  --no-touch    compile without touch support
+  --no-history  compile without history api support
+  --no-session  compile without sessionStorage support
 ```
 
 Example:
 
 ```
-$ cake -t "serenity" -b "/static/chocolate" build
+$ cake -t simonenko.su -b /i/chocolate/ --no-touch build
 ```
