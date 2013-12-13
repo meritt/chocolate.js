@@ -1,4 +1,6 @@
 touchType = do ->
+  return 0 unless isSupport
+
   element = document.createElement 'div'
 
   element.setAttribute 'ongesturestart', 'return'

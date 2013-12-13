@@ -1,13 +1,5 @@
 class Chocolate
   constructor: (images, options = {}) ->
-    if not document.querySelectorAll
-      # throw "Please upgrade your browser to view chocolate"
-      return false
-
-    unless defaultOptions and templates
-      throw "You don't have defaultOptions or templates variables"
-      return false
-
     @options = merge defaultOptions, options
     @storage = new Storage @options.repeat
 
@@ -203,168 +195,170 @@ class Chocolate
     Private methods
   ###
 
-  addImage = (chocolate, data, image) ->
-    data = chocolate.storage.add data
-    return unless data
+  if isSupport
 
-    if chocolate.options.thumbnails
-      template = mustache templates['thumbnails-item'], data
-      data.thumbnail = beforeEnd chocolate.thumbnails, template
+    addImage = (chocolate, data, image) ->
+      data = chocolate.storage.add data
+      return unless data
 
-      addEvent data.thumbnail, 'click', ->
-        chocolate.select data
+      if chocolate.options.thumbnails
+        template = mustache templates['thumbnails-item'], data
+        data.thumbnail = beforeEnd chocolate.thumbnails, template
+
+        addEvent data.thumbnail, 'click', ->
+          chocolate.select data
+          return
+
+      template = mustache templates['slide'], data
+      data.slide = beforeEnd chocolate.slider, template
+
+      addClass data.slide, choco_loading
+
+      data.img = getTarget data.slide, ".#{choco}slide-image"
+
+      action = chocolate.options.actions.container
+      if action in existActions
+        addEvent data.slide, 'click', ->
+          chocolate[action]()
+          return
+        , ".#{choco}slide-container"
+
+      return unless image
+
+      showFirstImage = (event, cid) ->
+        stop event
+        chocolate.open cid
         return
 
-    template = mustache templates['slide'], data
-    data.slide = beforeEnd chocolate.slider, template
-
-    addClass data.slide, choco_loading
-
-    data.img = getTarget data.slide, ".#{choco}slide-image"
-
-    action = chocolate.options.actions.container
-    if action in existActions
-      addEvent data.slide, 'click', ->
-        chocolate[action]()
-        return
-      , ".#{choco}slide-container"
-
-    return unless image
-
-    showFirstImage = (event, cid) ->
-      stop event
-      chocolate.open cid
-      return
-
-    addClass image, choco_item
-    addEvent image, 'click', (event) ->
-      showFirstImage event, data.cid
-      return
-
-    return if isTouch
-
-    preload = new Image()
-
-    addEvent preload, 'load', ->
-      template = mustache templates['image-hover'], data
-      image.insertAdjacentHTML 'afterend', template
-
-      popover = getTarget document, '[data-pid="' + data.cid + '"]'
-      setStyle popover,
-        'width': "#{offsetWidth image}px"
-        'height': "#{offsetHeight image}px"
-        'margin-top': "-#{offsetHeight image}px"
-
-      addEvent image, 'mouseenter', ->
-        toggleClass popover, choco_hover
-        return
-
-      addEvent image, 'mouseleave', ->
-        toggleClass popover, choco_hover
-        return
-
-      addEvent popover, 'click', (event) ->
+      addClass image, choco_item
+      addEvent image, 'click', (event) ->
         showFirstImage event, data.cid
         return
 
-    preload.src = data.thumb
+      return if isTouch
 
-    return
+      preload = new Image()
 
-  loadImage = (item, fn) ->
-    image = new Image()
+      addEvent preload, 'load', ->
+        template = mustache templates['image-hover'], data
+        image.insertAdjacentHTML 'afterend', template
 
-    addEvent image, 'load', ->
-      item.img.src = @src
-      item.w = image.width
-      item.h = image.height
+        popover = getTarget document, '[data-pid="' + data.cid + '"]'
+        setStyle popover,
+          'width': "#{offsetWidth image}px"
+          'height': "#{offsetHeight image}px"
+          'margin-top': "-#{offsetHeight image}px"
 
-      removeClass item.slide, choco_loading
-      setSize item
+        addEvent image, 'mouseenter', ->
+          toggleClass popover, choco_hover
+          return
 
-      fn true
-      return
+        addEvent image, 'mouseleave', ->
+          toggleClass popover, choco_hover
+          return
 
-    addEvent image, 'error', ->
-      removeClass item.slide, choco_loading
+        addEvent popover, 'click', (event) ->
+          showFirstImage event, data.cid
+          return
 
-      addClass item.slide, choco_error
-      addClass item.thumbnail, choco_error
-
-      fn false
-      return
-
-    image.src = item.orig
-    return
-
-  prepareActionFor = (chocolate, container) ->
-    action = chocolate.options.actions[container]
-    return if action not in existActions
-
-    verify = chocolate[container].classList[0]
-
-    addEvent chocolate[container], 'click', (event) ->
-      if hasClass event.target, verify
-        chocolate[action]()
+      preload.src = data.thumb
 
       return
 
-    if action is 'close'
-      addEvent chocolate[container], 'mouseenter', ->
-        toggleClass chocolate.overlay, choco_hover, ".#{choco}close"
+    loadImage = (item, fn) ->
+      image = new Image()
+
+      addEvent image, 'load', ->
+        item.img.src = @src
+        item.w = image.width
+        item.h = image.height
+
+        removeClass item.slide, choco_loading
+        setSize item
+
+        fn true
         return
 
-      addEvent chocolate[container], 'mouseleave', ->
-        toggleClass chocolate.overlay, choco_hover, ".#{choco}close"
+      addEvent image, 'error', ->
+        removeClass item.slide, choco_loading
+
+        addClass item.slide, choco_error
+        addClass item.thumbnail, choco_error
+
+        fn false
         return
 
-    return
+      image.src = item.orig
+      return
 
+    prepareActionFor = (chocolate, container) ->
+      action = chocolate.options.actions[container]
+      return if action not in existActions
 
-  setSize = (item) ->
-    return unless item.w > 0 and item.h > 0
+      verify = chocolate[container].classList[0]
 
-    getEnv()
+      addEvent chocolate[container], 'click', (event) ->
+        if hasClass event.target, verify
+          chocolate[action]()
 
-    s = scale item.w, item.h, env.s.w, env.s.h
-
-    item.img.width = s[0]
-    item.img.height = s[1]
-
-    return
-
-  addEvent window, 'resize', ->
-    needResize = true
-
-    if isOpen
-      setAnimation opened, false
-
-      opened.updateDimensions()
-      opened.select opened.current
-
-      setAnimation opened
-
-    return
-
-  setAnimation = (chocolate, enable = true) ->
-    method = if enable then 'add' else 'remove'
-
-    if chocolate.options.thumbnails
-      classList chocolate.thumbnails, choco_animated, null, method
-
-    classList chocolate.slider, choco_animated, null, method
-
-  unless isTouch
-    addEvent window, 'keydown', (event) ->
-      if not isOpen or not hasClass opened.overlay, choco_show
         return
 
-      switch event.keyCode
-        when 27 # ESC
-          opened.close()
-        when 37 # Left arrow
-          opened.prev()
-        when 39 # Right arrow
-          opened.next()
+      if action is 'close'
+        addEvent chocolate[container], 'mouseenter', ->
+          toggleClass chocolate.overlay, choco_hover, ".#{choco}close"
+          return
 
-window.chocolate = Chocolate
+        addEvent chocolate[container], 'mouseleave', ->
+          toggleClass chocolate.overlay, choco_hover, ".#{choco}close"
+          return
+
+      return
+
+
+    setSize = (item) ->
+      return unless item.w > 0 and item.h > 0
+
+      getEnv()
+
+      s = scale item.w, item.h, env.s.w, env.s.h
+
+      item.img.width = s[0]
+      item.img.height = s[1]
+
+      return
+
+    addEvent window, 'resize', ->
+      needResize = true
+
+      if isOpen
+        setAnimation opened, false
+
+        opened.updateDimensions()
+        opened.select opened.current
+
+        setAnimation opened
+
+      return
+
+    setAnimation = (chocolate, enable = true) ->
+      method = if enable then 'add' else 'remove'
+
+      if chocolate.options.thumbnails
+        classList chocolate.thumbnails, choco_animated, null, method
+
+      classList chocolate.slider, choco_animated, null, method
+
+    unless isTouch
+      addEvent window, 'keydown', (event) ->
+        if not isOpen or not hasClass opened.overlay, choco_show
+          return
+
+        switch event.keyCode
+          when 27 # ESC
+            opened.close()
+          when 37 # Left arrow
+            opened.prev()
+          when 39 # Right arrow
+            opened.next()
+
+window.chocolate = if isSupport then Chocolate else dummy

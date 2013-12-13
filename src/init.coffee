@@ -1,3 +1,7 @@
+if not defaultOptions or not templates
+  throw "You don't have defaultOptions or templates variables"
+  return
+
 choco = 'choco-'
 
 choco_body          = choco + 'body'
@@ -17,6 +21,7 @@ env = {}
 
 isOpen = false
 isTouch = false
+isSupport = not not document.querySelectorAll
 
 needResize = true
 
