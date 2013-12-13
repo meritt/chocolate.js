@@ -178,14 +178,19 @@ class Chocolate
 
     containers = ['leftside', 'rightside', 'overlay', 'thumbnailsToggle']
 
-    if show is '1' or hasClass @thumbnails, choco_hide
-      method = 'remove'
-      show = true
+    if show?
+      if show is '1'
+        method = 'remove'
+      else
+        method = 'add'
     else
-      method = 'add'
-      show = false
-
-    session.set show
+      if hasClass @thumbnails, choco_hide
+        method = 'remove'
+        show = true
+      else
+        method = 'add'
+        show = false
+      session.set show
 
     classList @thumbnails, choco_hide, null, method
 
