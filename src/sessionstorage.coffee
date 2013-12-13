@@ -1,14 +1,11 @@
-isSessionStorage = not not window.sessionStorage
+if not not window.sessionStorage
+  session = do ->
+    key = choco + 'thumbnails'
 
-if isSessionStorage
-  storageKey = "#{choco}thumbnails"
+    set: (show = true) ->
+      window.sessionStorage.setItem key, +show
+      return
 
-  setThumbnailsSettings = (show = true) ->
-    window.sessionStorage.setItem storageKey, +show
-
-  getThumbnailsSettings = ->
-    res = window.sessionStorage.getItem(storageKey)
-    if res?
-      return not not +res
-    else
-      return true
+    get: ->
+      option = window.sessionStorage.getItem key
+      return option and option is '0'
