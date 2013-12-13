@@ -388,7 +388,6 @@ class Chocolate
     needResize = true
 
     if isOpen
-
       setAnimation opened, false
 
       opened.updateDimensions()
@@ -400,8 +399,10 @@ class Chocolate
 
   setAnimation = (chocolate, enable = true) ->
     method = if enable then 'add' else 'remove'
-    if chocolate.thumbnails?
+
+    if chocolate.options.thumbnails
       classList chocolate.thumbnails, choco_animated, null, method
+
     classList chocolate.slider, choco_animated, null, method
 
   unless isTouch
