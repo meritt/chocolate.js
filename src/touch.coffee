@@ -91,27 +91,23 @@ Chocolate::initTouch = (env) ->
     return unless t
 
     t.dx = (t.x - finger.x) || 0
-    t.dy = (t.y - finger.y) || 0
     finger.x = t.x
     finger.y = t.y
-    t.x0 = finger.x0
-    t.y0 = finger.y0
 
-    s = getOffset slider
+    sliderOffset = getOffset slider
 
-    dx = Math.abs(t.x0 - t.x)
-    dy = Math.abs(t.y0 - t.y)
+    dx = Math.abs(finger.x0 - t.x)
+    dy = Math.abs(finger.y0 - t.y)
+    isThumbing = dx > dy
+    isClosing = not isThumbing
 
-    if dx > dy
-      isThumbing = true
-      isClosing = false
+    if isThumbing
       transparent 1
-      translate slider, s + t.dx
+      translate slider, sliderOffset + t.dx
     else
-      isClosing = true
-      isThumbing = false
       transparent Math.round((1 - dy / env.h) * 100) / 100
     stop event
+    return
 
   end = (event) =>
     t = captureFinger getTouch event.changedTouches, finger.id
@@ -123,9 +119,9 @@ Chocolate::initTouch = (env) ->
     if isThumbing
       addClass slider, choco_animated
       max = @storage.length() - 1 if max is -1
-      s = getOffset slider
-      s = touchShift t, (s / env.w)
-      @select squeeze s, 0, max
+      sliderOffset = getOffset slider
+      sliderOffset = touchShift t, (sliderOffset / env.w)
+      @select squeeze sliderOffset, 0, max
     if isClosing
       addClass overlay, choco_animated
       if opacity < 0.7
@@ -133,6 +129,8 @@ Chocolate::initTouch = (env) ->
       else
         transparent 1
         isClosing = false
+    finger = {}
+    return
 
   addEvent slider, 'click', (event) ->
     stop event
@@ -149,7 +147,6 @@ Chocolate::initTouch = (env) ->
   addEvent slider, 'webkitTransitionEnd', ->
     removeClass slider, choco_animated
     return
-
 
   addEvent overlay, 'transitionend', ->
     finish()
