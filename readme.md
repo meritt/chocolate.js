@@ -1,15 +1,24 @@
-Chocolate.js — nice gallery script
-----------------------------------------
+# Chocolate.js
 
-Для того чтобы создать релиз используйте комманду
+Chocolate.js is a high-customizable pop-up gallery.
 
-    cake build
+## Build your own Chocolate
 
-Дополнительные возможности создания релиза:
+To create your own build exec
 
-    -t "название"  название темы
-    -b "путь"      относительный путь к статическим файлам
+```
+$ cake build
+```
 
-Например:
+Options:
 
-    cake -t "serenity" -b "/static/chocolate" build
+```
+-t theme  name of theme
+-b path   basedir for theme images
+```
+
+Example:
+
+```
+$ cake -t simonenko.su -b /i/chocolate build
+```
