@@ -1,4 +1,4 @@
-dummy = pushState = () ->
+setThumbnailsSettings = getThumbnailsSettings = pushState = dummy = () ->
 
 merge = (o1, o2) ->
   for own key, value of o2
