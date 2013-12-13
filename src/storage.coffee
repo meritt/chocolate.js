@@ -1,9 +1,9 @@
 class Storage
-  images: {}
-  counter: 0
 
   constructor: (repeat) ->
     @repeat = not not repeat
+    @images = {}
+    @counter = 0
 
   add: (image) ->
     return false unless image.orig
