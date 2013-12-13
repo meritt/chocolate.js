@@ -3,9 +3,11 @@ class Chocolate
     @options = merge defaultOptions, options
     @storage = new Storage @options.repeat
 
-    template = templates.overlay.replace '{{thumbnails}}', if @options.thumbnails then templates.thumbnails else ''
+    thumbnailTemplate = if @options.thumbnails and templates.thumbnails then templates.thumbnails else ''
 
+    template = templates.overlay.replace '{{thumbnails}}', thumbnailTemplate
     @overlay = beforeEnd document.body, template
+
     @slider = getTarget @overlay, ".#{choco}slider"
 
     startTouch @
@@ -313,7 +315,6 @@ class Chocolate
           return
 
       return
-
 
     setSize = (item) ->
       return unless item.w > 0 and item.h > 0
