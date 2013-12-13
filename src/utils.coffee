@@ -1,6 +1,3 @@
-pushState = dummy = ->
-session = set: dummy, get: dummy
-
 merge = (o1, o2) ->
   for own key, value of o2
     if value instanceof Object
@@ -97,6 +94,35 @@ scale = (w1, h1, w2, h2) ->
     h1 = h2
 
   return [toInt(w1), toInt(h1)]
+
+getEnv = ->
+  return env unless needResize
+
+  env =
+    w: window.innerWidth or document.documentElement.clientWidth
+    h: window.innerHeight or document.documentElement.clientHeight
+
+  if isOpen
+    slide = getTarget opened.slider, ".#{choco}slide"
+    return env unless slide
+
+    needResize = false
+
+    style = getStyle slide
+    shift = toInt style 'width'
+
+    h = toInt(style 'height') -
+        toInt(style 'padding-top') -
+        toInt(style 'padding-bottom')
+
+    w = shift -
+        toInt(style 'padding-left') -
+        toInt(style 'padding-right')
+
+    env.shift = shift * -1
+    env.s = {w, h}
+
+  return env
 
 translate = do ->
   property = false
