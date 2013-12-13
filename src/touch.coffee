@@ -5,7 +5,7 @@ getOffset = (element) ->
   transform = style('transform') or style('-webkit-transform') or style('-ms-transform') or ''
 
   if regex.test transform
-    transform = reg.exec(tr)[1].split(',')[4].trim() or 0
+    transform = regex.exec(transform)[1].split(',')[4].trim() or 0
   else
     transform = 0
 
@@ -147,7 +147,7 @@ Chocolate::initTouch = (env) ->
     removeClass slider, 'animated'
     return
 
-  finish =>
+  finish = =>
     removeClass overlay, 'animated'
     return unless isClosing
 
@@ -166,10 +166,10 @@ Chocolate::initTouch = (env) ->
 
   # addEvent overlay, 'touchend', (event) ->
   #   touch.end()
-  # 
+  #
   # addEvent overlay, 'touchcancel', (event) ->
   #   touch.cancel()
-  # 
+  #
   # addEvent overlay, 'touchleave', (event) ->
   #   touch.end()
 
