@@ -26,8 +26,15 @@
 
 .choco-overlay {
   .choco-overlay(100);
-  padding: 0 0 0;
+  padding: 0;
   background: @overlay-background;
+
+  &.touch {
+    .choco-leftside,
+    .choco-rightside {
+      display: none;
+    }
+  }
 
   &.choco-hideless {
     .choco-leftside,
