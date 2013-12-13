@@ -1,5 +1,5 @@
 if not defaultOptions or not templates
-  throw "You don't have defaultOptions or templates variables"
+  throw new Error "You don't have defaultOptions or templates variables"
   return
 
 choco = 'choco-'
@@ -21,7 +21,7 @@ env = {}
 
 isOpen = false
 isTouch = false
-isSupport = not not document.querySelectorAll
+isSupport = not not window.addEventListener
 
 needResize = true
 
