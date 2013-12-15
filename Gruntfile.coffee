@@ -129,7 +129,16 @@ module.exports = (grunt) ->
           dest: "#{dest}/images/"
         ]
 
+    dalek:
+      options:
+        browser: ['chrome']
+      test:
+        src: ['test/*.js']
+
   require('matchdep').filter('grunt-*').forEach(grunt.loadNpmTasks)
+  grunt.loadNpmTasks 'grunt-dalek'
+
+  grunt.registerTask 'test', ['dalek']
 
   grunt.registerTask 'default', [
     'clean'

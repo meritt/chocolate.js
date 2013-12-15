@@ -33,10 +33,10 @@
     }
   , "devDependencies": {
         "dalekjs": "0.0.8"
-      , "dalek-cli": "0.0.3"
       , "dalek-browser-chrome": "0.0.8"
+      , "grunt-dalek": "0.2.x"
     }
   , "scripts": {
-      "test": "./node_modules/.bin/dalek test/*.js"
+      "test": "grunt test"
     }
 }
