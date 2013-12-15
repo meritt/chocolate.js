@@ -28,6 +28,7 @@
       , "grunt-contrib-less": "0.8.x"
       , "grunt-autoprefixer": "0.5.x"
       , "grunt-csso": "0.5.x"
+      , "grunt-contrib-imagemin": "0.4.x"
       , "grunt-replace": "0.5.x"
     }
   , "devDependencies": {

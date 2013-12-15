@@ -120,6 +120,15 @@ module.exports = (grunt) ->
           filter: 'isFile'
         ]
 
+    imagemin:
+      images:
+        files: [
+          expand: true
+          cwd: "#{dest}/images/"
+          src: ['*.{png,jpg,gif}']
+          dest: "#{dest}/images/"
+        ]
+
   require('matchdep').filter('grunt-*').forEach(grunt.loadNpmTasks)
 
   grunt.registerTask 'default', [
@@ -132,4 +141,5 @@ module.exports = (grunt) ->
     'uglify'
     'csso'
     'copy'
+    'imagemin'
   ]
