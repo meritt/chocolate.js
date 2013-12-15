@@ -17,6 +17,11 @@
   , "engines": {
       "node": ">=0.10.x"
     }
+  , "devDependencies": {
+      "dalekjs": "0.0.8"
+    , "dalek-cli": "0.0.3"
+    , "dalek-browser-chrome": "0.0.8"
+  }
   , "dependencies": {
       "coffee-script": "1.6.x"
     , "less": "1.5.x"
