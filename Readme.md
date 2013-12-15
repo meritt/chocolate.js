@@ -56,22 +56,22 @@ You can create your own
 To create your own build exec
 
 ```
-$ cake build
+$ grunt
 ```
 
 Options:
 
 ```
-  -t theme      name of theme [default]
-  -b path       basedir for theme images [/dist/default/images]
+  --theme=name    name of theme [default]
+  --basedir=path  basedir for theme images [/dist/default/images]
 
-  --no-touch    compile without touch support
-  --no-history  compile without history api support
-  --no-session  compile without sessionStorage support
+  --no-touch      compile without touch support
+  --no-history    compile without history api support
+  --no-session    compile without sessionStorage support
 ```
 
 Example:
 
 ```
-$ cake -t simonenko.su -b /i/chocolate/ --no-touch build
+$ grunt --theme=simonenko.su --basedir=/i/chocolate/ --no-session
 ```
