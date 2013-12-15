@@ -31,6 +31,6 @@
     , "jsdom": "0.8.x"
   }
   , "scripts": {
-      "test": "./node_modules/.bin/dalek test/test.js -b chrome"
+      "test": "./node_modules/.bin/dalek test/*.js"
   }
 }
