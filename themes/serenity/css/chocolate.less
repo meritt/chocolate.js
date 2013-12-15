@@ -56,10 +56,16 @@
   .choco-slide;
   padding: 0;
   margin: 0;
+  .choco-slide-container {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
   &.choco-error {
     .choco-slide-container {
-      min-width: 60px;
-      min-height: 90px;
+      width: 60px;
+      height: 90px;
+      overflow: auto;
       background-color: transparent;
       background-image: url("@{basedir}notfound.svg");
       background-position: 50% 30px;
@@ -71,6 +77,11 @@
     }
   }
   &.choco-loading {
+    .choco-slide-container {
+      overflow: auto;
+      width: 30px;
+      height: 30px;
+    }
     .choco-slide-image {
       display: none;
     }
@@ -100,8 +111,8 @@
 .choco-slide-image {
   display: block;
   margin: 0 auto;
-  max-height: 100%;
-  max-width: 100%;
+  height: 100%;
+  width: auto;
 }
 
 .sidecolumn() {
@@ -111,6 +122,8 @@
   margin: 0;
   padding: 0;
   width: 20px;
+  min-width: 20px;
+  z-index: 6;
   opacity: 0.5;
   cursor: pointer;
   &:hover {
@@ -122,7 +135,7 @@
 .choco-leftside {
   .sidecolumn();
   left: 0;
-  background: url("@{basedir}arrow-l.svg") 20px 50% no-repeat;
+  background: url("@{basedir}arrow-l.svg") 0 50% no-repeat;
 }
 
 .choco-rightside {
@@ -131,7 +144,7 @@
   &:after {
     position: absolute;
     top: 50%;
-    right: 20px;
+    right: 0;
     display: block;
     width: 20px;
     height: 20px;
