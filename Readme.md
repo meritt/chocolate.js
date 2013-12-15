@@ -73,5 +73,5 @@ Options:
 Example:
 
 ```
-$ grunt --theme=simonenko.su --basedir=/i/chocolate/ --no-session
+$ grunt --theme=simonenko --basedir=/i/chocolate/ --no-session
 ```
