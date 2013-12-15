@@ -370,4 +370,4 @@ class Chocolate
           when 39 # Right arrow
             opened.next()
 
-window.chocolate = if isSupport then Chocolate else dummy
+window.Chocolate = if isSupport then Chocolate else dummy

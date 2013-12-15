@@ -5,7 +5,7 @@ module.exports = {
   'Test init chocko items': function (test) {
     test.open(TEST_FILE)
       .execute(function () {
-         var chocko = new chocolate(document.querySelectorAll('img'));
+         var chocko = new Chocolate(document.querySelectorAll('img'));
        })
       .assert.numberOfElements('.choco-item ')
       .is(IMAGE_QUANTITY, 'should be ' + IMAGE_QUANTITY + ' choco-item')
@@ -15,7 +15,7 @@ module.exports = {
     test.open(TEST_FILE)
       .execute(function () {
          var imgs = document.querySelectorAll('img');
-         var chocko = new chocolate(imgs);
+         var chocko = new Chocolate(imgs);
          chocko.open(imgs.length);
        })
       .assert.visible('.choco-show')
@@ -24,7 +24,7 @@ module.exports = {
   'Test choco-close': function (test) {
     test.open(TEST_FILE).execute(function () {
       var imgs = document.querySelectorAll('img');
-      var chocko = new chocolate(imgs);
+      var chocko = new Chocolate(imgs);
       chocko.open(imgs.length);
       setTimeout(function() {
         chocko.close();
@@ -37,7 +37,7 @@ module.exports = {
   'Test choco-thumbnails': function(test) {
     test.open(TEST_FILE).execute(function() {
       var imgs = document.querySelectorAll('img');
-      var chocko = new chocolate(imgs);
+      var chocko = new Chocolate(imgs);
       chocko.open(imgs.length);
     });
 
@@ -50,7 +50,7 @@ module.exports = {
   'Test choco-next from 1 to 2': function (test) {
     test.open(TEST_FILE).execute(function () {
       var imgs = document.querySelectorAll('img');
-      var chocko = new chocolate(imgs);
+      var chocko = new Chocolate(imgs);
       chocko.open(0, null);
       setTimeout(function() {
         chocko.next();
@@ -64,7 +64,7 @@ module.exports = {
   'Test choco-next from 2 to 3': function (test) {
     test.open(TEST_FILE).execute(function () {
       var imgs = document.querySelectorAll('img');
-      var chocko = new chocolate(imgs);
+      var chocko = new Chocolate(imgs);
       chocko.open(1, null);
       setTimeout(function() {
         chocko.next();
@@ -78,7 +78,7 @@ module.exports = {
   'Test choco-prev from 2 to 1': function (test) {
     test.open(TEST_FILE).execute(function () {
       var imgs = document.querySelectorAll('img');
-      var chocko = new chocolate(imgs);
+      var chocko = new Chocolate(imgs);
       chocko.open(1, null);
       setTimeout(function() {
         chocko.prev();
@@ -92,7 +92,7 @@ module.exports = {
   'Test choco-prev from 3 to 2': function (test) {
     test.open(TEST_FILE).execute(function () {
       var imgs = document.querySelectorAll('img');
-      var chocko = new chocolate(imgs);
+      var chocko = new Chocolate(imgs);
       chocko.open(2, null);
       setTimeout(function() {
         chocko.prev();

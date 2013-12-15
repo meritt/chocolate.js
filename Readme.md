@@ -16,7 +16,7 @@ Then create new instance of chocolate passing HTMLCollection to it:
 
 ```html
 <script>
-  new chocolate(document.querySelectorAll('img'));
+  new Chocolate(document.querySelectorAll('img'));
 </script>
 ```
 
@@ -26,7 +26,7 @@ Chocolate automatically added all images you've passed to his gallery. Then when
 
 You can create Chocolate instance passing them some options:
 ```js
-new chocolate(document.querySelectorAll('img'), {
+new Chocolate(document.querySelectorAll('img'), {
   "thumbnails": true,     // Show thumbnails (boolean)
   "history":    true,     // Use history API (boolean)
   "repeat":     true,     // Show first image after last and last before first (boolean)
