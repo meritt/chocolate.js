@@ -151,3 +151,24 @@ translate = do ->
         shift = "translateX(#{shift}px)"
 
       element.style[property] = shift
+
+cssAnimationsSupport = do ->
+  cssanimations = 'cssanimations'
+  html = document.querySelector 'html'
+
+  return true if hasClass html, cssanimations
+
+  support = false
+  element = document.createElement 'div'
+
+  support = true if element.style.animationName
+
+  prefixes = ['Webkit', 'Moz', 'O', 'ms']
+
+  if support is false
+    for prefix in prefixes when element.style[prefix + 'AnimationName'] isnt undefined
+      support = true
+      break
+
+  addClass html, cssanimations if support is true
+  support
