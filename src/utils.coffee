@@ -109,7 +109,7 @@ getEnv = ->
     needResize = false
 
     style = getStyle slide
-    shift = toInt style 'width'
+    shift = toInt slide.offsetWidth
 
     h = toInt(style 'height') -
         toInt(style 'padding-top') -
