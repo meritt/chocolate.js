@@ -131,7 +131,11 @@
   text-overflow: ellipsis;
   font-size: 16px;
   line-height: 20px;
+  &.choco-empty {
+    display: none;
+  }
 }
+
 
 .choco-slide-image {
   display: block;
@@ -192,6 +196,20 @@
 .choco-spinner {
   display: none;
   height: 100%;
+  .choco-spinner-cssanimation {
+    display: none;
+  }
+}
+
+.cssanimations {
+
+  .choco-spinner-gifanimation {
+    display: none;
+  }
+  .choco-spinner-cssanimation {
+    display: block;
+    animation: spin 0.8s linear infinite;
+  }
 }
 
 .choco-loading .choco-spinner {
@@ -283,6 +301,11 @@
   0%   { opacity: 0; }
   75%  { opacity: 0; }
   100% { opacity: 1; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 // @keyframes thumbnails {
