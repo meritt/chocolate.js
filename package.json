@@ -18,11 +18,14 @@
       "node": ">=0.10.x"
     }
   , "dependencies": {
-      "coffee-script": "1.6.x"
-    , "less": "1.5.x"
-    , "autoprefixer": "0.8.x"
-    , "uglify-js": "2.4.x"
-    , "cssmin": "0.4.x"
-    , "jsdom": "0.8.x"
-  }
+        "jsdom": "0.8.x"
+      , "grunt": "0.4.x"
+      , "grunt-contrib-copy": "0.4.x"
+      , "grunt-contrib-coffee": "0.7.x"
+      , "grunt-contrib-uglify": "0.2.x"
+      , "grunt-contrib-less": "0.8.x"
+      , "grunt-autoprefixer": "0.5.x"
+      , "grunt-csso": "0.5.x"
+      , "grunt-replace": "0.5.x"
+    }
 }
