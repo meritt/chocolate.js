@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Chocolate.js by serenity</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Chocolate.js</h1>
+        <p>High-customizable gallery</p>
+
+        <p class="view"><a href="https://github.com/serenity/chocolate.js">View the Project on GitHub <small>serenity/chocolate.js</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/serenity/chocolate.js/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/serenity/chocolate.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/serenity/chocolate.js">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
+
+<p>Inlcude chocolate style and script:</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"/css/chocolate.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/js/chocolate.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+<p>Then create new instance of chocolate passing HTMLCollection to it:</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script&gt;</span>
+  <span class="kd">var</span> <span class="nx">choco</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chocolate</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s1">'img'</span><span class="p">));</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+<p>Chocolate automatically added all images you've passed to his gallery. Then when you click on one of this images, chocolate open the image in its gallery. You can switch between images by clicking on them thumbnails or by pressing arrow keys or by clicking on panels.</p>
+
+<h3>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<p>You can create chocolate instance passing them some options:</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">choco</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chocolate</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s1">'img'</span><span class="p">),</span> <span class="p">{</span>
+  <span class="s2">"thumbnails"</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>     <span class="c1">// Show thumbnails (boolean)</span>
+  <span class="s2">"history"</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>        <span class="c1">// Use history API (boolean)</span>
+  <span class="s2">"repeat"</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>         <span class="c1">// Show first image after last and last before first (boolean)</span>
+
+  <span class="s2">"actions"</span><span class="o">:</span> <span class="p">{</span>            <span class="c1">// Actions bound on click of container</span>
+    <span class="s2">"overlay"</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>     <span class="c1">// Click on the space top and down of the image</span>
+    <span class="s2">"leftside"</span><span class="o">:</span> <span class="s2">"prev"</span><span class="p">,</span>   <span class="c1">// Click on space left of the image</span>
+    <span class="s2">"container"</span><span class="o">:</span> <span class="s2">"next"</span><span class="p">,</span>  <span class="c1">// Click on the image</span>
+    <span class="s2">"rightside"</span><span class="o">:</span> <span class="s2">"close"</span>  <span class="c1">// Click on space right of the image</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="themes" class="anchor" href="#themes"><span class="octicon octicon-link"></span></a>Themes</h2>
+
+<p>Chocolate consists of four different zones: thumbnails, container with image, left panel, right panel. You can manage actions which occur when you click on one of three zones (exclude thumbnails).</p>
+
+<p>You can create your own</p>
+
+<ul>
+<li>stylesheets,</li>
+<li>images,</li>
+<li>templates,</li>
+<li>options.</li>
+</ul><h2>
+<a name="build-your-own-chocolatejs" class="anchor" href="#build-your-own-chocolatejs"><span class="octicon octicon-link"></span></a>Build your own chocolate.js</h2>
+
+<p>To create your own build exec</p>
+
+<pre><code>$ grunt
+</code></pre>
+
+<p>Options:</p>
+
+<pre><code>--theme=name    name of theme [default]
+--basedir=path  basedir for theme images [/dist/default/images]
+
+--no-touch      compile without touch support
+--no-history    compile without history api support
+--no-session    compile without sessionStorage support
+</code></pre>
+
+<p>Example:</p>
+
+<pre><code>$ grunt --theme=simonenko --basedir=/i/chocolate/ --no-session
+</code></pre>
+
+<h2>
+<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
+
+<ul>
+<li>
+<a href="//github.com/meritt">Alexey Simonenko</a>, <a href="mailto:alexey@simonenko.su">alexey@simonenko.su</a>, <a href="http://simonenko.su">simonenko.su</a>
+</li>
+<li>
+<a href="//github.com/isquariel">Sophia Ilinova</a>, <a href="mailto:tavsophi@gmail.com">tavsophi@gmail.com</a>
+</li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License, see the included <code>License.md</code> file.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/serenity">serenity</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-37507032-11");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
