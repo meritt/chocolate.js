@@ -276,6 +276,9 @@ class Chocolate
         item.h = image.height
 
         removeClass item.slide, choco_loading
+        title = getTarget item.slide, ".#{choco_title}"
+        if title.innerHTML.trim() isnt ""
+          removeClass title, choco_empty
         setSize item
 
         fn true
