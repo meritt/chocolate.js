@@ -1,17 +1,22 @@
 if not not (window.history and window.history.pushState)
   getImageFromUri = ->
     hash = window.location.hash
-    return unless hash
+
+    if not hash and isOpen
+      opened.close()
+      return
 
     if isOpen
       item = opened.storage.search hash
-      return opened.select item if item
+      if item
+        opened.select item, false
+        return
 
     for chocolate in instances
       item = chocolate.storage.search hash
       if item
         opened.close() if isOpen
-        chocolate.open item
+        chocolate.open item, false
         return
 
   if 'onhashchange' of window
@@ -25,7 +30,7 @@ if not not (window.history and window.history.pushState)
 
   pushState = (title, hash) ->
     title = title or ''
-    hash = hash or ''
+    return unless hash
 
     window.history.pushState null, title, "##{hash}"
     return
