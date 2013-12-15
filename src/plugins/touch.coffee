@@ -1,3 +1,5 @@
+choco_touch = choco + 'touch'
+
 touchType = do ->
   return 0 unless isSupport
 
@@ -142,7 +144,7 @@ if touchType isnt 0
       finger = {}
       return
 
-    addClass chocolate.overlay, 'touch'
+    addClass chocolate.overlay, choco_touch
 
     addEvent chocolate.slider, 'click', (event) ->
       stop event
