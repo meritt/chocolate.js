@@ -14,16 +14,16 @@ touchType = do ->
   return 0
 
 transitionType = do ->
-  transitions = 'csstransitions'
-  html = document.querySelector 'html'
+  element = document.createElement 'div'
   property = 'transition'
 
-  return true if html.style[property] isnt undefined
+  return true if element.style[property] isnt undefined
 
+  property = property.replace /^./, property[0].toUpperCase()
   prefixes = ['Webkit', 'Moz', 'O', 'ms']
   for prefix in prefixes
-    if element.style[prefix + 'Transition'] isnt undefined
-      return prefix.toLowerCase() + 'Transition'
+    if element.style[prefix + property] isnt undefined
+      return prefix.toLowerCase() + property
   return false
 
 if touchType isnt 0
