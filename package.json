@@ -28,4 +28,11 @@
       , "grunt-csso": "0.5.x"
       , "grunt-replace": "0.5.x"
     }
+  , "devDependencies": {
+        "dalekjs": "0.0.8"
+      , "dalek-browser-chrome": "0.0.8"
+    }
+  , "scripts": {
+      "test": "./node_modules/.bin/dalek test/test.js -b chrome"
+    }
 }

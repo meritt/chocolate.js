@@ -49,7 +49,9 @@
 
 .choco-slider {
   .choco-slider;
-  transition: transform 0.4s;
+  &.choco-animated {
+    transition: transform 0.4s;
+  }
 }
 
 .choco-slide {
@@ -111,8 +113,10 @@
 .choco-slide-image {
   display: block;
   margin: 0 auto;
-  height: 100%;
+  min-height: 100%;
+  min-width: 100%;
   width: auto;
+  height: auto;
 }
 
 .sidecolumn() {
@@ -121,8 +125,8 @@
   top: 0;
   margin: 0;
   padding: 0;
-  width: 20px;
-  min-width: 20px;
+  width: 60px;
+  min-width: 60px;
   z-index: 6;
   opacity: 0.5;
   cursor: pointer;
