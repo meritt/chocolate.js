@@ -1,7 +1,5 @@
-node_modules
 .DS_Store
-.settings
-.project
-.buildpath
+node_modules
 Thumbs.db
 dist/*
+temp*

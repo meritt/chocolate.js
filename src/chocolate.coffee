@@ -1,521 +1,373 @@
-counter = 0
-
-existActions = ['next', 'prev', 'close']
-
-isHistory = not not (window.history and history.pushState)
-isStorage = 'localStorage' of window and window['localStorage']?
-isIE8     = document.documentMode? and document.documentMode is 8
-
 class Chocolate
-  images: {}
-  length: 0
-
-  current: null
-
-  ###
-   Конструктор
-  ###
   constructor: (images, options = {}) ->
-    if not document.querySelectorAll
-      # throw "Please upgrade your browser to view chocolate"
-      return false
+    @options = merge defaultOptions, options
+    @storage = new Storage @options.repeat
 
-    if not defaultOptions or not templates
-      throw "You don't have defaultOptions or templates variables"
-      return false
+    thumbnailTemplate = if @options.thumbnails and templates.thumbnails then templates.thumbnails else ''
 
-    @options = $.extend defaultOptions, options
+    template = templates.overlay.replace '{{thumbnails}}', thumbnailTemplate
+    @overlay = beforeEnd document.body, template
 
-    ###
-     Подготовка шаблонов
-    ###
-    template = templates['overlay']
-    template = template.replace '{{spinner}}', templates['spinner']
-    template = template.replace '{{thumbnails}}', if @options.thumbnails then templates['thumbnails'] else ''
+    @slider = getTarget @overlay, ".#{choco}slider"
 
-    @overlay = $(template).appendTo 'body'
+    startTouch @
 
-    ###
-     Получаем необходимые контейнеры
-    ###
-    containers = ['container', 'spinner', 'leftside', 'rightside', 'header']
-    containers.push 'thumbnails' if @options.thumbnails
+    if isTouch
+      @options.thumbnails = false
+    else
+      containers = ['leftside', 'rightside']
 
-    @[container] = @overlay.find '.choco-' + container for container in containers
-    @overlay.addClass 'choco-ie8' if isIE8
+      if @options.thumbnails
+        containers.push 'thumbnails'
 
-    ###
-     Добавляем события по-умолчанию для контейнеров
-    ###
-    @overlay.find('.choco-close').on 'click', => @close()
+      for container in containers
+        @[container] = getTarget @overlay, ".#{choco}#{container}"
 
-    @_prepareActionFor container for container in ['overlay', 'container', 'leftside', 'rightside']
+      if @options.thumbnails
+        @thumbnailsToggle = getTarget @overlay, ".#{choco}thumbnails-toggle"
 
-    $(window).on 'keyup', (event) =>
-      if @overlay.hasClass 'choco-show'
-        switch event.keyCode
-          when 27    # ESC
-            @close()
-          when 37    # Left arrow
-            @prev()
-          when 39    # Right arrow
-            @next()
+        addEvent @thumbnailsToggle, 'click', =>
+          @toggleThumbnails()
+          return
+      else
+        for container in ['overlay', 'leftside', 'rightside']
+          addClass @[container], choco_no_thumbnails
 
-    cssAnimationsSupport()
+      for container in ['overlay', 'leftside', 'rightside']
+        prepareActionFor @, container
 
-    ###
-     Если можно использовать History API добавляем событие на отслеживание изменений в адресе
-    ###
-    isHistory = false if isHistory and not @options.history
+    if images
+      @add images
 
-    if isHistory
-      onHistory = =>
-        cid = @_getImageFromUri()
+    instances.push @
 
-        if cid > 0 and cid isnt @current
-          if @current is null
-            @show cid
-          else
-            @open cid, false
+  close: ->
+    setAnimation opened, false
 
-      $(window).on 'load', -> onHistory()
+    isOpen = false
+    opened = null
 
-      if 'onhashchange' of window
-        $(window).on 'hashchange', -> onHistory()
+    if hasClass @overlay, choco_show
+      removeClass @overlay, choco_show
+      removeClass document.body, choco_body
 
-    ###
-     Получаем параметры отступов и другие неизменяемые размеры
-    ###
-    @dimensions = @_getInitialParams()
+      if @options.thumbnails
+        removeClass @current.thumbnail, choco_selected
 
-    ###
-     Добавляем изображения для галереи
-    ###
-    @add images if images
+      @current = null
+      pushState()
 
-  ###
-   Добавляем список изображений для работы в галереи
-  ###
+    return @
+
+  open: (cid, updateHistory) ->
+    return @ if isOpen
+
+    opened = @
+    isOpen = true
+
+    addClass @overlay, choco_show
+    addClass document.body, choco_body
+
+    showThumbnails = session.get()
+    @toggleThumbnails showThumbnails if showThumbnails?
+
+    @updateDimensions()
+    @select cid, updateHistory
+
+    setTimeout ->
+      setAnimation opened
+    , 0
+
+    return @
+
+  select: (item, updateHistory = true) ->
+    if typeof item is 'number'
+      item = @storage.get item
+
+    return false unless item
+
+    getEnv()
+    translate @slider, env.shift * item.cid
+
+    if @options.thumbnails
+      if @current?
+        removeClass @current.thumbnail, choco_selected
+
+      thumb = item.thumbnail
+      addClass thumb, choco_selected
+
+      offset = (env.w / 2) - thumb.offsetLeft - (offsetWidth(thumb) / 2)
+      offset = squeeze offset, 0, env.w - @dimensions.thumbWidth
+
+      translate @thumbnails, offset
+
+    if updateHistory
+      pushState item.title ? item.hashbang, item.hashbang
+
+    loading = hasClass item.slide, choco_loading
+    if loading
+      loadImage item, => @updateSides item
+    else
+      @updateSides item
+
+    @current = item
+
+    return true
+
+  next: ->
+    @select @storage.next @current
+    return @
+
+  prev: ->
+    @select @storage.prev @current
+    return @
+
   add: (images) ->
     return @ if not images or images.length is 0
 
     for object in images
-      image     = null
-      isElement = if typeof HTMLElement is 'object' then object instanceof HTMLElement else typeof object is 'object' and object.nodeType is 1 and typeof object.nodeName is 'string'
+      image = null
+
+      if typeof HTMLElement is 'object'
+        isElement = object instanceof HTMLElement
+      else
+        isElement = typeof object is 'object' and object.nodeType is 1 and typeof object.nodeName is 'string'
 
       if isElement
-        image  = $ object
+        image = object
+
         object =
-          source:    image.attr('data-src') or image.parent().attr('href')
-          title:     image.attr('data-title') or image.attr('title')
-          thumbnail: image.attr('src')
+          orig: getAttribute(image, 'data-src') or getAttribute(image.parentNode, 'href')
+          title: getAttribute(image, 'data-title') or getAttribute(image, 'title') or getAttribute(image, 'alt') or getAttribute(image.parentNode, 'title')
+          thumb: getAttribute(image, 'src')
 
-      @_addToGallery object, image
-    @
+      addImage @, object, image
 
-  ###
-   Показать изображение на большом экране
-  ###
-  show: (cid) ->
-    cid = @_getImageFromUri() unless cid?
-    cid = 1 if cid <= 0
-    throw 'Image not found' unless @images[cid]?
+    return @
 
-    @createThumbnails cid
-    $('body').addClass 'choco-body'
-    @overlay.addClass 'choco-show'
+  updateDimensions: ->
+    if @options.thumbnails
+      @dimensions = thumbWidth: offsetWidth @thumbnails
 
-    @_hideLess() if @length is 1
+    for cid, image of @storage.images
+      setSize image
 
-    $(window).on 'resize', =>
-      image = @images[@current]
-      @updateDimensions image.width, image.height
+    return
 
-    @open cid
-    @
+  updateSides: (item) ->
+    return if isTouch
 
-  close: ->
-    if @overlay.hasClass 'choco-show'
-      history.pushState null, null, '#' if isHistory
+    if not item.size
+      item.size = offsetWidth getTarget item.slide, ".#{choco}slide-container"
 
-      if @options.thumbnails
-        @thumbnails.html ''
-        @overlay.find('.choco-thumbnails-toggle').off 'click'
+    s = "#{(env.w - item.size) / 2}px"
 
-      $(window).off 'resize'
+    setStyle @leftside, width: s
+    setStyle @rightside, width: s
 
-      @current = null
-      @overlay.removeClass 'choco-show'
-      $('body').removeClass 'choco-body'
-    @
+    return
 
-  open: (cid, updateHistory) ->
-    if @current isnt cid
-      @updateImage cid, updateHistory if @images[cid]?
-    @
+  toggleThumbnails: (show) ->
+    return if isTouch
 
-  next: ->
-    next = @current + 1
+    containers = ['leftside', 'rightside', 'overlay', 'thumbnailsToggle']
 
-    if @options.repeat
-      next = 1 unless @images[next]?
-
-    @updateImage next if @images[next]?
-    @
-
-  prev: ->
-    prev = @current - 1
-
-    if @options.repeat
-      prev = counter unless @images[prev]?
-
-    @updateImage prev if @images[prev]?
-    @
-
-  ###
-   Обновление изображения
-  ###
-  updateImage: (cid, updateHistory = true) ->
-    @current = cid
-
-    @container.removeClass 'choco-show'
-    @container.removeClass 'choco-error' if @container.hasClass 'choco-error'
-    @header.removeClass 'choco-show' if @header.hasClass 'choco-show'
-    @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
-
-    if isHistory and updateHistory
-      title = if @images[cid].title then @images[cid].title else @images[cid].hashbang
-      history.pushState null, title, "##{@images[cid].hashbang}"
-
-    @updateThumbnails()
-
-    @getImageSize cid, (cid) ->
-      @container.addClass 'choco-show'
-
-      image = @images[cid]
-
-      @updateDimensions image.width, image.height
-
-      @container.css
-        'background-image': 'url(' + image.source + ')'
-        '-ms-filter': "\"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image.source + "',sizingMethod='scale')\""
-
-      @header.html if image.title then templates['image-title'].replace '{{title}}', image.title else ''
-    @
-
-  ###
-   Обновление размеров блока с главным изображением
-  ###
-  getImageSize: (cid, after = ->) ->
-    image = @images[cid]
-
-    fn = => after.call @, cid if cid is @current
-
-    if not image.width or not image.height
-      @spinner.removeClass 'choco-hide' if @spinner.hasClass 'choco-hide'
-
-      element = new Image()
-
-      element.onload = =>
-        if cid is @current
-          @images[cid].width  = element.width
-          @images[cid].height = element.height
-
-          @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
-
-          fn()
-
-      element.onerror = =>
-        if cid is @current
-          @spinner.addClass 'choco-hide' if not @spinner.hasClass 'choco-hide'
-          @container.addClass 'choco-show choco-error'
-          @updateDimensions @container.width(), @container.height()
-
-      element.src = image.source
-
+    if show?
+      if show is '1'
+        method = 'remove'
+      else
+        method = 'add'
     else
-      fn()
+      if hasClass @thumbnails, choco_hide
+        method = 'remove'
+        show = true
+      else
+        method = 'add'
+        show = false
+      session.set show
+
+    classList @thumbnails, choco_hide, null, method
+
+    for container in containers
+      classList @[container], choco_no_thumbnails, null, method
+
+    resizeHandler()
+
+    return
 
   ###
-   Обновление размеров блока с главным изображением
-  ###
-  updateDimensions: (width, height) ->
-    title = not not @images[@current].title
-
-    thumbnails = headerHeight = 0
-
-    if @dimensions.thumbnails isnt false and not @thumbnails.hasClass('choco-hide')
-      @dimensions.thumbnails = @thumbnails.height() if @dimensions.thumbnails is 0
-      thumbnails = @dimensions.thumbnails
-
-    headerHeight = @dimensions.header if title
-
-    innerWidth   = window.innerWidth or document.documentElement.clientWidth
-    windowWidth  = innerWidth - @dimensions.horizontal
-    innerHeight  = window.innerHeight or document.documentElement.clientHeight
-    windowHeight = innerHeight - @dimensions.vertical - thumbnails - headerHeight
-
-    if width > windowWidth
-      height = windowWidth * height / width
-      width  = windowWidth
-
-    if height > windowHeight
-      width  = windowHeight * width / height
-      height = windowHeight
-
-    left = width / 2
-
-    top  = height / 2
-    top += thumbnails / 2   if thumbnails > 0
-    top -= headerHeight / 2 if headerHeight > 0
-
-    style =
-      'width':  toInt(innerWidth / 2 - left) + 'px'
-      'height': toInt(innerHeight) + 'px'
-
-    @leftside.css  style
-    @rightside.css style
-
-    if title
-      @header.addClass('choco-show').css
-        'width':       toInt width
-        'margin-left': '-' + toInt(left) + 'px'
-        'margin-top':  '-' + toInt(top + headerHeight) + 'px'
-
-    style =
-      'width':       toInt width
-      'height':      toInt height
-      'margin-left': '-' + toInt(left) + 'px'
-      'margin-top':  '-' + toInt(top) + 'px'
-
-    @container.css style
-    @spinner.css   style
-    @
-
-  ###
-   Создание панели для тумбнейлов
-  ###
-  createThumbnails: (cid) ->
-    return @ if not @options.thumbnails or not cid or @length <= 1
-
-    _this   = @
-    current = @images[cid]
-    content = ''
-
-    for cid, image of @images
-      selected = if current.source? is image.source then ' selected' else ''
-      template = templates['thumbnails-item']
-
-      content += template.replace('{{selected}}', selected)
-                         .replace('{{cid}}', cid)
-                         .replace('{{image}}', image.thumbnail)
-                         .replace('{{title}}', if image.title then ' title="' + image.title + '"' else '')
-
-    @thumbnails.html(content).find('.choco-thumbnail').each ->
-      thumbnail = $ @
-      image = thumbnail.attr 'data-image'
-
-      thumbnail.on 'click', -> _this.open toInt thumbnail.attr 'data-cid'
-      thumbnail.css 'background-image': 'url(' + image + ')'
-      thumbnail.get(0).style['-ms-filter'] = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + image + "',sizingMethod='scale')"
-
-    @overlay.find('.choco-thumbnails-toggle').on 'click', ->
-      current = _this.images[_this.current]
-      status  = _this.thumbnails.hasClass 'choco-hide'
-      method  = if status then 'removeClass' else 'addClass'
-
-      if isStorage
-        localStorage.setItem 'choco-thumbnails', if status then 1 else 0
-
-      _this.thumbnails[method] 'choco-hide'
-      $(@)[method] 'choco-hide'
-
-      _this.updateDimensions current.width, current.height if current
-
-    if isStorage and not @thumbnails.hasClass 'choco-hide'
-      status = localStorage.getItem('choco-thumbnails') or 1
-      @overlay.find('.choco-thumbnails-toggle').trigger 'click' if toInt(status) is 0
-
-    @
-
-  ###
-   Обновление тумбнейлов
-  ###
-  updateThumbnails: ->
-    return @ if not @options.thumbnails or @length <= 1
-
-    before = @thumbnails.find('.selected').removeClass('selected').attr 'data-cid'
-    after  = @thumbnails.find('[data-cid="' + @current + '"]').addClass 'selected'
-
-    if not @dimensions.thumbnail
-      @dimensions.thumbnail = toInt @_outerWidth after
-
-    width     = @thumbnails.width()
-    element   = after.get(0).offsetLeft
-    thumbnail = @dimensions.thumbnail
-    container = @thumbnails.get(0).scrollLeft or 0
-
-    if before
-      offset = if @current > before then container + thumbnail else container - thumbnail
-    else
-      offset = element - (width / 2) + (thumbnail / 2)
-      offset = 1 if offset <= 0
-
-    if @options.repeat
-      right = offset + width
-
-      if right < element
-        offset = thumbnail + element
-      else if offset > element
-        offset = 1
-
-    @thumbnails.get(0).scrollLeft = offset
-    @
-
-
-  ###
-   -- Private methods --
+    Private methods
   ###
 
+  if isSupport
 
-  ###
-   Private method
-  ###
-  _addToGallery: (data, image) ->
-    return unless data.source
+    addImage = (chocolate, data, image) ->
+      data = chocolate.storage.add data
+      return unless data
 
-    cid = ++counter
+      if chocolate.options.thumbnails
+        template = mustache templates['thumbnails-item'], data
+        data.thumbnail = beforeEnd chocolate.thumbnails, template
 
-    data.thumbnail = data.source unless data.thumbnail
+        addEvent data.thumbnail, 'click', ->
+          chocolate.select data
+          return
 
-    fragments     = data.source.split '/'
-    data.hashbang = fragments[fragments.length-1]
+      template = mustache templates['slide'], data
+      data.slide = beforeEnd chocolate.slider, template
 
-    @images[cid] = data
+      addClass data.slide, choco_loading
 
-    @length++
+      data.img = getTarget data.slide, ".#{choco}slide-image"
 
-    if image
-      showFirstImage = (event, cid) =>
-        event.stopPropagation()
-        event.preventDefault()
-        @show cid
+      action = chocolate.options.actions.container
+      if action in existActions
+        addEvent data.slide, 'click', ->
+          chocolate[action]()
+          return
+        , ".#{choco}slide-container"
 
-      image.addClass('choco-item').on 'click', (event) ->
-        showFirstImage event, cid
+      return unless image
+
+      showFirstImage = (event, cid) ->
+        stop event
+        chocolate.open cid
+        return
+
+      addClass image, choco_item
+      addEvent image, 'click', (event) ->
+        showFirstImage event, data.cid
+        return
+
+      return if isTouch
 
       preload = new Image()
-      preload.onload = ->
-        image.after templates['image-hover'].replace '{{cid}}', cid
 
-        popover = $('[data-pid="' + cid + '"]').css
-          'width':      image.width()
-          'height':     image.height()
-          'margin-top': '-' + image.height() + 'px'
+      addEvent preload, 'load', ->
+        template = mustache templates['image-hover'], data
+        image.insertAdjacentHTML 'afterend', template
 
-        image.on 'mouseenter mouseleave', -> popover.toggleClass 'choco-hover'
-        popover.on 'click', (event) -> showFirstImage event, cid
+        popover = getTarget document, '[data-pid="' + data.cid + '"]'
+        setStyle popover,
+          'width': "#{offsetWidth image}px"
+          'height': "#{offsetHeight image}px"
+          'margin-top': "-#{offsetHeight image}px"
 
-      preload.src = data.thumbnail
+        addEvent image, 'mouseenter', ->
+          toggleClass popover, choco_hover
+          return
 
-  ###
-   Private method
-  ###
-  _prepareActionFor: (container) ->
-    method = @options.actions[container] if @options.actions[container] in existActions
+        addEvent image, 'mouseleave', ->
+          toggleClass popover, choco_hover
+          return
 
-    if method
-      verify = @[container].attr 'class'
+        addEvent popover, 'click', (event) ->
+          showFirstImage event, data.cid
+          return
 
-      @[container].on 'click', (event) =>
-        @[method]() if $(event.target).hasClass verify
+      preload.src = data.thumb
 
-      if @options.actions[container] is 'close'
-        @[container].on 'mouseenter mouseleave', =>
-          @overlay.find('.choco-close').toggleClass 'choco-hover'
-    @
+      return
 
-  ###
-   Private method
-  ###
-  _getImageFromUri: ->
-    hash = window.location.hash
-    cid  = 0
+    loadImage = (item, fn) ->
+      image = new Image()
 
-    for key, image of @images
-      if "##{image.hashbang}" is hash
-        cid = key
-        break
+      addEvent image, 'load', ->
+        item.img.src = @src
+        item.w = image.width
+        item.h = image.height
 
-    cid
+        removeClass item.slide, choco_loading
+        title = getTarget item.slide, ".#{choco_title}"
+        if title? and title.innerHTML.trim() isnt ""
+          removeClass title, choco_empty
+        setSize item
 
-  ###
-   Private method
-  ###
-  _getInitialParams: ->
-    thumbnails = if not @options.thumbnails then false else @thumbnails.height()
+        fn true
+        return
 
-    horizontal = toInt(@overlay.css('padding-left')) + toInt(@overlay.css('padding-right'))
-    vertical   = toInt(@overlay.css('padding-top')) + toInt(@overlay.css('padding-bottom'))
+      addEvent image, 'error', ->
+        removeClass item.slide, choco_loading
 
-    header = toInt @header.css('height')
-    if header is 0
-      header = 40
-      @header.css 'height', header
+        addClass item.slide, choco_error
+        addClass item.thumbnail, choco_error
 
-    {horizontal, vertical, thumbnails, header}
+        fn false
+        return
 
-  ###
-   Private method
-  ###
-  _hideLess: ->
-    @dimensions.thumbnails = false if @options.thumbnails
-    @overlay.addClass 'choco-hideless'
-    @
+      image.src = item.orig
+      return
 
-  ###
-   Private method
-  ###
-  _outerWidth: (element) ->
-    return element.outerWidth true if element.outerWidth?
+    prepareActionFor = (chocolate, container) ->
+      action = chocolate.options.actions[container]
+      return if action not in existActions
 
-    styles = [
-      'margin-left'
-      'margin-right'
-      'padding-left'
-      'padding-right'
-      'border-left-width'
-      'border-right-width'
-    ]
+      verify = chocolate[container].classList[0]
 
-    width = parseFloat element.css 'width'
-    width += parseFloat element.css style for style in styles
-    width
+      addEvent chocolate[container], 'click', (event) ->
+        if hasClass event.target, verify
+          chocolate[action]()
+
+        return
+
+      if action is 'close'
+        addEvent chocolate[container], 'mouseenter', ->
+          toggleClass chocolate.overlay, choco_hover, ".#{choco}close"
+          return
+
+        addEvent chocolate[container], 'mouseleave', ->
+          toggleClass chocolate.overlay, choco_hover, ".#{choco}close"
+          return
+
+      return
+
+    setSize = (item) ->
+      return unless item.w > 0 and item.h > 0
+
+      getEnv()
+
+      s = scale item.w, item.h, env.s.w, env.s.h
+
+      item.img.width = s[0]
+      item.img.height = s[1]
+
+      return
 
 
-toInt = (string) -> parseInt string, 10
+    resizeHandler = ->
+      needResize = true
 
-cssAnimationsSupport = ->
-  return true if $('html').hasClass 'cssanimations'
+      if isOpen
+        setAnimation opened, false
 
-  support = false
-  element = document.createElement 'div'
+        opened.updateDimensions()
+        opened.select opened.current
 
-  support = true if element.style.animationName
+        setAnimation opened
 
-  prefixes = ['Webkit', 'Moz', 'O', 'ms']
+      return
 
-  if support is false
-    support = true for prefix in prefixes when element.style[prefix + 'AnimationName'] isnt undefined
+    addEvent window, 'resize', resizeHandler
 
-  $('html').addClass 'cssanimations' if support is true
-  support
+    setAnimation = (chocolate, enable = true) ->
+      method = if enable then 'add' else 'remove'
 
-# Экспорт в глобальное пространство
-window.chocolate = Chocolate
+      if chocolate.options.thumbnails
+        classList chocolate.thumbnails, choco_animated, null, method
 
-# Подключение к jQuery Plugins / Ender Plugins / Zepto Plugins
-frameworks = ['jQuery', 'ender', 'Zepto']
-for framework in frameworks
-  if window[framework]?.fn
-    window[framework].fn.chocolate = -> new Chocolate @, arguments[0]
+      classList chocolate.slider, choco_animated, null, method
+
+    unless isTouch
+      addEvent window, 'keydown', (event) ->
+        if not isOpen or not hasClass opened.overlay, choco_show
+          return
+
+        switch event.keyCode
+          when 27 # ESC
+            opened.close()
+          when 37 # Left arrow
+            opened.prev()
+          when 39 # Right arrow
+            opened.next()
+
+window.Chocolate = if isSupport then Chocolate else dummy

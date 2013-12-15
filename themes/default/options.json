@@ -1,12 +1,12 @@
 {
-    "thumbnails": true
-  , "history":    true
-  , "repeat":     false
+  "thumbnails": true,
+  "history": true,
+  "repeat": false,
 
-  , "actions": {
-        "overlay":   false
-      , "leftside":  "prev"
-      , "container": "next"
-      , "rightside": "close"
-    }
+  "actions": {
+    "overlay": false,
+    "leftside": "prev",
+    "container": "next",
+    "rightside": "close"
+  }
 }

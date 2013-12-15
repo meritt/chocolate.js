@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Шаблоны</title>
+</head>
+<body>
+
+<!-- Шаблон при наведении на изображение в тексте сайта -->
+<script id="image-hover" type="text/x-template">
+  <span class="choco-item-hover" data-pid="{{cid}}"></span>
+</script>
+
+<!-- Шаблон блока перекрывающего весь сайт и добавляющий основную структуру шоколада -->
+<script id="overlay" type="text/x-template">
+  <div class="choco-overlay">
+    <div class="choco-slider">
+      <div class="choco-inline-hack"></div>
+    </div>
+    <div class="choco-leftside choco-unselect"></div>
+    <div class="choco-rightside choco-unselect"></div>
+  </div>
+</script>
+
+<!-- Шаблон слайда изображения -->
+<script id="slide" type="text/x-template">
+  <div class="choco-slide">
+    <div class="choco-slide-container">
+      <span class="choco-slide-title">{{title}}</span>
+      <div class="choco-spinner">
+        <img src="@@basedirloader.svg" width="60" height="60" alt="">
+      </div>
+      <img class="choco-slide-image" src="" alt="{{title}}">
+    </div>
+  </div>
+</script>
+
+</body>
+</html>

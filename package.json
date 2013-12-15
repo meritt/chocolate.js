@@ -1,20 +1,43 @@
 {
     "name": "chocolate.js"
-  , "version": "0.0.3"
-  , "homepage": "http://chocolatejs.ru"
+  , "version": "0.1.0"
+  , "description": ""
+  , "keywords": []
   , "author": "Alexey Simonenko <alexey@simonenko.su>"
   , "contributors": [
         "Alexey Simonenko <alexey@simonenko.su>"
       , "Ann Sabonim <a.sabonim@gmail.com>"
+      , "Sophia Ilinova <tavsophi@gmail.com>"
+      , "Michail Morozov <morozov@serenity.su>"
     ]
+  , "homepage": "http://chocolatejs.ru"
+  , "repository": {
+        "type": "git"
+      , "url": "https://github.com/serenity/chocolate.js.git"
+    }
   , "engines": {
-      "node": ">=0.8.x"
+      "node": ">=0.10.x"
     }
   , "dependencies": {
-      "coffee-script": "1.6.x"
-    , "less": "1.5.x"
-    , "uglify-js": "2.4.x"
-    , "cssmin": "0.4.x"
-    , "jsdom": "0.8.x"
-  }
+        "jsdom": "0.8.x"
+      , "matchdep": "0.3.x"
+      , "grunt": "0.4.x"
+      , "grunt-contrib-clean": "0.5.x"
+      , "grunt-contrib-copy": "0.4.x"
+      , "grunt-contrib-coffee": "0.7.x"
+      , "grunt-contrib-uglify": "0.2.x"
+      , "grunt-contrib-less": "0.8.x"
+      , "grunt-autoprefixer": "0.5.x"
+      , "grunt-csso": "0.5.x"
+      , "grunt-contrib-imagemin": "0.4.x"
+      , "grunt-replace": "0.5.x"
+    }
+  , "devDependencies": {
+        "dalekjs": "0.0.8"
+      , "dalek-browser-chrome": "0.0.8"
+      , "grunt-dalek": "0.2.x"
+    }
+  , "scripts": {
+      "test": "grunt test"
+    }
 }

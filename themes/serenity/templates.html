@@ -19,7 +19,6 @@
     </div>
     <div class="choco-leftside choco-unselect"></div>
     <div class="choco-rightside choco-unselect"></div>
-    {{thumbnails}}
   </div>
 </script>
 
@@ -27,7 +26,6 @@
 <script id="slide" type="text/x-template">
   <div class="choco-slide">
     <div class="choco-slide-container">
-      <h1 class="choco-slide-title choco-empty">{{title}}</h1>
       <div class="choco-spinner">
         <img src="@@basedirloader.png" width="30" height="30" alt="" class="choco-spinner-cssanimation">
         <img src="@@basedirloader.gif" width="32" height="32" alt="" class="choco-spinner-gifanimation">
@@ -35,17 +33,6 @@
       <img class="choco-slide-image" src="" alt="{{title}}">
     </div>
   </div>
-</script>
-
-<!-- Шаблон блока со списком тумбнейлов -->
-<script id="thumbnails" type="text/x-template">
-  <ul class="choco-thumbnails choco-unselect"></ul>
-  <div class="choco-thumbnails-toggle choco-unselect"></div>
-</script>
-
-<!-- Шаблон тумбнейла -->
-<script id="thumbnails-item" type="text/x-template">
-  <li class="choco-thumbnail" data-cid="{{cid}}" style="background-image:url('{{thumb}}')"></li>
 </script>
 
 </body>

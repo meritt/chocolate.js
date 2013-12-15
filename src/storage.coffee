@@ -1,58 +1,50 @@
-"use strict"
+class Storage
 
-merge = (o1, o2) ->
-    return o1 if o1 == null or o2 == null
-    for key of o2
-        o1[key] = o2[key] if o2.hasOwnProperty key
-    o1
+  constructor: (repeat) ->
+    @repeat = not not repeat
+    @images = {}
+    @counter = 0
 
-_elements = {}
-counter = 0
+  add: (image) ->
+    return false unless image.orig
 
-class ChocolateStorage
+    cid = @counter++
 
-    add: (options) ->
-        _elements[counter] = merge {
-                'cid': counter, # ID
-                'name': '',    # title
-                'thumb': '',   # preview
-                'file': '',    # filename
-                'orig': '',    # original
-                'w': null,     # width
-                'h': null      # height
-            }, options
-        merge {}, _elements[counter++]
+    fragments = image.orig.split '/'
 
-    get: (key, fn) ->
-        item = _elements[key]
-        if item.h isnt null and item.w isnt null or item.origin is ''
-            fn merge {},item
-        image = new Image()
-        image.src = item.orig
-        image.addEventListener "error", () ->
-            item.orig = ''
-            fn merge {},item
-        , false
-        image.addEventListener "load", () ->
-            item.w = image.naturalWidth
-            item.h = image.naturalHeight
-            fn merge {},item
-        , false
+    image.hashbang = fragments[fragments.length-1]
+    image.thumb = image.orig unless image.thumb
 
-    next: (key, fn) ->
-        len = @length()
-        while not _elements[++key]? and key < len then
-        @get key, fn if _elements[key]?
+    @images[cid] = merge {
+      cid: cid,     # id
+      name: '',     # title
+      thumb: '',    # preview
+      hashbang: '', # filename
+      orig: '',     # original
+      w: null,      # width
+      h: null       # height
+    }, image
 
-    prev: (key, fn) ->
-        while not _elements[--key]? and key > -1 then
-        @get key, fn if _elements[key]?
+    return @images[cid]
 
-    length: () ->
-        return Object.keys(_elements).length if Object.keys?
-        i = 0
-        for key of _elements
-            i++ if _elements.hasOwnProperty key
-        i
+  get: (cid) ->
+    return @images[cid]
 
-window.ChocolateStorage = ChocolateStorage
+  next: (current) ->
+    cid = current.cid + 1
+    cid = 0 if @repeat and not @images[cid]
+    return @images[cid]
+
+  prev: (current) ->
+    cid = current.cid - 1
+    cid = @length() - 1 if @repeat and cid < 0
+    return @images[cid]
+
+  length: ->
+    return Object.keys(@images).length
+
+  search: (hash) ->
+    for own key, image of @images
+      return image if "##{image.hashbang}" is hash
+
+    return false
