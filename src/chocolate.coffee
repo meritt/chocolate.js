@@ -279,7 +279,7 @@ class Chocolate
 
         removeClass item.slide, choco_loading
         title = getTarget item.slide, ".#{choco_title}"
-        if title.innerHTML.trim() isnt ""
+        if title? and title.innerHTML.trim() isnt ""
           removeClass title, choco_empty
         setSize item
 
