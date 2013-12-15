@@ -36,6 +36,6 @@
       , "dalek-browser-chrome": "0.0.8"
     }
   , "scripts": {
-      "test": "./node_modules/.bin/dalek test/test.js -b chrome"
+      "test": "./node_modules/.bin/dalek test/*.js"
     }
 }
