@@ -191,6 +191,8 @@ class Chocolate
     for container in containers
       classList @[container], choco_no_thumbnails, null, method
 
+    resizeHandler()
+
     return
 
   ###
@@ -331,7 +333,8 @@ class Chocolate
 
       return
 
-    addEvent window, 'resize', ->
+
+    resizeHandler = ->
       needResize = true
 
       if isOpen
@@ -343,6 +346,8 @@ class Chocolate
         setAnimation opened
 
       return
+
+    addEvent window, 'resize', resizeHandler
 
     setAnimation = (chocolate, enable = true) ->
       method = if enable then 'add' else 'remove'
