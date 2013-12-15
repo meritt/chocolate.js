@@ -1,3 +1,5 @@
+jsdom = require 'jsdom'
+
 module.exports = (grunt) ->
 
   theme = grunt.option 'theme'
@@ -23,21 +25,42 @@ module.exports = (grunt) ->
   sources.push 'src/chocolate.coffee'
 
   grunt.registerTask 'chocolate', ->
+    done = @async()
+
     grunt.log.write 'Including options and templates...'
 
-    options = grunt.file.read "themes/#{theme}/options.json"
-    options = "var defaultOptions = #{options};"
+    html = grunt.file.read "themes/#{theme}/templates.html"
+    jsdom.env html, [], (error, window) ->
+      output = {}
 
-    source = grunt.file.read destjs
+      [].forEach.call window.document.querySelectorAll('script'), (script) ->
+        key = script.getAttribute 'id'
+        return if not key
 
-    template = "<%= vendors %>\n\n(function(window, document) {\n\n<%= source %>\n\n})(window, document);"
+        lines = script.innerHTML.split "\n"
+        content = ''
+        for line in lines
+          content += line.trim()
 
-    data =
-      vendors: grunt.file.read 'vendors/classlist/classList.js'
-      source: options + "\n\n" + source
+        output[key] = content.trim()
 
-    grunt.file.write destjs, grunt.template.process template, data: data
-    grunt.log.write().ok()
+      window.close()
+
+      options = grunt.file.read "themes/#{theme}/options.json"
+      options = "var defaultOptions = #{options};"
+
+      output = "var templates = #{JSON.stringify(output)};"
+
+      source = grunt.file.read destjs
+
+      tmpl = "<%= vendors %>\n\n(function(window, document) {\n\n<%= source %>\n\n})(window, document);"
+      data =
+        vendors: grunt.file.read 'vendors/classlist/classList.js'
+        source: options + "\n\n" + output + "\n\n" + source
+
+      grunt.file.write destjs, grunt.template.process tmpl, data: data
+      grunt.log.write().ok()
+      done()
 
   grunt.initConfig
     clean: [dest]
