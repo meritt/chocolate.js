@@ -24,13 +24,13 @@ if not not (window.history and window.history.pushState)
       getImageFromUri()
       return
 
-  addEvent window, 'load', ->
+  addEvent document, 'DOMContentLoaded', ->
     getImageFromUri()
     return
 
   pushState = (title, hash) ->
     title = title or ''
-    return unless hash
+    hash = hash or ''
 
     window.history.pushState null, title, "##{hash}"
     return
