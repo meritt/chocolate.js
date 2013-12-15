@@ -19,7 +19,9 @@
     }
   , "dependencies": {
         "jsdom": "0.8.x"
+      , "matchdep": "0.3.x"
       , "grunt": "0.4.x"
+      , "grunt-contrib-clean": "0.5.x"
       , "grunt-contrib-copy": "0.4.x"
       , "grunt-contrib-coffee": "0.7.x"
       , "grunt-contrib-uglify": "0.2.x"
@@ -30,6 +32,7 @@
     }
   , "devDependencies": {
         "dalekjs": "0.0.8"
+      , "dalek-cli": "0.0.3"
       , "dalek-browser-chrome": "0.0.8"
     }
   , "scripts": {
