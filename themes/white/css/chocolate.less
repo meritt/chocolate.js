@@ -58,11 +58,13 @@
   margin: 0;
   &.choco-error {
     .choco-slide-container {
-      height: 60px;
+      min-width: 60px;
+      min-height: 90px;
       background-color: transparent;
-      background-image: url("@{basedir}/notfound.svg");
-      background-position: 50% 50%;
-      background-size: 100% 100%;
+      background-image: url("@{basedir}notfound.svg");
+      background-position: 50% 30px;
+      background-size: 60px 60px;
+      background-repeat: no-repeat;
     }
     .choco-slide-image {
       display: none;
