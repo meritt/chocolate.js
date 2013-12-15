@@ -1,11 +1,10 @@
-Chocolate.js
-============
+# Chocolate.js
 
-Chocolate.js is a high-customizable pop-up gallery.
+Chocolate.js is a high-customizable gallery.
 
 ## API
 
-Inlcude Chocolate styles and script:
+Inlcude chocolate style and script:
 
 ```html
 <link href="/css/chocolate.css" rel="stylesheet">
@@ -16,7 +15,7 @@ Then create new instance of chocolate passing HTMLCollection to it:
 
 ```html
 <script>
-  new Chocolate(document.querySelectorAll('img'));
+  var choco = new Chocolate(document.querySelectorAll('img'));
 </script>
 ```
 
@@ -24,20 +23,20 @@ Chocolate automatically added all images you've passed to his gallery. Then when
 
 ### Options
 
-You can create Chocolate instance passing them some options:
+You can create chocolate instance passing them some options:
+
 ```js
-new Chocolate(document.querySelectorAll('img'), {
+var choco = new Chocolate(document.querySelectorAll('img'), {
   "thumbnails": true,     // Show thumbnails (boolean)
-  "history":    true,     // Use history API (boolean)
-  "repeat":     true,     // Show first image after last and last before first (boolean)
-  
+  "history": true,        // Use history API (boolean)
+  "repeat": true,         // Show first image after last and last before first (boolean)
+
   "actions": {            // Actions bound on click of container
     "overlay": false,     // Click on the space top and down of the image
     "leftside": "prev",   // Click on space left of the image
     "container": "next",  // Click on the image
     "rightside": "close"  // Click on space right of the image
   }
-  
 });
 ```
 
@@ -51,7 +50,7 @@ You can create your own
  * templates,
  * options.
 
-## Build your own Chocolate
+## Build your own chocolate.js
 
 To create your own build exec
 
@@ -62,12 +61,12 @@ $ grunt
 Options:
 
 ```
-  --theme=name    name of theme [default]
-  --basedir=path  basedir for theme images [/dist/default/images]
+--theme=name    name of theme [default]
+--basedir=path  basedir for theme images [/dist/default/images]
 
-  --no-touch      compile without touch support
-  --no-history    compile without history api support
-  --no-session    compile without sessionStorage support
+--no-touch      compile without touch support
+--no-history    compile without history api support
+--no-session    compile without sessionStorage support
 ```
 
 Example:
@@ -75,3 +74,12 @@ Example:
 ```
 $ grunt --theme=simonenko --basedir=/i/chocolate/ --no-session
 ```
+
+## Authors
+
+* [Alexey Simonenko](//github.com/meritt), [alexey@simonenko.su](mailto:alexey@simonenko.su), [simonenko.su](http://simonenko.su)
+* [Sophia Ilinova](//github.com/isquariel), [tavsophi@gmail.com](mailto:tavsophi@gmail.com)
+
+## License
+
+The MIT License, see the included `License.md` file.
