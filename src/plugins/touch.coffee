@@ -13,6 +13,19 @@ touchType = do ->
 
   return 0
 
+transitionType = do ->
+  transitions = 'csstransitions'
+  html = document.querySelector 'html'
+  property = 'transition'
+
+  return true if html.style[property] isnt undefined
+
+  prefixes = ['Webkit', 'Moz', 'O', 'ms']
+  for prefix in prefixes
+    if element.style[prefix + 'Transition'] isnt undefined
+      return prefix.toLowerCase() + 'Transition'
+  return false
+
 if touchType isnt 0
   isTouch = true
 
@@ -137,6 +150,7 @@ if touchType isnt 0
 
         if opacity < 0.7
           transparent 0
+          finish() if transitionType is false
         else
           transparent 1
           isClosing = false
@@ -154,19 +168,14 @@ if touchType isnt 0
       stop event
       return
 
-    addEvent chocolate.slider, 'transitionend', ->
+    if transitionType isnt false
+      transitionend = if transitionType is true then 'transitionend' else transitionType+'End'
+
+    addEvent chocolate.slider, transitionend, ->
       removeClass chocolate.slider, choco_animated
       return
 
-    addEvent chocolate.slider, 'webkitTransitionEnd', ->
-      removeClass chocolate.slider, choco_animated
-      return
-
-    addEvent chocolate.overlay, 'transitionend', ->
-      finish()
-      return
-
-    addEvent chocolate.overlay, 'webkitTransitionEnd', ->
+    addEvent chocolate.overlay, transitionend, ->
       finish()
       return
 

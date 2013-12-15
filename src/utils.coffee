@@ -165,10 +165,9 @@ cssAnimationsSupport = do ->
 
   prefixes = ['Webkit', 'Moz', 'O', 'ms']
 
-  if support is false
-    for prefix in prefixes when element.style[prefix + 'AnimationName'] isnt undefined
-      support = true
-      break
+  for prefix in prefixes when element.style[prefix + 'AnimationName'] isnt undefined
+    support = true
+    break
 
   addClass html, cssanimations if support is true
   support
