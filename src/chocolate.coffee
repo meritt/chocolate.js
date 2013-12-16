@@ -348,6 +348,7 @@ class Chocolate
       return
 
     addEvent window, 'resize', resizeHandler
+    addEvent window, 'orientationchange', resizeHandler
 
     setAnimation = (chocolate, enable = true) ->
       method = if enable then 'add' else 'remove'
