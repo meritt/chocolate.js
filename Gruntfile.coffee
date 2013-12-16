@@ -6,7 +6,7 @@ module.exports = (grunt) ->
   theme = 'default' if not theme or typeof theme isnt 'string'
 
   basedir = grunt.option 'basedir'
-  basedir = "/dist/#{theme}/images/" if not basedir or typeof basedir isnt 'string'
+  basedir = "/dist/#{theme}/images" if not basedir or typeof basedir isnt 'string'
 
   dest = "dist/#{theme}"
   destjs = "#{dest}/js/chocolate.js"

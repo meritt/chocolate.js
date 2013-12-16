@@ -78,7 +78,7 @@ Options:
 Example:
 
 ```
-$ grunt --theme=simonenko --basedir=/i/chocolate/ --no-session
+$ grunt --theme=simonenko --basedir=/i/chocolate --no-session
 ```
 
 The best way to understand chocolate theme is inspect one of the included themes. You can define most of all styles for chocolate: change backgrounds, borders, padding, margin.
