@@ -54,9 +54,10 @@ module.exports = (grunt) ->
       source = grunt.file.read destjs
 
       tmpl = "<%= vendors %>\n\n(function(window, document) {\n\n<%= source %>\n\n})(window, document);"
-      data =
-        vendors: grunt.file.read 'vendors/classlist/classList.js'
-        source: options + "\n\n" + output + "\n\n" + source
+      data = source: options + "\n\n" + output + "\n\n" + source
+
+      unless grunt.option 'no-classlist'
+        data.vendors = grunt.file.read 'vendors/classlist/classList.js'
 
       grunt.file.write destjs, grunt.template.process tmpl, data: data
       grunt.log.write().ok()

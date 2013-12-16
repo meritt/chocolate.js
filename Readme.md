@@ -69,6 +69,7 @@ Options:
 --no-touch      compile without touch support
 --no-history    compile without history api support
 --no-session    compile without sessionStorage support
+--no-classlist  compile without classList.js polyfill (for IE9)
 ```
 
 Example:
