@@ -22,7 +22,7 @@ Then create new instance of chocolate passing HTMLCollection to it:
 ```
 Chocolate automatically added all images you've passed to his gallery. Then when you click on one of this images, chocolate open the image in its gallery. You can switch between images by clicking on them thumbnails or by pressing arrow keys or by clicking on panels.
 
-![Chocolate Layout Scheme](http://serenity.github.io/chocolate.js/chocolate.svg)
+![Chocolate Layout Scheme](http://chocolatejs.ru/chocolate.svg)
 
 There are four zones you can clik on: the image, the overlay (space above and below the image), left panel (all space from left to image and from top to thumbnails), right panel (all space from image to right edge and from top to thumbnails). You can define it by passing options to Chocolate or by setting default options for your theme.
 
