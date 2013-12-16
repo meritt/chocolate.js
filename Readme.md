@@ -20,8 +20,11 @@ Then create new instance of chocolate passing HTMLCollection to it:
   var choco = new Chocolate(document.querySelectorAll('img'));
 </script>
 ```
-
 Chocolate automatically added all images you've passed to his gallery. Then when you click on one of this images, chocolate open the image in its gallery. You can switch between images by clicking on them thumbnails or by pressing arrow keys or by clicking on panels.
+
+![Chocolate Layout Scheme](http://serenity.github.io/chocolate.js/chocolate.svg)
+
+There are four zones you can clik on: the image, the overlay (space above and below the image), left panel (all space from left to image and from top to thumbnails), right panel (all space from image to right edge and from top to thumbnails). You can define it by passing options to Chocolate or by setting default options for your theme.
 
 ### Options
 
@@ -77,6 +80,15 @@ Example:
 ```
 $ grunt --theme=simonenko --basedir=/i/chocolate/ --no-session
 ```
+
+The best way to understand chocolate theme is inspect one of the included themes. You can define most of all styles for chocolate: change backgrounds, borders, padding, margin.
+But you should understand some basic mechanisms of Chocolate.js.
+
+1. To show specified image in gallery Chocolate translate the slider (container with images) at `slide.offsetWidth*slideNumber` (see `getEnv` in `src/utils.coffee`), so all sliders should be located in line in one container.
+2. To align appropriate thumbnail to center Chocolate calculate `offsetWidth` and `offsetLeft` of this thumbnail (see `chocolate.select` in `chocolate.coffee`)
+3. The width of left and right panels is calculated as `((window.innerWidth - image.width) / 2)`. So if you want to fit images width to 100% of screen, you have to specify min-width for the panels. (See `themes/serenity/css/chocolate.less`)
+
+We moved basic CSS rules you have to use to separate file `themes/mixins.less`
 
 ## Authors
 
