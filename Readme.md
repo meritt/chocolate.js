@@ -1,6 +1,6 @@
 # Chocolate.js
 
-[![Dependency Status](https://david-dm.org/serenity/chocolate.js.png)](https://david-dm.org/serenity/chocolate.js) [![devDependency Status](https://david-dm.org/serenity/chocolate.js/dev-status.png)](https://david-dm.org/serenity/chocolate.js#info=devDependencies)
+[![NPM version](https://badge.fury.io/js/chocolate.js.png)](http://badge.fury.io/js/chocolate.js) [![Dependency Status](https://david-dm.org/serenity/chocolate.js.png)](https://david-dm.org/serenity/chocolate.js) [![devDependency Status](https://david-dm.org/serenity/chocolate.js/dev-status.png)](https://david-dm.org/serenity/chocolate.js#info=devDependencies)
 
 Chocolate.js is a high-customizable gallery.
 
