@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="/dist/default/css/chocolate.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -28,6 +29,15 @@
         </ul>
       </header>
       <section>
+        <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h2>
+        <article class="demo">
+          <a class="demo_link" href="/images/1.jpg">
+            <img class="demo_img" src="/images/1s.jpg">
+          </a>
+          <a class="demo_link" href="/images/2.jpg">
+            <img class="demo_img" src="/images/2s.jpg">
+          </a>
+        </article>
         <h2>
 <a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
 
@@ -120,6 +130,10 @@
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
+    <script src="/dist/default/js/chocolate.min.js"></script>
+    <script>
+      new Chocolate(document.querySelectorAll('.demo_img'));
+    </script>
     <script src="javascripts/scale.fix.js"></script>
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
