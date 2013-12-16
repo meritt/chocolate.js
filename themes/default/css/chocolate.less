@@ -2,7 +2,7 @@
 
 @basedir: "@@basedir";
 
-@overlay-background: rgba(0,0,0,0.8);
+@overlay-background: rgba(0, 0, 0, 0.8);
 
 @thumbnails-height: 120px;
 @thumbnails-aspect-ratio: 4/3;
@@ -25,11 +25,9 @@
 
 .choco-item-hover {
   .choco-item-hover;
+
   &:hover, &.choco-hover {
-    background-color: rgba(0, 0, 0, .4);
-    background-image: url("@{basedir}lupa.svg");
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
+    background: rgba(0, 0, 0, 0.4) url("@{basedir}lupa.svg") 50% 50% no-repeat;
   }
 }
 
@@ -72,6 +70,7 @@
 
 .choco-slider {
   .choco-slider;
+
   &.choco-animated {
     transition: transform 0.4s;
   }
@@ -85,11 +84,8 @@
     .choco-slide-container {
       min-width: 60px;
       min-height: 90px;
-      background-color: transparent;
-      background-image: url("@{basedir}notfound.svg");
-      background-position: 50% 30px;
+      background: transparent url("@{basedir}notfound.svg") 50% 30px no-repeat;
       background-size: 60px 60px;
-      background-repeat: no-repeat;
     }
 
     .choco-slide-image {
@@ -127,11 +123,11 @@
   text-overflow: ellipsis;
   font-size: 16px;
   line-height: 20px;
+
   &.choco-empty {
     display: none;
   }
 }
-
 
 .choco-slide-image {
   display: block;
@@ -192,16 +188,17 @@
 .choco-spinner {
   display: none;
   height: 100%;
+
   .choco-spinner-cssanimation {
     display: none;
   }
 }
 
 .cssanimations {
-
   .choco-spinner-gifanimation {
     display: none;
   }
+
   .choco-spinner-cssanimation {
     display: block;
     animation: spin 0.8s linear infinite;
@@ -230,10 +227,10 @@
   border-top: @border solid rgba(255,255,255,0.8);
   text-align: center;
   transition: margin-bottom 0.2s;
+
   &.choco-animated {
     transition: transform 0.4s, margin-bottom 0.2s;
   }
-  //animation: thumbnails 1s ease-in-out;
 
   &.choco-hide {
     margin-bottom: -@height - @y * 2 + @border;
@@ -252,7 +249,6 @@
   opacity: 0.5;
   cursor: pointer;
   transition: height 0.2s;
-  //animation: thumbnails 1.6s ease-in-out;
 
   &:hover {
     opacity: 1;
@@ -301,12 +297,6 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
+  0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
-// @keyframes thumbnails {
-//   0%   { opacity: 0; }
-//   40%  { opacity: 0; }
-//   100% { opacity: 1; }
-// }

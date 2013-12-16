@@ -53,6 +53,7 @@
 
 .choco-slider {
   .choco-slider;
+
   &.choco-animated {
     transition: transform 0.4s;
   }
@@ -105,6 +106,10 @@
   text-overflow: ellipsis;
   font-size: 1.4rem;
   font-weight: normal;
+
+  &.choco-empty {
+    display: none;
+  }
 }
 
 .choco-slide-image {
@@ -162,6 +167,21 @@
 .choco-spinner {
   display: none;
   height: 100%;
+
+  .choco-spinner-cssanimation {
+    display: none;
+  }
+}
+
+.cssanimations {
+  .choco-spinner-gifanimation {
+    display: none;
+  }
+
+  .choco-spinner-cssanimation {
+    display: block;
+    animation: spin 0.8s linear infinite;
+  }
 }
 
 .choco-loading .choco-spinner {
@@ -172,4 +192,9 @@
   0%   { opacity: 0; }
   75%  { opacity: 0; }
   100% { opacity: 1; }
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
