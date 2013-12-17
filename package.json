@@ -1,8 +1,8 @@
 {
     "name": "chocolate.js"
   , "version": "0.1.0"
-  , "description": ""
-  , "keywords": []
+  , "description": "High-customizable gallery"
+  , "keywords": ["chocolate", "gallery", "lightbox"]
   , "author": "Alexey Simonenko <alexey@simonenko.su>"
   , "contributors": [
         "Alexey Simonenko <alexey@simonenko.su>"
