@@ -35,8 +35,6 @@
         <section id="main_content">
           <p><a href="http://badge.fury.io/js/chocolate.js"><img src="https://badge.fury.io/js/chocolate.js.png" alt="NPM version"></a> <a href="https://david-dm.org/serenity/chocolate.js"><img src="https://david-dm.org/serenity/chocolate.js.png" alt="Dependency Status"></a> <a href="https://david-dm.org/serenity/chocolate.js#info=devDependencies"><img src="https://david-dm.org/serenity/chocolate.js/dev-status.png" alt="devDependency Status"></a></p>
 
-<p>Chocolate.js is a high-customizable gallery.</p>
-
 <h2>
   <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h2>
 <ul class="demos">
@@ -187,7 +185,7 @@ But you should understand some basic mechanisms of Chocolate.js.</p>
         </footer>
         <script src="dist/default/js/chocolate.min.js"></script>
         <script>
-          new Chocolate(document.querySelectorAll('.demo_img'));
+          new Chocolate(document.querySelectorAll('.demo_img'), {"repeat": true});
         </script>
 
                   <script type="text/javascript">
