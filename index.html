@@ -1,44 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Chocolate.js by serenity</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <link rel="stylesheet" href="dist/default/css/chocolate.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Chocolate.js by serenity</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Chocolate.js</h1>
-        <p>High-customizable gallery</p>
+    <div id="container">
+      <div class="inner">
 
-        <p class="view"><a href="https://github.com/serenity/chocolate.js">View the Project on GitHub <small>serenity/chocolate.js</small></a></p>
+        <header>
+          <h1>Chocolate.js</h1>
+          <h2>High-customizable gallery</h2>
+        </header>
 
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/serenity/chocolate.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/serenity/chocolate.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/serenity/chocolate.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-        <ul>
-          <li><a href="https://github.com/serenity/chocolate.js/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/serenity/chocolate.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/serenity/chocolate.js">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h2>
-        <article class="demo">
-          <a class="demo_link" href="images/1.jpg">
-            <img class="demo_img" src="images/1s.jpg">
-          </a>
-          <a class="demo_link" href="images/2.jpg">
-            <img class="demo_img" src="images/2s.jpg">
-          </a>
-        </article>
-        <h2>
+        <hr>
+
+        <section id="main_content">
+          <p><a href="http://badge.fury.io/js/chocolate.js"><img src="https://badge.fury.io/js/chocolate.js.png" alt="NPM version"></a> <a href="https://david-dm.org/serenity/chocolate.js"><img src="https://david-dm.org/serenity/chocolate.js.png" alt="Dependency Status"></a> <a href="https://david-dm.org/serenity/chocolate.js#info=devDependencies"><img src="https://david-dm.org/serenity/chocolate.js/dev-status.png" alt="devDependency Status"></a></p>
+
+<p>Chocolate.js is a high-customizable gallery.</p>
+
+<h2>
 <a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
 
 <p>Inlcude chocolate style and script:</p>
@@ -55,6 +52,10 @@
 </pre></div>
 
 <p>Chocolate automatically added all images you've passed to his gallery. Then when you click on one of this images, chocolate open the image in its gallery. You can switch between images by clicking on them thumbnails or by pressing arrow keys or by clicking on panels.</p>
+
+<p><img src="http://chocolatejs.ru/chocolate.svg" alt="Chocolate Layout Scheme"></p>
+
+<p>There are four zones you can clik on: the image, the overlay (space above and below the image), left panel (all space from left to image and from top to thumbnails), right panel (all space from image to right edge and from top to thumbnails). You can define it by passing options to Chocolate or by setting default options for your theme.</p>
 
 <h3>
 <a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h3>
@@ -103,12 +104,22 @@
 --no-touch      compile without touch support
 --no-history    compile without history api support
 --no-session    compile without sessionStorage support
+--no-classlist  compile without classList.js polyfill (for IE9)
 </code></pre>
 
 <p>Example:</p>
 
-<pre><code>$ grunt --theme=simonenko --basedir=/i/chocolate/ --no-session
+<pre><code>$ grunt --theme=simonenko --basedir=/i/chocolate --no-session
 </code></pre>
+
+<p>The best way to understand chocolate theme is inspect one of the included themes. You can define most of all styles for chocolate: change backgrounds, borders, padding, margin.
+But you should understand some basic mechanisms of Chocolate.js.</p>
+
+<ol>
+<li>To show specified image in gallery Chocolate translate the slider (container with images) at <code>slide.offsetWidth*slideNumber</code> (see <code>getEnv</code> in <code>src/utils.coffee</code>), so all sliders should be located in line in one container.</li>
+<li>To align appropriate thumbnail to center Chocolate calculate <code>offsetWidth</code> and <code>offsetLeft</code> of this thumbnail (see <code>chocolate.select</code> in <code>chocolate.coffee</code>)</li>
+<li>The width of left and right panels is calculated as <code>((window.innerWidth - image.width) / 2)</code>. So if you want to fit images width to 100% of screen, you have to specify min-width for the panels. (See <code>themes/serenity/css/chocolate.less</code>)</li>
+</ol><p>We moved basic CSS rules you have to use to separate file <code>themes/mixins.less</code></p>
 
 <h2>
 <a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
@@ -124,18 +135,16 @@
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>The MIT License, see the included <code>License.md</code> file.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/serenity">serenity</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-    </div>
-    <script src="dist/default/js/chocolate.min.js"></script>
-    <script>
-      new Chocolate(document.querySelectorAll('.demo_img'));
-    </script>
-    <script src="javascripts/scale.fix.js"></script>
-              <script type="text/javascript">
+
+<p><a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/serenity/chocolate.js/trend.png" alt="Bitdeli Badge"></a></p>
+        </section>
+
+        <footer>
+          Chocolate.js is maintained by <a href="https://github.com/serenity">serenity</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -146,5 +155,7 @@
             } catch(err) {}
           </script>
 
+      </div>
+    </div>
   </body>
 </html>
