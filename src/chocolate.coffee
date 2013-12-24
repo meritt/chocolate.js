@@ -88,6 +88,8 @@ class Chocolate
 
     getEnv()
     translate @slider, env.shift * item.cid
+    if item.bg
+      @overlay.style.background = item.bg
 
     if @options.thumbnails
       if @current?
@@ -140,6 +142,7 @@ class Chocolate
           orig: getAttribute(image, 'data-src') or getAttribute(image.parentNode, 'href')
           title: getAttribute(image, 'data-title') or getAttribute(image, 'title') or getAttribute(image, 'alt') or getAttribute(image.parentNode, 'title')
           thumb: getAttribute(image, 'src')
+          bg: getAttribute(image, 'data-background')
 
       addImage @, object, image
 
