@@ -90,6 +90,8 @@ class Chocolate
     translate @slider, env.shift * item.cid
     if item.bg
       @overlay.style.background = item.bg
+    else
+      @overlay.style.background = ""
 
     if @options.thumbnails
       if @current?
