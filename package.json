@@ -16,7 +16,7 @@
       , "url": "https://github.com/serenity/chocolate.js.git"
     }
   , "engines": {
-      "node": ">=0.10.x"
+      "node": "~0.10"
     }
   , "dependencies": {
         "jsdom": "0.8.x"
