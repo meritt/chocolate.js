@@ -1,29 +1,24 @@
 .choco-body {
   overflow: hidden;
 }
-
 .choco-unselect {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
-
 .choco-item {
   display: block;
 }
-
 .choco-item-hover {
   position: relative;
   display: block;
   cursor: pointer;
 }
-
 .choco-item-hover:hover,
 .choco-item-hover.choco-hover {
   background: rgba(0, 0, 0, 0.4) url("http://chocolatejs.ru/dist/default/images/lupa.svg") 50% 50% no-repeat;
 }
-
 .choco-overlay {
   position: fixed;
   top: 0;
@@ -35,16 +30,13 @@
   padding: 0 0 142px;
   background: rgba(0, 0, 0, 0.8);
 }
-
 .choco-overlay.choco-show {
   display: block;
 }
-
 .choco-overlay.choco-animated {
   -webkit-transition: opacity linear 0.15s;
   transition: opacity linear 0.15s;
 }
-
 .choco-overlay.choco-touch {
   padding: 0;
   background: #2d3032;
@@ -53,23 +45,19 @@
   -ms-user-select: none;
   user-select: none;
 }
-
 .choco-overlay.choco-touch .choco-thumbnails,
 .choco-overlay.choco-touch .choco-thumbnails-toggle,
 .choco-overlay.choco-touch .choco-leftside,
 .choco-overlay.choco-touch .choco-rightside {
   display: none;
 }
-
 .choco-overlay.choco-touch .choco-slider {
   -webkit-transition: none;
   transition: none;
 }
-
 .choco-overlay.choco-no-thumbnails {
   padding-bottom: 0;
 }
-
 .choco-overlay.choco-hideless .choco-leftside,
 .choco-overlay.choco-hideless .choco-rightside,
 .choco-overlay.choco-hideless .choco-thumbnails,
@@ -77,7 +65,6 @@
   display: none;
   cursor: default;
 }
-
 .choco-slider {
   display: block;
   white-space: nowrap;
@@ -85,12 +72,10 @@
   height: 100%;
   text-align: center;
 }
-
 .choco-slider.choco-animated {
   -webkit-transition: -webkit-transform 0.4s;
   transition: transform 0.4s;
 }
-
 .choco-slide {
   display: inline-block;
   -moz-box-sizing: border-box;
@@ -99,22 +84,18 @@
   height: 100%;
   padding: 50px 50px 30px;
 }
-
 .choco-slide.choco-error .choco-slide-container {
   min-width: 60px;
   min-height: 90px;
   background: transparent url("http://chocolatejs.ru/dist/default/images/notfound.svg") 50% 30px no-repeat;
   background-size: 60px 60px;
 }
-
 .choco-slide.choco-error .choco-slide-image {
   display: none;
 }
-
 .choco-slide.choco-loading .choco-slide-image {
   display: none;
 }
-
 .choco-inline-hack {
   display: inline-block;
   margin: 0;
@@ -123,7 +104,6 @@
   height: 100%;
   vertical-align: middle;
 }
-
 .choco-slide-container {
   display: inline-block;
   max-width: 100%;
@@ -131,7 +111,6 @@
   vertical-align: middle;
   cursor: pointer;
 }
-
 .choco-slide-title {
   position: relative;
   display: block;
@@ -144,18 +123,15 @@
   font-size: 16px;
   line-height: 20px;
 }
-
 .choco-slide-title.choco-empty {
   display: none;
 }
-
 .choco-slide-image {
   display: block;
   margin: 0 auto;
   max-width: 100%;
   max-height: 100%;
 }
-
 .choco-leftside {
   position: fixed;
   top: 0;
@@ -170,17 +146,14 @@
   left: 0;
   background: url("http://chocolatejs.ru/dist/default/images/arrow-l.svg") 20px 20px no-repeat;
 }
-
 .choco-leftside:hover {
   opacity: 1;
   -webkit-transition: opacity 0.2s;
   transition: opacity 0.2s;
 }
-
 .choco-leftside.choco-no-thumbnails {
   bottom: 0;
 }
-
 .choco-rightside {
   position: fixed;
   top: 0;
@@ -194,17 +167,14 @@
   animation: smooth 0.8s;
   right: 0;
 }
-
 .choco-rightside:hover {
   opacity: 1;
   -webkit-transition: opacity 0.2s;
   transition: opacity 0.2s;
 }
-
 .choco-rightside.choco-no-thumbnails {
   bottom: 0;
 }
-
 .choco-rightside:after {
   position: absolute;
   top: 20px;
@@ -215,30 +185,24 @@
   background: url("http://chocolatejs.ru/dist/default/images/close.svg") no-repeat;
   content: '';
 }
-
 .choco-spinner {
   display: none;
   height: 100%;
 }
-
 .choco-spinner .choco-spinner-cssanimation {
   display: none;
 }
-
 .cssanimations .choco-spinner-gifanimation {
   display: none;
 }
-
 .cssanimations .choco-spinner-cssanimation {
   display: block;
   -webkit-animation: spin 0.8s linear infinite;
   animation: spin 0.8s linear infinite;
 }
-
 .choco-loading .choco-spinner {
   display: inline-block;
 }
-
 .choco-thumbnails {
   display: block;
   white-space: nowrap;
@@ -258,16 +222,13 @@
   -webkit-transition: margin-bottom 0.2s;
   transition: margin-bottom 0.2s;
 }
-
 .choco-thumbnails.choco-animated {
   -webkit-transition: -webkit-transform 0.4s, margin-bottom 0.2s;
   transition: transform 0.4s, margin-bottom 0.2s;
 }
-
 .choco-thumbnails.choco-hide {
   margin-bottom: -138px;
 }
-
 .choco-thumbnails-toggle {
   position: absolute;
   right: 0;
@@ -282,17 +243,14 @@
   -webkit-transition: height 0.2s;
   transition: height 0.2s;
 }
-
 .choco-thumbnails-toggle:hover {
   opacity: 1;
 }
-
 .choco-thumbnails-toggle.choco-no-thumbnails {
   height: 40px;
   background: url("http://chocolatejs.ru/dist/default/images/arrow-t.svg") 50% 22px no-repeat;
   box-shadow: none;
 }
-
 .choco-thumbnail {
   display: inline-block;
   cursor: pointer;
@@ -309,66 +267,52 @@
   -webkit-transition: box-shadow 0.1s ease-in-out;
   transition: box-shadow 0.1s ease-in-out;
 }
-
 .choco-thumbnail:hover {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
 }
-
 .choco-thumbnail.choco-selected,
 .choco-thumbnail.choco-selected:hover {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 15px 0 rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(255, 255, 255, 0.7);
 }
-
 @-webkit-keyframes smooth {
   0% {
     opacity: 0;
   }
-
   75% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
 }
-
 @keyframes smooth {
   0% {
     opacity: 0;
   }
-
   75% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
 }
-
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
-
 @keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-
   100% {
     -webkit-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }

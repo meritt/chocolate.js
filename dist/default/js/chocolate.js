@@ -1,6 +1,6 @@
 /*
  * classList.js: Cross-browser full element.classList implementation.
- * 2012-11-15
+ * 2014-01-31
  *
  * By Eli Grey, http://eligrey.com
  * Public Domain.
@@ -11,10 +11,7 @@
 
 /*! @source http://purl.eligrey.com/github/classList.js/blob/master/classList.js*/
 
-if ("document" in self && !(
-		"classList" in document.createElement("_") &&
-		"classList" in document.createElementNS("http://www.w3.org/2000/svg", "svg")
-	)) {
+if ("document" in self && !("classList" in document.createElement("_"))) {
 
 (function (view) {
 
@@ -135,15 +132,15 @@ classListProto.remove = function () {
 		this._updateClassName();
 	}
 };
-classListProto.toggle = function (token, forse) {
+classListProto.toggle = function (token, force) {
 	token += "";
 
 	var
 		  result = this.contains(token)
 		, method = result ?
-			forse !== true && "remove"
+			force !== true && "remove"
 		:
-			forse !== false && "add"
+			force !== false && "add"
 	;
 
 	if (method) {
@@ -817,8 +814,7 @@ Chocolate = (function() {
   var addImage, loadImage, prepareActionFor, resizeHandler, setAnimation, setSize;
 
   function Chocolate(images, options) {
-    var container, containers, template, thumbnailTemplate, _i, _j, _k, _len, _len1, _len2, _ref, _ref1,
-      _this = this;
+    var container, containers, template, thumbnailTemplate, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
     if (options == null) {
       options = {};
     }
@@ -842,9 +838,11 @@ Chocolate = (function() {
       }
       if (this.options.thumbnails) {
         this.thumbnailsToggle = getTarget(this.overlay, "." + choco + "thumbnails-toggle");
-        addEvent(this.thumbnailsToggle, 'click', function() {
-          _this.toggleThumbnails();
-        });
+        addEvent(this.thumbnailsToggle, 'click', (function(_this) {
+          return function() {
+            _this.toggleThumbnails();
+          };
+        })(this));
       } else {
         _ref = ['overlay', 'leftside', 'rightside'];
         for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
@@ -902,8 +900,7 @@ Chocolate = (function() {
   };
 
   Chocolate.prototype.select = function(item, updateHistory) {
-    var loading, offset, thumb, _ref,
-      _this = this;
+    var loading, offset, thumb, _ref;
     if (updateHistory == null) {
       updateHistory = true;
     }
@@ -915,6 +912,11 @@ Chocolate = (function() {
     }
     getEnv();
     translate(this.slider, env.shift * item.cid);
+    if (item.bg) {
+      this.overlay.style.background = item.bg;
+    } else {
+      this.overlay.style.background = "";
+    }
     if (this.options.thumbnails) {
       if (this.current != null) {
         removeClass(this.current.thumbnail, choco_selected);
@@ -930,9 +932,11 @@ Chocolate = (function() {
     }
     loading = hasClass(item.slide, choco_loading);
     if (loading) {
-      loadImage(item, function() {
-        return _this.updateSides(item);
-      });
+      loadImage(item, (function(_this) {
+        return function() {
+          return _this.updateSides(item);
+        };
+      })(this));
     } else {
       this.updateSides(item);
     }
@@ -968,7 +972,8 @@ Chocolate = (function() {
         object = {
           orig: getAttribute(image, 'data-src') || getAttribute(image.parentNode, 'href'),
           title: getAttribute(image, 'data-title') || getAttribute(image, 'title') || getAttribute(image, 'alt') || getAttribute(image.parentNode, 'title'),
-          thumb: getAttribute(image, 'src')
+          thumb: getAttribute(image, 'src'),
+          bg: getAttribute(image, 'data-background')
         };
       }
       addImage(this, object, image);
@@ -1037,10 +1042,10 @@ Chocolate = (function() {
     resizeHandler();
   };
 
+
   /*
     Private methods
-  */
-
+   */
 
   if (isSupport) {
     addImage = function(chocolate, data, image) {
