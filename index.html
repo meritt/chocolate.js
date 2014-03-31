@@ -6,13 +6,11 @@
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/demo.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <link rel="stylesheet" type="text/css" href="dist/default/css/chocolate.css" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Chocolate.js by serenity</title>
+    <title>Chocolate.js by meritt</title>
   </head>
 
   <body>
@@ -25,55 +23,17 @@
         </header>
 
         <section id="downloads" class="clearfix">
-          <a href="https://github.com/serenity/chocolate.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/serenity/chocolate.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/serenity/chocolate.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
+          <a href="https://github.com/meritt/chocolate.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/meritt/chocolate.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/meritt/chocolate.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
         <hr>
 
         <section id="main_content">
-          <p><a href="http://badge.fury.io/js/chocolate.js"><img src="https://badge.fury.io/js/chocolate.js.png" alt="NPM version"></a> <a href="https://david-dm.org/serenity/chocolate.js"><img src="https://david-dm.org/serenity/chocolate.js.png" alt="Dependency Status"></a> <a href="https://david-dm.org/serenity/chocolate.js#info=devDependencies"><img src="https://david-dm.org/serenity/chocolate.js/dev-status.png" alt="devDependency Status"></a></p>
+          <p><a href="http://badge.fury.io/js/chocolate.js"><img src="https://badge.fury.io/js/chocolate.js.png" alt="NPM version"></a> <a href="https://david-dm.org/meritt/chocolate.js"><img src="https://david-dm.org/meritt/chocolate.js.png" alt="Dependency Status"></a> <a href="https://david-dm.org/meritt/chocolate.js#info=devDependencies"><img src="https://david-dm.org/meritt/chocolate.js/dev-status.png" alt="devDependency Status"></a></p>
 
-<h2>
-  <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h2>
-<ul class="demos">
-  <li class="demo_item">
-    <a href="http://farm4.staticflickr.com/3056/3027957073_cec0c99df1_o.jpg" target="_blank">
-      <img class="demo_img" src="images/1s.jpg" alt="" title="The first cat">
-    </a>
-  </li>
-  <li class="demo_item">
-    <a href="http://farm4.staticflickr.com/3267/3253913119_611ddb9044_o.jpg" target="_blank">
-      <img class="demo_img" src="images/2s.jpg" alt="" title="The second cat">
-    </a>
-  </li>
-  <li class="demo_item">
-    <a href="http://farm3.staticflickr.com/2818/10646921263_dabcb6b043_k.jpg" target="_blank">
-      <img class="demo_img" src="images/3s.jpg" alt="" title="The third cat">
-    </a>
-  </li>
-  <li class="demo_item">
-    <a href="http://farm2.staticflickr.com/1034/539719106_44cee71663_o.jpg" target="_blank">
-      <img class="demo_img" src="images/4s.jpg" alt="" title="The fourth cat">
-    </a>
-  </li>
-  <li class="demo_item">
-    <a href="http://farm4.staticflickr.com/3644/4562826679_3a3909bda3_o.jpg" target="_blank">
-      <img class="demo_img" src="images/5s.jpg" alt="">
-    </a>
-  </li>
-  <li class="demo_item">
-    <a href="http://farm1.staticflickr.com/144/327559662_5dae865e69_o.jpg" target="_blank">
-      <img class="demo_img" src="images/6s.jpg" alt="">
-    </a>
-  </li>
-  <li class="demo_item">
-    <a href="http://farm8.staticflickr.com/7382/9044603950_189e75a0dd_b.jpg" target="_blank">
-      <img class="demo_img" src="images/7s.jpg" alt="">
-    </a>
-  </li>
-</ul>
+<p>Chocolate.js is a high-customizable gallery.</p>
 
 <h2>
 <a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
@@ -133,8 +93,8 @@
 
 <p>To create your own build exec</p>
 
-<pre><code>$ grunt
-</code></pre>
+<div class="highlight highlight-bash"><pre><span class="nv">$ </span>grunt
+</pre></div>
 
 <p>Options:</p>
 
@@ -149,8 +109,8 @@
 
 <p>Example:</p>
 
-<pre><code>$ grunt --theme=simonenko --basedir=/i/chocolate --no-session
-</code></pre>
+<div class="highlight highlight-bash"><pre><span class="nv">$ </span>grunt --theme<span class="o">=</span>simonenko --basedir<span class="o">=</span>/i/chocolate --no-session
+</pre></div>
 
 <p>The best way to understand chocolate theme is inspect one of the included themes. You can define most of all styles for chocolate: change backgrounds, borders, padding, margin.
 But you should understand some basic mechanisms of Chocolate.js.</p>
@@ -158,7 +118,7 @@ But you should understand some basic mechanisms of Chocolate.js.</p>
 <ol>
 <li>To show specified image in gallery Chocolate translate the slider (container with images) at <code>slide.offsetWidth*slideNumber</code> (see <code>getEnv</code> in <code>src/utils.coffee</code>), so all sliders should be located in line in one container.</li>
 <li>To align appropriate thumbnail to center Chocolate calculate <code>offsetWidth</code> and <code>offsetLeft</code> of this thumbnail (see <code>chocolate.select</code> in <code>chocolate.coffee</code>)</li>
-<li>The width of left and right panels is calculated as <code>((window.innerWidth - image.width) / 2)</code>. So if you want to fit images width to 100% of screen, you have to specify min-width for the panels. (See <code>themes/serenity/css/chocolate.less</code>)</li>
+<li>The width of left and right panels is calculated as <code>((window.innerWidth - image.width) / 2)</code>. So if you want to fit images width to 100% of screen, you have to specify min-width for the panels. (See <code>themes/simonenko/css/chocolate.less</code>)</li>
 </ol><p>We moved basic CSS rules you have to use to separate file <code>themes/mixins.less</code></p>
 
 <h2>
@@ -176,17 +136,13 @@ But you should understand some basic mechanisms of Chocolate.js.</p>
 
 <p>The MIT License, see the included <code>License.md</code> file.</p>
 
-<p><a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/serenity/chocolate.js/trend.png" alt="Bitdeli Badge"></a></p>
+<p><a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/meritt/chocolate.js/trend.png" alt="Bitdeli Badge"></a></p>
         </section>
 
         <footer>
-          Chocolate.js is maintained by <a href="https://github.com/serenity">serenity</a><br>
+          Chocolate.js is maintained by <a href="https://github.com/meritt">meritt</a><br>
           This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
         </footer>
-        <script src="dist/default/js/chocolate.min.js"></script>
-        <script>
-          new Chocolate(document.querySelectorAll('.demo_img'), {"repeat": true});
-        </script>
 
                   <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
