@@ -1,6 +1,6 @@
 # Chocolate.js
 
-[![NPM version](https://badge.fury.io/js/chocolate.js.png)](http://badge.fury.io/js/chocolate.js) [![Dependency Status](https://david-dm.org/serenity/chocolate.js.png)](https://david-dm.org/serenity/chocolate.js) [![devDependency Status](https://david-dm.org/serenity/chocolate.js/dev-status.png)](https://david-dm.org/serenity/chocolate.js#info=devDependencies)
+[![NPM version](https://badge.fury.io/js/chocolate.js.png)](http://badge.fury.io/js/chocolate.js) [![Dependency Status](https://david-dm.org/meritt/chocolate.js.png)](https://david-dm.org/meritt/chocolate.js) [![devDependency Status](https://david-dm.org/meritt/chocolate.js/dev-status.png)](https://david-dm.org/meritt/chocolate.js#info=devDependencies)
 
 Chocolate.js is a high-customizable gallery.
 
@@ -59,7 +59,7 @@ You can create your own
 
 To create your own build exec
 
-```
+```bash
 $ grunt
 ```
 
@@ -77,7 +77,7 @@ Options:
 
 Example:
 
-```
+```bash
 $ grunt --theme=simonenko --basedir=/i/chocolate --no-session
 ```
 
@@ -86,7 +86,7 @@ But you should understand some basic mechanisms of Chocolate.js.
 
 1. To show specified image in gallery Chocolate translate the slider (container with images) at `slide.offsetWidth*slideNumber` (see `getEnv` in `src/utils.coffee`), so all sliders should be located in line in one container.
 2. To align appropriate thumbnail to center Chocolate calculate `offsetWidth` and `offsetLeft` of this thumbnail (see `chocolate.select` in `chocolate.coffee`)
-3. The width of left and right panels is calculated as `((window.innerWidth - image.width) / 2)`. So if you want to fit images width to 100% of screen, you have to specify min-width for the panels. (See `themes/serenity/css/chocolate.less`)
+3. The width of left and right panels is calculated as `((window.innerWidth - image.width) / 2)`. So if you want to fit images width to 100% of screen, you have to specify min-width for the panels. (See `themes/simonenko/css/chocolate.less`)
 
 We moved basic CSS rules you have to use to separate file `themes/mixins.less`
 
@@ -99,4 +99,4 @@ We moved basic CSS rules you have to use to separate file `themes/mixins.less`
 
 The MIT License, see the included `License.md` file.
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/serenity/chocolate.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/meritt/chocolate.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
