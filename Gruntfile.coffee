@@ -89,7 +89,7 @@ module.exports = (grunt) ->
         dest: destcss
 
     autoprefixer:
-      options: browsers: ['last 2 versions', 'ie 9']
+      options: browsers: ['last 2 versions', 'ie 9', 'opera 12.1']
       chocolate: src: destcss
 
     csso:
