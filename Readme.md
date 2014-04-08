@@ -1,6 +1,6 @@
 # Chocolate.js
 
-[![NPM version](https://badge.fury.io/js/chocolate.js.png)](http://badge.fury.io/js/chocolate.js) [![Dependency Status](https://david-dm.org/meritt/chocolate.js.png)](https://david-dm.org/meritt/chocolate.js) [![devDependency Status](https://david-dm.org/meritt/chocolate.js/dev-status.png)](https://david-dm.org/meritt/chocolate.js#info=devDependencies)
+[![NPM version](https://badge.fury.io/js/chocolate.js.svg)](http://badge.fury.io/js/chocolate.js) [![Dependency Status](https://david-dm.org/meritt/chocolate.js.svg?theme=shields.io)](https://david-dm.org/meritt/chocolate.js) [![devDependency Status](https://david-dm.org/meritt/chocolate.js/dev-status.svg?theme=shields.io)](https://david-dm.org/meritt/chocolate.js#info=devDependencies)
 
 Chocolate.js is a high-customizable gallery.
 
