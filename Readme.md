@@ -93,7 +93,7 @@ We moved basic CSS rules you have to use to separate file `themes/mixins.less`
 ## Authors
 
 * [Alexey Simonenko](//github.com/meritt), [alexey@simonenko.su](mailto:alexey@simonenko.su), [simonenko.su](http://simonenko.su)
-* [Sofia Ilinova](//github.com/isquariel), [isqua@isqua.ru](mailto:isqua@isqua.ru), [isqua.ru](http://isqua.ru)
+* [Sofia Ilinova](//github.com/isqua), [isqua@isqua.ru](mailto:isqua@isqua.ru), [isqua.ru](https://isqua.ru)
 
 ## License
 
